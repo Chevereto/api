@@ -1,0 +1,15 @@
+{
+    "name": "chevereto/chevereto",
+    "description": "Self-hosted image sharing",
+    "type": "library",
+    "license": "MIT",
+    "authors": [
+        {
+            "name": "Rodolfo Berrios",
+            "email": "rodolfo@chevereto.com"
+        }
+    ],
+    "require": {
+        "chevere/chevere": "dev-master"
+    }
+}
