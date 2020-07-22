@@ -11,6 +11,6 @@
 
 declare(strict_types=1);
 
-use Chevereto\Controllers\Web\Image\ImageGetController;
+use Chevereto\Controllers\Api\Album\AlbumPostController;
 
-return new ImageGetController;
+return new AlbumPostController;

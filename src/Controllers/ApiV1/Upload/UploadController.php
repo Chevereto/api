@@ -11,7 +11,7 @@
 
 declare(strict_types=1);
 
-namespace Chevereto\Controllers\Web\Album;
+namespace Chevereto\Controllers\ApiV1\Upload;
 
 use Chevere\Components\Controller\Controller;
 use Chevere\Components\Controller\ControllerParameter;
@@ -22,18 +22,18 @@ use Chevere\Interfaces\Controller\ControllerArgumentsInterface;
 use Chevere\Interfaces\Controller\ControllerParametersInterface;
 use Chevere\Interfaces\Controller\ControllerResponseInterface;
 
-class AlbumGetController extends Controller
+final class UploadController extends Controller
 {
     public function getDescription(): string
     {
-        return 'Presents the album user interface.';
+        return 'Uploads an image resource.';
     }
 
     public function getParameters(): ControllerParametersInterface
     {
         return (new ControllerParameters)
             ->withAdded(
-                new ControllerParameter('id', new Regex('/\d+/'))
+                new ControllerParameter('source', new Regex('/.*/'))
             );
     }
 

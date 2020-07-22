@@ -22,7 +22,7 @@ use Chevere\Interfaces\Controller\ControllerArgumentsInterface;
 use Chevere\Interfaces\Controller\ControllerParametersInterface;
 use Chevere\Interfaces\Controller\ControllerResponseInterface;
 
-class ImageGetController extends Controller
+final class ImageGetController extends Controller
 {
     public function getDescription(): string
     {

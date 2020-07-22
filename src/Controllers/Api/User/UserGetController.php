@@ -22,7 +22,7 @@ use Chevere\Interfaces\Controller\ControllerArgumentsInterface;
 use Chevere\Interfaces\Controller\ControllerParametersInterface;
 use Chevere\Interfaces\Controller\ControllerResponseInterface;
 
-class UserGetController extends Controller
+final class UserGetController extends Controller
 {
     public function getDescription(): string
     {

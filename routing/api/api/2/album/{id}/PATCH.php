@@ -11,6 +11,6 @@
 
 declare(strict_types=1);
 
-use Chevere\Components\Route\RouteName;
+use Chevereto\Controllers\Api\Album\AlbumPatchController;
 
-return new RouteName('image') ;
+return new AlbumPatchController;

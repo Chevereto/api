@@ -5,7 +5,7 @@
         "body": [
             "<?php",
             "",
-            "namespace Chevereto\\Controllers\\\\${TM_DIRECTORY/(^.+\\/(.*)$)/$2/};",
+            "namespace Chevereto\\\\${TM_DIRECTORY/.*src\\/(([^\\/]*)(\\/)?)|(\\/)([^\\/]*)/$2${3:+\\\\}${5:+\\\\}$5/g};",
             "",
             "use Chevere\\Components\\Controller\\Controller;",
             "use Chevere\\Components\\Controller\\ControllerParameters;",
@@ -14,7 +14,7 @@
             "use Chevere\\Interfaces\\Controller\\ControllerArgumentsInterface;",
             "use Chevere\\Interfaces\\Controller\\ControllerParametersInterface;",
             "",
-            "class $TM_FILENAME_BASE extends Controller",
+            "final class $TM_FILENAME_BASE extends Controller",
             "{",
             "\tpublic function getDescription(): string",
             "\t{",

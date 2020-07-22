@@ -23,11 +23,14 @@ use function Chevere\Components\Routing\routerForRoutingDescriptors;
 
 require 'vendor/autoload.php';
 
+set_error_handler('Chevere\Components\ThrowableHandler\errorsAsExceptions');
+set_exception_handler('Chevere\Components\ThrowableHandler\consoleHandler');
+
 $dir = dirForString(__DIR__ . '/');
 $cacheDir = $dir->getChild('cache/');
 $routingDir = $dir->getChild('routing/');
 $router = new Router;
-foreach ([/*'api', */'web'] as $group) {
+foreach (['api', 'api-legacy', 'web'] as $group) {
     $routingDescriptorsMaker = new RoutingDescriptorsMaker(
         $routingDir->getChild("$group/")
     );

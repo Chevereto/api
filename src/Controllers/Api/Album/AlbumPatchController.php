@@ -11,25 +11,30 @@
 
 declare(strict_types=1);
 
-namespace Chevereto\Controllers\Web\Explore;
+namespace Chevereto\Controllers\Api\Album;
 
 use Chevere\Components\Controller\Controller;
+use Chevere\Components\Controller\ControllerParameter;
 use Chevere\Components\Controller\ControllerParameters;
 use Chevere\Components\Controller\ControllerResponse;
+use Chevere\Components\Regex\Regex;
 use Chevere\Interfaces\Controller\ControllerArgumentsInterface;
 use Chevere\Interfaces\Controller\ControllerParametersInterface;
 use Chevere\Interfaces\Controller\ControllerResponseInterface;
 
-class ExploreGetController extends Controller
+final class AlbumPatchController extends Controller
 {
     public function getDescription(): string
     {
-        return 'Presents the explorer user interface.';
+        return 'Updates an album identified by its id.';
     }
 
     public function getParameters(): ControllerParametersInterface
     {
-        return new ControllerParameters;
+        return (new ControllerParameters)
+            ->withAdded(
+                new ControllerParameter('id', new Regex('/\d+/'))
+            );
     }
 
     public function run(ControllerArgumentsInterface $controllerArguments): ControllerResponseInterface

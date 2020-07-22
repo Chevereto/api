@@ -14,13 +14,15 @@ declare(strict_types=1);
 namespace Chevereto\Controllers\Api\Upload;
 
 use Chevere\Components\Controller\Controller;
+use Chevere\Components\Controller\ControllerParameter;
 use Chevere\Components\Controller\ControllerParameters;
 use Chevere\Components\Controller\ControllerResponse;
+use Chevere\Components\Regex\Regex;
 use Chevere\Interfaces\Controller\ControllerArgumentsInterface;
 use Chevere\Interfaces\Controller\ControllerParametersInterface;
 use Chevere\Interfaces\Controller\ControllerResponseInterface;
 
-class UploadPostController extends Controller
+final class UploadPostController extends Controller
 {
     public function getDescription(): string
     {
@@ -29,7 +31,10 @@ class UploadPostController extends Controller
 
     public function getParameters(): ControllerParametersInterface
     {
-        return new ControllerParameters;
+        return (new ControllerParameters)
+            ->withAdded(
+                new ControllerParameter('source', new Regex('/.*/'))
+            );
     }
 
     public function run(ControllerArgumentsInterface $controllerArguments): ControllerResponseInterface

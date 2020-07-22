@@ -11,6 +11,6 @@
 
 declare(strict_types=1);
 
-use Chevereto\Controllers\Web\Album\AlbumGetController;
+use Chevere\Components\Route\RouteName;
 
-return new AlbumGetController;
+return new RouteName('upload') ;

@@ -22,7 +22,7 @@ class IndexGetController extends Controller
 {
     public function getDescription(): string
     {
-        return 'Presents the website index.';
+        return 'Presents the user interface.';
     }
 
     public function run(ControllerArgumentsInterface $controllerArguments): ControllerResponseInterface
