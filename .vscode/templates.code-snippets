@@ -1,0 +1,59 @@
+{
+    "controller": {
+        "description": "Create a controller",
+        "prefix": "controller",
+        "body": [
+            "<?php",
+            "",
+            "namespace Chevereto\\Controllers\\\\${TM_DIRECTORY/(^.+\\/(.*)$)/$2/};",
+            "",
+            "use Chevere\\Components\\Controller\\Controller;",
+            "use Chevere\\Components\\Controller\\ControllerParameters;",
+            "use Chevere\\Components\\Controller\\ControllerResponse;",
+            "use Chevere\\Interfaces\\Controller\\ControllerResponseInterface;",
+            "use Chevere\\Interfaces\\Controller\\ControllerArgumentsInterface;",
+            "use Chevere\\Interfaces\\Controller\\ControllerParametersInterface;",
+            "",
+            "class $TM_FILENAME_BASE extends Controller",
+            "{",
+            "\tpublic function getDescription(): string",
+            "\t{",
+            "\t\treturn '${1:description}';",
+            "\t}",
+            "",
+            "\tpublic function getParameters(): ControllerParametersInterface",
+            "\t{",
+            "\t\treturn ${2:new ControllerParameters};",
+            "\t}",
+            "",
+            "\tpublic function run(ControllerArgumentsInterface \\$controllerArguments): ControllerResponseInterface",
+            "\t{",
+            "\t\treturn ${3:new ControllerResponse(true, [])};",
+            "\t}",
+            "}"
+        ]
+    },
+    "route-name": {
+        "description": "Route name",
+        "prefix": "route-name",
+        "body": [
+            "<?php",
+            "",
+            "use Chevere\\Components\\Route\\RouteName;",
+            "",
+            "return new RouteName('${1:name}') ;",
+            "",
+        ]
+    },
+    "endpoint-method": {
+        "description": "Endpoint method",
+        "prefix": "endpoint-method",
+        "body": [
+            "<?php",
+            "",
+            "return new ${1:controller};",
+            "",
+        ]
+    }
+    
+}

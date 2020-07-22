@@ -11,5 +11,10 @@
     ],
     "require": {
         "chevere/chevere": "dev-master"
+    },
+    "autoload": {
+        "psr-4": {
+            "Chevereto\\": "src/"
+        }
     }
 }
