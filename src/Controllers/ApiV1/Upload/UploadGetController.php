@@ -22,7 +22,7 @@ use Chevere\Interfaces\Controller\ControllerArgumentsInterface;
 use Chevere\Interfaces\Controller\ControllerParametersInterface;
 use Chevere\Interfaces\Controller\ControllerResponseInterface;
 
-final class UploadController extends Controller
+final class UploadGetController extends Controller
 {
     public function getDescription(): string
     {
@@ -34,6 +34,13 @@ final class UploadController extends Controller
         return (new ControllerParameters)
             ->withAdded(
                 new ControllerParameter('source', new Regex('/.*/'))
+            )
+            ->withAdded(
+                new ControllerParameter('key', new Regex('/.*/'))
+            )
+            ->withAdded(
+                (new ControllerParameter('format', new Regex('/json|redirect|txt/')))
+                    ->withIsRequired(false)
             );
     }
 

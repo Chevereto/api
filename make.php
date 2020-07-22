@@ -31,11 +31,11 @@ $cacheDir = $dir->getChild('cache/');
 $routingDir = $dir->getChild('routing/');
 $router = new Router;
 foreach (['api', 'api-legacy', 'web'] as $group) {
-    $routingDescriptorsMaker = new RoutingDescriptorsMaker(
-        $routingDir->getChild("$group/")
-    );
+    $routingDescriptorsMaker = ;
     $routerForGroup = routerForRoutingDescriptors(
-        $routingDescriptorsMaker->descriptors(),
+        (new RoutingDescriptorsMaker(
+            $routingDir->getChild("$group/")
+        ))->descriptors(),
         $group
     );
     foreach ($routerForGroup->routables()->getGenerator() as $routable) {
