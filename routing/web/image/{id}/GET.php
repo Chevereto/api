@@ -11,6 +11,6 @@
 
 declare(strict_types=1);
 
-use Chevere\Components\Route\RouteName;
+use Chevereto\Controllers\Web\Image\ImageGetController;
 
-return new RouteName('api-index') ;
+return new ImageGetController;

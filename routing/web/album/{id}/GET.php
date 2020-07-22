@@ -11,6 +11,6 @@
 
 declare(strict_types=1);
 
-use Chevere\Components\Route\RouteName;
+use Chevereto\Controllers\Web\Album\AlbumGetController;
 
-return new RouteName('api-users') ;
+return new AlbumGetController;

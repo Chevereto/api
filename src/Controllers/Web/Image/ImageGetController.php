@@ -11,18 +11,30 @@
 
 declare(strict_types=1);
 
-namespace Chevereto\Controllers;
+namespace Chevereto\Controllers\Web\Image;
 
 use Chevere\Components\Controller\Controller;
+use Chevere\Components\Controller\ControllerParameter;
+use Chevere\Components\Controller\ControllerParameters;
 use Chevere\Components\Controller\ControllerResponse;
+use Chevere\Components\Regex\Regex;
 use Chevere\Interfaces\Controller\ControllerArgumentsInterface;
+use Chevere\Interfaces\Controller\ControllerParametersInterface;
 use Chevere\Interfaces\Controller\ControllerResponseInterface;
 
-class IndexController extends Controller
+class ImageGetController extends Controller
 {
     public function getDescription(): string
     {
-        return 'description';
+        return 'Presents the image user interface.';
+    }
+
+    public function getParameters(): ControllerParametersInterface
+    {
+        return (new ControllerParameters)
+            ->withAdded(
+                new ControllerParameter('id', new Regex('/\d+/'))
+            );
     }
 
     public function run(ControllerArgumentsInterface $controllerArguments): ControllerResponseInterface

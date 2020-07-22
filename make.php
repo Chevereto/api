@@ -27,7 +27,7 @@ $dir = dirForString(__DIR__ . '/');
 $cacheDir = $dir->getChild('cache/');
 $routingDir = $dir->getChild('routing/');
 $router = new Router;
-foreach (['api', 'web'] as $group) {
+foreach ([/*'api', */'web'] as $group) {
     $routingDescriptorsMaker = new RoutingDescriptorsMaker(
         $routingDir->getChild("$group/")
     );
@@ -47,5 +47,6 @@ $cacheRouteCollector = (new Cache($cacheDir->getChild('router/')))
 echo "Cached HTTP router\n";
 $publicDir = $dir->getChild('public/');
 $specDir = $publicDir->getChild('spec/');
-$specMaker = new SpecMaker(new SpecPath('/spec'), $specDir, $router);
+$specPath = new SpecPath('/spec');
+$specMaker = new SpecMaker($specPath, $specDir, $router);
 echo 'Spec made at ' . $specDir->path()->absolute() . "\n";

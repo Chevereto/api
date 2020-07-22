@@ -16,5 +16,14 @@
         "psr-4": {
             "Chevereto\\": "src/"
         }
+    },
+    "repositories": {
+        "dev-package": {
+            "type": "path",
+            "url": "/home/rodolfo/git/chevere/chevere",
+            "options": {
+                "symlink": true
+            }
+        }
     }
 }

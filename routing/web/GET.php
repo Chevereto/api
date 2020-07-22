@@ -11,6 +11,6 @@
 
 declare(strict_types=1);
 
-use Chevereto\Controllers\Users\UserGetController;
+use Chevereto\Controllers\Web\Index\IndexGetController;
 
-return new UserGetController;
+return new IndexGetController;

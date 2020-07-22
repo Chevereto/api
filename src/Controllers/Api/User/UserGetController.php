@@ -11,7 +11,7 @@
 
 declare(strict_types=1);
 
-namespace Chevereto\Controllers\Users;
+namespace Chevereto\Controllers\Api\User;
 
 use Chevere\Components\Controller\Controller;
 use Chevere\Components\Controller\ControllerParameter;
@@ -40,6 +40,10 @@ class UserGetController extends Controller
 
     public function run(ControllerArgumentsInterface $controllerArguments): ControllerResponseInterface
     {
-        return new ControllerResponse(true, []);
+        $id = $controllerArguments->get('id');
+
+        return new ControllerResponse(true, [
+            'id' => $id,
+        ]);
     }
 }
