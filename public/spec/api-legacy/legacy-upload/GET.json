@@ -1,0 +1,25 @@
+{
+    "method": "GET",
+    "spec": "\/spec\/api-legacy\/legacy-upload\/GET.json",
+    "description": "Uploads an image resource.",
+    "parameters": {
+        "source": {
+            "name": "source",
+            "regex": "\/.*\/",
+            "description": "",
+            "isRequired": true
+        },
+        "key": {
+            "name": "key",
+            "regex": "\/.*\/",
+            "description": "",
+            "isRequired": true
+        },
+        "format": {
+            "name": "format",
+            "regex": "\/json|redirect|txt\/",
+            "description": "",
+            "isRequired": false
+        }
+    }
+}

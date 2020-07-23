@@ -1,0 +1,21 @@
+{
+    "name": "web",
+    "spec": "\/spec\/web\/routes.json",
+    "routes": {
+        "index": {
+            "name": "index",
+            "spec": "\/spec\/web\/index\/route.json",
+            "path": "\/",
+            "regex": "#\/#",
+            "wildcards": {},
+            "endpoints": {
+                "GET": {
+                    "method": "GET",
+                    "spec": "\/spec\/web\/index\/GET.json",
+                    "description": "Presents the user interface.",
+                    "parameters": {}
+                }
+            }
+        }
+    }
+}

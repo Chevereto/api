@@ -1,0 +1,6 @@
+{
+    "method": "GET",
+    "spec": "\/spec\/api\/image-id\/GET.json",
+    "description": "Get the image identified by its id.",
+    "parameters": {}
+}

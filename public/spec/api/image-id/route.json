@@ -1,0 +1,17 @@
+{
+    "name": "image-id",
+    "spec": "\/spec\/api\/image-id\/route.json",
+    "path": "\/api\/2\/image\/{id:\\d+}\/",
+    "regex": "~^(?|\/api\/2\/image\/(\\d+)\/)$~",
+    "wildcards": {
+        "id": "^\\d+$"
+    },
+    "endpoints": {
+        "GET": {
+            "method": "GET",
+            "spec": "\/spec\/api\/image-id\/GET.json",
+            "description": "Get the image identified by its id.",
+            "parameters": {}
+        }
+    }
+}
