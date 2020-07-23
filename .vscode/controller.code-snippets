@@ -32,28 +32,5 @@
             "\t}",
             "}"
         ]
-    },
-    "route-name": {
-        "description": "Route name",
-        "prefix": "route-name",
-        "body": [
-            "<?php",
-            "",
-            "use Chevere\\Components\\Route\\RouteName;",
-            "",
-            "return new RouteName('${1:name}') ;",
-            "",
-        ]
-    },
-    "endpoint-method": {
-        "description": "Endpoint method",
-        "prefix": "endpoint-method",
-        "body": [
-            "<?php",
-            "",
-            "return new ${1:controller};",
-            "",
-        ]
     }
-    
 }

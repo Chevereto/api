@@ -10,11 +10,13 @@
         }
     ],
     "require": {
-        "chevere/chevere": "dev-master"
+        "chevere/chevere": "dev-master",
+        "phpunit/phpunit": "^9.2"
     },
     "autoload": {
         "psr-4": {
-            "Chevereto\\": "chevereto/src"
+            "Chevereto\\": "src/",
+            "CheveretoTests\\": "tests/"
         }
     },
     "repositories": {
