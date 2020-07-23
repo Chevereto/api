@@ -27,11 +27,9 @@ set_error_handler('Chevere\Components\ThrowableHandler\errorsAsExceptions');
 set_exception_handler('Chevere\Components\ThrowableHandler\consoleHandler');
 
 $dir = dirForString(__DIR__ . '/');
-$cacheDir = $dir->getChild('cache/');
-$routingDir = $dir->getChild('routing/');
+$routingDir = $dir->getChild('app/routing/');
 $router = new Router;
 foreach (['api', 'api-legacy', 'web'] as $group) {
-    $routingDescriptorsMaker = ;
     $routerForGroup = routerForRoutingDescriptors(
         (new RoutingDescriptorsMaker(
             $routingDir->getChild("$group/")
@@ -41,6 +39,10 @@ foreach (['api', 'api-legacy', 'web'] as $group) {
     foreach ($routerForGroup->routables()->getGenerator() as $routable) {
         $router = $router->withAddedRoutable($routable, $group);
     }
+}
+$cacheDir = $dir->getChild('cache/');
+if ($cacheDir->exists()) {
+    $cacheDir->removeContents();
 }
 $cacheRouteCollector = (new Cache($cacheDir->getChild('router/')))
     ->withAddedItem(
