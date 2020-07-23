@@ -13,19 +13,19 @@
                 "source": {
                     "name": "source",
                     "regex": "\/.*\/",
-                    "description": "",
+                    "description": "A base64 image string OR an image URL or a FILES single resource.",
                     "isRequired": true
                 },
                 "key": {
                     "name": "key",
                     "regex": "\/.*\/",
-                    "description": "",
+                    "description": "API V1 key.",
                     "isRequired": true
                 },
                 "format": {
                     "name": "format",
-                    "regex": "\/json|redirect|txt\/",
-                    "description": "",
+                    "regex": "\/^(json|redirect|txt)$\/",
+                    "description": "Response document output format. Defaults to `json`.",
                     "isRequired": false
                 }
             }
@@ -38,19 +38,19 @@
                 "source": {
                     "name": "source",
                     "regex": "\/.*\/",
-                    "description": "",
+                    "description": "A base64 image string OR an image URL or a FILES single resource.",
                     "isRequired": true
                 },
                 "key": {
                     "name": "key",
                     "regex": "\/.*\/",
-                    "description": "",
+                    "description": "API V1 key.",
                     "isRequired": true
                 },
                 "format": {
                     "name": "format",
-                    "regex": "\/json|redirect|txt\/",
-                    "description": "",
+                    "regex": "\/^(json|redirect|txt)$\/",
+                    "description": "Response document output format. Defaults to `json`.",
                     "isRequired": false
                 }
             }

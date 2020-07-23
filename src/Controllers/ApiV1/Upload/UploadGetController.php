@@ -33,13 +33,16 @@ final class UploadGetController extends Controller
     {
         return (new ControllerParameters)
             ->withAdded(
-                new ControllerParameter('source', new Regex('/.*/'))
+                (new ControllerParameter('source', new Regex('/.*/')))
+                    ->withDescription('A base64 image string OR an image URL or a FILES single resource.')
             )
             ->withAdded(
-                new ControllerParameter('key', new Regex('/.*/'))
+                (new ControllerParameter('key', new Regex('/.*/')))
+                    ->withDescription('API V1 key.')
             )
             ->withAdded(
-                (new ControllerParameter('format', new Regex('/json|redirect|txt/')))
+                (new ControllerParameter('format', new Regex('/^(json|redirect|txt)$/')))
+                    ->withDescription('Response document output format. Defaults to `json`.')
                     ->withIsRequired(false)
             );
     }

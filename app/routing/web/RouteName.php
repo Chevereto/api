@@ -13,4 +13,4 @@ declare(strict_types=1);
 
 use Chevere\Components\Route\RouteName;
 
-return new RouteName('index') ;
+return new RouteName('index');
