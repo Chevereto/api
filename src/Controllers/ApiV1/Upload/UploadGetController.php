@@ -14,11 +14,13 @@ declare(strict_types=1);
 namespace Chevereto\Controllers\ApiV1\Upload;
 
 use Chevere\Components\Controller\Controller;
-use Chevere\Components\Parameter\Arguments;
 use Chevere\Components\Parameter\Parameter;
 use Chevere\Components\Parameter\ParameterOptional;
 use Chevere\Components\Parameter\Parameters;
+use Chevere\Components\Plugin\PluggableAnchors;
+use Chevere\Components\Plugin\Plugs\Hooks\Traits\PluggableHooksTrait;
 use Chevere\Components\Regex\Regex;
+use Chevere\Components\Response\ResponseProvisional;
 use Chevere\Components\Response\ResponseSuccess;
 use Chevere\Components\Service\ServiceProviders;
 use Chevere\Components\Workflow\Task;
@@ -26,19 +28,29 @@ use Chevere\Components\Workflow\Workflow;
 use Chevere\Components\Workflow\WorkflowRun;
 use Chevere\Interfaces\Parameter\ArgumentsInterface;
 use Chevere\Interfaces\Parameter\ParametersInterface;
+use Chevere\Interfaces\Plugin\PluggableAnchorsInterface;
+use Chevere\Interfaces\Plugin\Plugs\Hooks\PluggableHooksInterface;
 use Chevere\Interfaces\Response\ResponseInterface;
 use Chevere\Interfaces\Service\ServiceableInterface;
 use Chevere\Interfaces\Service\ServiceProvidersInterface;
 use Chevere\Interfaces\Workflow\WorkflowInterface;
 
-final class UploadGetController extends Controller implements ServiceableInterface
+final class UploadGetController extends Controller implements ServiceableInterface, PluggableHooksInterface
 {
+    use PluggableHooksTrait;
+
     private WorkflowInterface $workflow;
 
     public function getServiceProviders(): ServiceProvidersInterface
     {
         return (new ServiceProviders($this))
             ->withAdded('withWorkflow');
+    }
+
+    public static function getHookAnchors(): PluggableAnchorsInterface
+    {
+        return (new PluggableAnchors)
+            ->withAdded('setWorkflow');
     }
 
     public function getDescription(): string
@@ -63,22 +75,9 @@ final class UploadGetController extends Controller implements ServiceableInterfa
             );
     }
 
-    public function withWorkflow(WorkflowInterface $workflow): self
-    {
-        $new = clone $this;
-        $new->workflow = $workflow;
-
-        return $new;
-    }
-
     public function getWorkflow(): WorkflowInterface
     {
-        return (new Workflow('apiv1-upload-get-controller'))
-            ->withAdded(
-                'fetch',
-                (new Task('fetchApiV1ImageFn'))
-                    ->withArguments('${source}') // argument too huge for serialize!
-            )
+        $workflow = (new Workflow('apiv1-upload-get-controller'))
             ->withAdded(
                 'validate',
                 (new Task('validateImageFn'))
@@ -89,12 +88,12 @@ final class UploadGetController extends Controller implements ServiceableInterfa
                 (new Task('uploadImageFn'))
                     ->withArguments('${filename}')
             )
-            )
             ->withAdded(
                 'response',
                 (new Task('picoConLaWea'))
                     ->withArguments('${upload:id}')
             );
+        $this->hook('setWorkflow', $workflow);
         // $workflow = $workflow
         //     // Plugin: check banned hashes
         //     ->withAddedBefore(
@@ -110,13 +109,34 @@ final class UploadGetController extends Controller implements ServiceableInterfa
         //         (new Task('vendorPath/sepiaFilter'))
         //             ->withArguments('${filename}')
         //     );
+
+        return $workflow;
+    }
+
+    public function withWorkflow(WorkflowInterface $workflow): self
+    {
+        $new = clone $this;
+        $new->workflow = $workflow;
+
+        return $new;
+    }
+
+    public function workflow(): WorkflowInterface
+    {
+        return $this->workflow;
     }
 
     public function run(ArgumentsInterface $arguments): ResponseInterface
     {
-        $run = new WorkflowRun($this->workflow, $arguments->toArray());
-        xdd($run);
+        /**
+         * @var string $source
+         */
+        $source = $arguments->get('source');
+        $filename = $source . '.tmp';
+        $run = new WorkflowRun($this->workflow, ['filename' => $filename]);
 
-        return new ResponseSuccess([]);
+        return new ResponseProvisional([
+            'id' => $run->uuid(),
+        ]);
     }
 }

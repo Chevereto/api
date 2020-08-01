@@ -5,10 +5,10 @@
         "image-id": {
             "name": "image-id",
             "spec": "\/spec\/api\/image-id\/route.json",
-            "path": "\/api\/2\/image\/{id:\\d+}\/",
-            "regex": "~^(?|\/api\/2\/image\/(\\d+)\/)$~",
+            "path": "\/api\/2\/image\/{id:.*}\/",
+            "regex": "~^(?|\/api\/2\/image\/(.*)\/)$~",
             "wildcards": {
-                "id": "^\\d+$"
+                "id": "^.*$"
             },
             "endpoints": {
                 "GET": {
@@ -33,7 +33,7 @@
                     "parameters": {
                         "source": {
                             "name": "source",
-                            "regex": "\/.*\/",
+                            "regex": "\/^.*$\/",
                             "description": "",
                             "isRequired": true
                         }
@@ -44,10 +44,10 @@
         "album-id": {
             "name": "album-id",
             "spec": "\/spec\/api\/album-id\/route.json",
-            "path": "\/api\/2\/album\/{id:\\d+}\/",
-            "regex": "~^(?|\/api\/2\/album\/(\\d+)\/)$~",
+            "path": "\/api\/2\/album\/{id:.*}\/",
+            "regex": "~^(?|\/api\/2\/album\/(.*)\/)$~",
             "wildcards": {
-                "id": "^\\d+$"
+                "id": "^.*$"
             },
             "endpoints": {
                 "GET": {
@@ -78,7 +78,7 @@
                     "parameters": {
                         "name": {
                             "name": "name",
-                            "regex": "\/\\w+\/",
+                            "regex": "\/^.*$\/",
                             "description": "",
                             "isRequired": true
                         }

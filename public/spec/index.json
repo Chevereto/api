@@ -7,10 +7,10 @@
                 "image-id": {
                     "name": "image-id",
                     "spec": "\/spec\/api\/image-id\/route.json",
-                    "path": "\/api\/2\/image\/{id:\\d+}\/",
-                    "regex": "~^(?|\/api\/2\/image\/(\\d+)\/)$~",
+                    "path": "\/api\/2\/image\/{id:.*}\/",
+                    "regex": "~^(?|\/api\/2\/image\/(.*)\/)$~",
                     "wildcards": {
-                        "id": "^\\d+$"
+                        "id": "^.*$"
                     },
                     "endpoints": {
                         "GET": {
@@ -35,7 +35,7 @@
                             "parameters": {
                                 "source": {
                                     "name": "source",
-                                    "regex": "\/.*\/",
+                                    "regex": "\/^.*$\/",
                                     "description": "",
                                     "isRequired": true
                                 }
@@ -46,10 +46,10 @@
                 "album-id": {
                     "name": "album-id",
                     "spec": "\/spec\/api\/album-id\/route.json",
-                    "path": "\/api\/2\/album\/{id:\\d+}\/",
-                    "regex": "~^(?|\/api\/2\/album\/(\\d+)\/)$~",
+                    "path": "\/api\/2\/album\/{id:.*}\/",
+                    "regex": "~^(?|\/api\/2\/album\/(.*)\/)$~",
                     "wildcards": {
-                        "id": "^\\d+$"
+                        "id": "^.*$"
                     },
                     "endpoints": {
                         "GET": {
@@ -80,7 +80,7 @@
                             "parameters": {
                                 "name": {
                                     "name": "name",
-                                    "regex": "\/\\w+\/",
+                                    "regex": "\/^.*$\/",
                                     "description": "",
                                     "isRequired": true
                                 }
@@ -108,19 +108,19 @@
                             "parameters": {
                                 "source": {
                                     "name": "source",
-                                    "regex": "\/.*\/",
+                                    "regex": "\/^.*$\/",
                                     "description": "A base64 image string OR an image URL or a FILES single resource.",
                                     "isRequired": true
                                 },
                                 "key": {
                                     "name": "key",
-                                    "regex": "\/.*\/",
+                                    "regex": "\/^.*$\/",
                                     "description": "API V1 key.",
                                     "isRequired": true
                                 },
                                 "format": {
                                     "name": "format",
-                                    "regex": "\/^(json|redirect|txt)$\/",
+                                    "regex": "\/^.*$\/",
                                     "description": "Response document output format. Defaults to `json`.",
                                     "isRequired": false
                                 }
@@ -133,19 +133,19 @@
                             "parameters": {
                                 "source": {
                                     "name": "source",
-                                    "regex": "\/.*\/",
+                                    "regex": "\/^.*$\/",
                                     "description": "A base64 image string OR an image URL or a FILES single resource.",
                                     "isRequired": true
                                 },
                                 "key": {
                                     "name": "key",
-                                    "regex": "\/.*\/",
+                                    "regex": "\/^.*$\/",
                                     "description": "API V1 key.",
                                     "isRequired": true
                                 },
                                 "format": {
                                     "name": "format",
-                                    "regex": "\/^(json|redirect|txt)$\/",
+                                    "regex": "\/^.*$\/",
                                     "description": "Response document output format. Defaults to `json`.",
                                     "isRequired": false
                                 }
@@ -159,16 +159,16 @@
             "name": "web",
             "spec": "\/spec\/web\/routes.json",
             "routes": {
-                "index": {
-                    "name": "index",
-                    "spec": "\/spec\/web\/index\/route.json",
+                "web": {
+                    "name": "web",
+                    "spec": "\/spec\/web\/web\/route.json",
                     "path": "\/",
                     "regex": "#\/#",
                     "wildcards": {},
                     "endpoints": {
                         "GET": {
                             "method": "GET",
-                            "spec": "\/spec\/web\/index\/GET.json",
+                            "spec": "\/spec\/web\/web\/GET.json",
                             "description": "Presents the user interface.",
                             "parameters": {}
                         }

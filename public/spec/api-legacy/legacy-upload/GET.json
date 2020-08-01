@@ -5,19 +5,19 @@
     "parameters": {
         "source": {
             "name": "source",
-            "regex": "\/.*\/",
+            "regex": "\/^.*$\/",
             "description": "A base64 image string OR an image URL or a FILES single resource.",
             "isRequired": true
         },
         "key": {
             "name": "key",
-            "regex": "\/.*\/",
+            "regex": "\/^.*$\/",
             "description": "API V1 key.",
             "isRequired": true
         },
         "format": {
             "name": "format",
-            "regex": "\/^(json|redirect|txt)$\/",
+            "regex": "\/^.*$\/",
             "description": "Response document output format. Defaults to `json`.",
             "isRequired": false
         }

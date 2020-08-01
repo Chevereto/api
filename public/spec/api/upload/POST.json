@@ -5,7 +5,7 @@
     "parameters": {
         "source": {
             "name": "source",
-            "regex": "\/.*\/",
+            "regex": "\/^.*$\/",
             "description": "",
             "isRequired": true
         }
