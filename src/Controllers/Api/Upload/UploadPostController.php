@@ -14,13 +14,13 @@ declare(strict_types=1);
 namespace Chevereto\Controllers\Api\Upload;
 
 use Chevere\Components\Controller\Controller;
-use Chevere\Components\Controller\ControllerParameter;
-use Chevere\Components\Controller\ControllerParameters;
-use Chevere\Components\Controller\ControllerResponse;
+use Chevere\Components\Parameter\Parameter;
+use Chevere\Components\Parameter\Parameters;
 use Chevere\Components\Regex\Regex;
-use Chevere\Interfaces\Controller\ControllerArgumentsInterface;
-use Chevere\Interfaces\Controller\ControllerParametersInterface;
-use Chevere\Interfaces\Controller\ControllerResponseInterface;
+use Chevere\Components\Response\ResponseSuccess;
+use Chevere\Interfaces\Parameter\ArgumentsInterface;
+use Chevere\Interfaces\Parameter\ParametersInterface;
+use Chevere\Interfaces\Response\ResponseInterface;
 
 final class UploadPostController extends Controller
 {
@@ -29,16 +29,16 @@ final class UploadPostController extends Controller
         return 'Uploads the attached resource.';
     }
 
-    public function getParameters(): ControllerParametersInterface
+    public function getParameters(): ParametersInterface
     {
-        return (new ControllerParameters)
+        return (new Parameters)
             ->withAdded(
-                new ControllerParameter('source', new Regex('/.*/'))
+                new Parameter('source', new Regex('/.*/'))
             );
     }
 
-    public function run(ControllerArgumentsInterface $controllerArguments): ControllerResponseInterface
+    public function run(ArgumentsInterface $arguments): ResponseInterface
     {
-        return new ControllerResponse(true, []);
+        return new ResponseSuccess([]);
     }
 }

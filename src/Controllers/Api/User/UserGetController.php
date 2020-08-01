@@ -14,13 +14,13 @@ declare(strict_types=1);
 namespace Chevereto\Controllers\Api\User;
 
 use Chevere\Components\Controller\Controller;
-use Chevere\Components\Controller\ControllerParameter;
-use Chevere\Components\Controller\ControllerParameters;
-use Chevere\Components\Controller\ControllerResponse;
+use Chevere\Components\Parameter\Parameter;
+use Chevere\Components\Parameter\Parameters;
 use Chevere\Components\Regex\Regex;
-use Chevere\Interfaces\Controller\ControllerArgumentsInterface;
-use Chevere\Interfaces\Controller\ControllerParametersInterface;
-use Chevere\Interfaces\Controller\ControllerResponseInterface;
+use Chevere\Components\Response\ResponseSuccess;
+use Chevere\Interfaces\Parameter\ArgumentsInterface;
+use Chevere\Interfaces\Parameter\ParametersInterface;
+use Chevere\Interfaces\Response\ResponseInterface;
 
 final class UserGetController extends Controller
 {
@@ -29,21 +29,19 @@ final class UserGetController extends Controller
         return 'Get an user identified by its id.';
     }
 
-    public function getParameters(): ControllerParametersInterface
+    public function getParameters(): ParametersInterface
     {
-        return (new ControllerParameters)
+        return (new Parameters)
             ->withAdded(
-                (new ControllerParameter('id', new Regex('/\d+/')))
+                (new Parameter('id', new Regex('/\d+/')))
                     ->withDescription('The user identifier.')
             );
     }
 
-    public function run(ControllerArgumentsInterface $controllerArguments): ControllerResponseInterface
+    public function run(ArgumentsInterface $arguments): ResponseInterface
     {
-        $id = $controllerArguments->get('id');
+        $id = $arguments->get('id');
 
-        return new ControllerResponse(true, [
-            'id' => $id,
-        ]);
+        return new ResponseSuccess(['id' => $id, ]);
     }
 }

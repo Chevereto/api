@@ -13,8 +13,8 @@ declare(strict_types=1);
 
 namespace CheveretoTests\Controllers\ApiV1\Upload;
 
-use Chevere\Components\Controller\ControllerArguments;
 use Chevere\Components\Controller\ControllerRunner;
+use Chevere\Components\Parameter\Arguments;
 use Chevere\Interfaces\Controller\ControllerExecutedInterface;
 use Chevereto\Controllers\ApiV1\Upload\UploadGetController;
 use PHPUnit\Framework\TestCase;
@@ -25,7 +25,7 @@ final class UploadGetControllerTest extends TestCase
     {
         $controller = new UploadGetController;
         $this->assertIsString($controller->getDescription());
-        $arguments = new ControllerArguments(
+        $arguments = new Arguments(
             $controller->getParameters(),
             [
                 'source' => 'string source',
@@ -33,8 +33,7 @@ final class UploadGetControllerTest extends TestCase
                 'format' => 'json'
             ]
         );
-        $runner = new ControllerRunner($controller);
-        $executed = $runner->execute($arguments);
-        $this->assertInstanceOf(ControllerExecutedInterface::class, $executed);
+        $controller = $controller->withWorkflow();
+        $controller->run($arguments);
     }
 }
