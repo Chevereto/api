@@ -31,6 +31,8 @@ use Chevere\Interfaces\Plugin\PluggableAnchorsInterface;
 use Chevere\Interfaces\Plugin\Plugs\Hooks\PluggableHooksInterface;
 use Chevere\Interfaces\Response\ResponseInterface;
 use Chevere\Interfaces\Workflow\WorkflowInterface;
+use Chevereto\Actions\Image\UploadImage;
+use Chevereto\Actions\Image\ValidateImage;
 use function Chevere\Components\Workflow\workflowRunner;
 
 final class UploadGetController extends Controller implements PluggableHooksInterface
@@ -42,6 +44,7 @@ final class UploadGetController extends Controller implements PluggableHooksInte
     public static function getHookAnchors(): PluggableAnchorsInterface
     {
         return (new PluggableAnchors)
+            ->withAdded('setParameters')
             ->withAdded('setWorkflow');
     }
 
@@ -70,7 +73,9 @@ final class UploadGetController extends Controller implements PluggableHooksInte
     public function setUp(): ControllerInterface
     {
         $new = clone $this;
+        $new->workflow = $this->getWorkflow();
         $new->hook('setParameters', $new->parameters);
+        $new->hook('setWorkflow', $new->workflow);
 
         return $new;
     }
@@ -80,29 +85,14 @@ final class UploadGetController extends Controller implements PluggableHooksInte
         return (new Workflow('api-v1-upload-get-controller'))
             ->withAdded(
                 'validate',
-                (new Task(__NAMESPACE__ . '\validateImageFn'))
+                (new Task(ValidateImage::class))
                     ->withArguments('${filename}')
             )
             ->withAdded(
                 'upload',
-                (new Task(__NAMESPACE__ . '\uploadImageFn'))
+                (new Task(UploadImage::class))
                     ->withArguments('${filename}')
             );
-        // $workflow = $workflow
-        //     // Plugin: check banned hashes
-        //     ->withAddedBefore(
-        //         'validate',
-        //         'vendor-ban-check',
-        //         (new Task('vendorPath/banCheck'))
-        //             ->withArguments('${filename}')
-        //     )
-        //     // Plugin: sepia filter
-        //     ->withAddedAfter(
-        //         'validate',
-        //         'vendor-sepia-filter',
-        //         (new Task('vendorPath/sepiaFilter'))
-        //             ->withArguments('${filename}')
-        //     );
     }
 
     public function run(ArgumentsInterface $arguments): ResponseInterface
@@ -112,26 +102,11 @@ final class UploadGetController extends Controller implements PluggableHooksInte
          */
         $source = $arguments->get('source');
         $filename = $source . '.tmp';
-        $workflow = $this->getWorkflow();
-        $this->hook('setWorkflow', $workflow);
-        $workflowRun = workflowRunner(
-            new WorkflowRun($workflow, ['filename' => $filename])
-        );
+        $array = ['filename' => $filename];
+        $workflowRun = workflowRunner(new WorkflowRun($this->workflow, $array));
 
         return new ResponseSuccess([
             'id' => $workflowRun->get('upload')->data()['id'],
         ]);
     }
-}
-
-function validateImageFn(string $filename): ResponseInterface
-{
-    return new ResponseSuccess([]);
-}
-
-function uploadImageFn(string $filename): ResponseInterface
-{
-    return new ResponseSuccess([
-        'id' => '123',
-    ]);
 }

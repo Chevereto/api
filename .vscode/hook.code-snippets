@@ -1,0 +1,36 @@
+{
+    "hook": {
+        "description": "Create a hook",
+        "prefix": "hook",
+        "body": [
+            "<?php",
+            "",
+            "namespace Chevereto\\\\${TM_DIRECTORY/.*src\\/(([^\\/]*)(\\/)?)|(\\/)([^\\/]*)/$2${3:+\\\\}${5:+\\\\}$5/g};",
+            "",
+            "use Chevere\\Interfaces\\Plugin\\Plugs\\Hooks\\HookInterface;",
+            "",
+            "final class $TM_FILENAME_BASE implements HookInterface",
+            "{",
+            "\tpublic function __invoke(&\\$argument): void",
+            "\t{",
+            "\t\t${0}",
+            "\t}",
+            "",
+            "\tpublic function anchor(): string",
+            "\t{",
+            "\t\treturn '${1:anchor}';",
+            "\t}",
+            "",
+            "\tpublic function at(): string",
+            "\t{",
+            "\t\treturn '${2:at}';",
+            "\t}",
+            "",
+            "\tpublic function priority(): int",
+            "\t{",
+            "\t\treturn ${3:0};",
+            "\t}",
+            "}"
+        ]
+    }
+}

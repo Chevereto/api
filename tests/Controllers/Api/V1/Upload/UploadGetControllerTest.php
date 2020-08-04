@@ -19,7 +19,6 @@ use Chevere\Interfaces\Response\ResponseProvisionalInterface;
 use Chevere\Interfaces\Response\ResponseSuccessInterface;
 use Chevereto\Controllers\Api\V1\Upload\UploadGetController;
 use PHPUnit\Framework\TestCase;
-use function Chevere\Components\Workflow\workflowRunner;
 
 final class UploadGetControllerTest extends TestCase
 {
@@ -35,6 +34,7 @@ final class UploadGetControllerTest extends TestCase
                 'format' => 'json'
             ]
         );
+        $controller = $controller->setUp();
         $response = $controller->run($arguments);
         $this->assertInstanceOf(ResponseSuccessInterface::class, $response);
         $this->assertSame('123', $response->data()['id']);
