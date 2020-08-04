@@ -17,6 +17,7 @@ use Chevere\Components\Controller\ControllerRunner;
 use Chevere\Components\Parameter\Arguments;
 use Chevere\Interfaces\Controller\ControllerExecutedInterface;
 use Chevere\Interfaces\Response\ResponseProvisionalInterface;
+use Chevere\Interfaces\Response\ResponseSuccessInterface;
 use Chevereto\Controllers\ApiV1\Upload\UploadGetController;
 use PHPUnit\Framework\TestCase;
 
@@ -34,10 +35,9 @@ final class UploadGetControllerTest extends TestCase
                 'format' => 'json'
             ]
         );
-        $workflow = $controller->getWorkflow();
-        $controller = $controller->withWorkflow($workflow);
         $response = $controller->run($arguments);
-        $this->assertInstanceOf(ResponseProvisionalInterface::class, $response);
+        $this->assertInstanceOf(ResponseSuccessInterface::class, $response);
         $this->assertArrayHasKey('id', $response->data());
+        $this->assertSame('123', $response->data()['id']);
     }
 }

@@ -20,9 +20,7 @@ use Chevere\Components\Parameter\Parameters;
 use Chevere\Components\Plugin\PluggableAnchors;
 use Chevere\Components\Plugin\Plugs\Hooks\Traits\PluggableHooksTrait;
 use Chevere\Components\Regex\Regex;
-use Chevere\Components\Response\ResponseProvisional;
 use Chevere\Components\Response\ResponseSuccess;
-use Chevere\Components\Service\ServiceProviders;
 use Chevere\Components\Workflow\Task;
 use Chevere\Components\Workflow\Workflow;
 use Chevere\Components\Workflow\WorkflowRun;
@@ -31,26 +29,32 @@ use Chevere\Interfaces\Parameter\ParametersInterface;
 use Chevere\Interfaces\Plugin\PluggableAnchorsInterface;
 use Chevere\Interfaces\Plugin\Plugs\Hooks\PluggableHooksInterface;
 use Chevere\Interfaces\Response\ResponseInterface;
-use Chevere\Interfaces\Service\ServiceableInterface;
-use Chevere\Interfaces\Service\ServiceProvidersInterface;
 use Chevere\Interfaces\Workflow\WorkflowInterface;
+use function Chevere\Components\Workflow\workflowRunner;
 
-final class UploadGetController extends Controller implements ServiceableInterface, PluggableHooksInterface
+function validateImageFn(string $filename): ResponseInterface
+{
+    return new ResponseSuccess([]);
+}
+
+function uploadImageFn(string $filename): ResponseInterface
+{
+    return new ResponseSuccess([
+        'id' => '123',
+    ]);
+}
+
+final class UploadGetController extends Controller implements PluggableHooksInterface
 {
     use PluggableHooksTrait;
 
     private WorkflowInterface $workflow;
 
-    public function getServiceProviders(): ServiceProvidersInterface
-    {
-        return (new ServiceProviders($this))
-            ->withAdded('withWorkflow');
-    }
-
     public static function getHookAnchors(): PluggableAnchorsInterface
     {
         return (new PluggableAnchors)
-            ->withAdded('setWorkflow');
+            ->withAdded('setWorkflow')
+            ->withAdded('beforeResponse');
     }
 
     public function getDescription(): string
@@ -77,23 +81,17 @@ final class UploadGetController extends Controller implements ServiceableInterfa
 
     public function getWorkflow(): WorkflowInterface
     {
-        $workflow = (new Workflow('apiv1-upload-get-controller'))
+        return (new Workflow('apiv1-upload-get-controller'))
             ->withAdded(
                 'validate',
-                (new Task('validateImageFn'))
+                (new Task('Chevereto\Controllers\ApiV1\Upload\validateImageFn'))
                     ->withArguments('${filename}')
             )
             ->withAdded(
                 'upload',
-                (new Task('uploadImageFn'))
+                (new Task('Chevereto\Controllers\ApiV1\Upload\uploadImageFn'))
                     ->withArguments('${filename}')
-            )
-            ->withAdded(
-                'response',
-                (new Task('picoConLaWea'))
-                    ->withArguments('${upload:id}')
             );
-        $this->hook('setWorkflow', $workflow);
         // $workflow = $workflow
         //     // Plugin: check banned hashes
         //     ->withAddedBefore(
@@ -109,34 +107,28 @@ final class UploadGetController extends Controller implements ServiceableInterfa
         //         (new Task('vendorPath/sepiaFilter'))
         //             ->withArguments('${filename}')
         //     );
-
-        return $workflow;
-    }
-
-    public function withWorkflow(WorkflowInterface $workflow): self
-    {
-        $new = clone $this;
-        $new->workflow = $workflow;
-
-        return $new;
-    }
-
-    public function workflow(): WorkflowInterface
-    {
-        return $this->workflow;
     }
 
     public function run(ArgumentsInterface $arguments): ResponseInterface
     {
+        $workflow = $this->getWorkflow();
+        $this->hook('setWorkflow', $workflow);
         /**
          * @var string $source
          */
         $source = $arguments->get('source');
-        $filename = $source . '.tmp';
-        $run = new WorkflowRun($this->workflow, ['filename' => $filename]);
+        $filename = "$source.tmp";
+        $workflowRun = new WorkflowRun(
+            $workflow,
+            ['filename' => $filename]
+        );
+        $workflowRun = workflowRunner($workflowRun);
+        $uploadId = $workflowRun->get('upload')->data()['id'];
+        $image = [
+            'id' => $uploadId,
+        ];
+        $this->hook('beforeResponse', $image);
 
-        return new ResponseProvisional([
-            'id' => $run->uuid(),
-        ]);
+        return new ResponseSuccess($image);
     }
 }
