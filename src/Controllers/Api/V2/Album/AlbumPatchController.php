@@ -11,7 +11,7 @@
 
 declare(strict_types=1);
 
-namespace Chevereto\Controllers\Api\Album;
+namespace Chevereto\Controllers\Api\V2\Album;
 
 use Chevere\Components\Controller\Controller;
 use Chevere\Components\Parameter\Parameter;
@@ -22,11 +22,11 @@ use Chevere\Interfaces\Parameter\ArgumentsInterface;
 use Chevere\Interfaces\Parameter\ParametersInterface;
 use Chevere\Interfaces\Response\ResponseInterface;
 
-final class AlbumGetController extends Controller
+final class AlbumPatchController extends Controller
 {
     public function getDescription(): string
     {
-        return 'Get an album identified by its id.';
+        return 'Updates an album identified by its id.';
     }
 
     public function getParameters(): ParametersInterface

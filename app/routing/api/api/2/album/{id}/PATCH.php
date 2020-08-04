@@ -11,6 +11,6 @@
 
 declare(strict_types=1);
 
-use Chevereto\Controllers\Api\Album\AlbumPatchController;
+use Chevereto\Controllers\Api\V2\Album\AlbumPatchController;
 
 return new AlbumPatchController;

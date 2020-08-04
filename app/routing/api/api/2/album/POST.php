@@ -11,6 +11,6 @@
 
 declare(strict_types=1);
 
-use Chevereto\Controllers\Api\Album\AlbumPostController;
+use Chevereto\Controllers\Api\V2\Album\AlbumPostController;
 
 return new AlbumPostController;

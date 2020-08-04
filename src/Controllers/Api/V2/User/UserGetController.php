@@ -11,7 +11,7 @@
 
 declare(strict_types=1);
 
-namespace Chevereto\Controllers\Api\User;
+namespace Chevereto\Controllers\Api\V2\User;
 
 use Chevere\Components\Controller\Controller;
 use Chevere\Components\Parameter\Parameter;

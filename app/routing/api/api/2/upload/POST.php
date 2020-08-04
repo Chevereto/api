@@ -11,6 +11,6 @@
 
 declare(strict_types=1);
 
-use Chevereto\Controllers\Api\Upload\UploadPostController;
+use Chevereto\Controllers\Api\V2\Upload\UploadPostController;
 
 return new UploadPostController;
