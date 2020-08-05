@@ -13,23 +13,27 @@ declare(strict_types=1);
 
 namespace Chevereto\Actions\Image;
 
+use Chevere\Components\Parameter\Parameter;
+use Chevere\Components\Parameter\Parameters;
 use Chevere\Components\Response\ResponseSuccess;
 use Chevere\Components\Service\ServiceProviders;
+use Chevere\Components\Workflow\Action;
+use Chevere\Interfaces\Parameter\ArgumentsInterface;
+use Chevere\Interfaces\Parameter\ParametersInterface;
 use Chevere\Interfaces\Response\ResponseInterface;
 use Chevere\Interfaces\Service\ServiceableInterface;
 use Chevere\Interfaces\Service\ServiceProvidersInterface;
 use Chevere\Interfaces\Workflow\ActionInterface;
 use Psr\Log\LoggerInterface;
 
-class UploadImage implements ActionInterface, ServiceableInterface
+class UploadImage extends Action implements ServiceableInterface
 {
-    // private string $filename;
-
     private LoggerInterface $logger;
 
-    public function __construct(string $filename)
+    public function getParameters(): ParametersInterface
     {
-        // $this->filename = $filename;
+        return (new Parameters)
+            ->withAdded(new Parameter('filename'));
     }
 
     public function getServiceProviders(): ServiceProvidersInterface
@@ -46,7 +50,7 @@ class UploadImage implements ActionInterface, ServiceableInterface
         return $new;
     }
 
-    public function execute(): ResponseInterface
+    public function run(ArgumentsInterface $arguments): ResponseInterface
     {
         return new ResponseSuccess(['id' => '123']);
     }

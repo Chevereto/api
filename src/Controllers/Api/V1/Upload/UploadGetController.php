@@ -86,12 +86,12 @@ final class UploadGetController extends Controller implements PluggableHooksInte
             ->withAdded(
                 'validate',
                 (new Task(ValidateImage::class))
-                    ->withArguments('${filename}')
+                    ->withArguments(['filename' => '${filename}'])
             )
             ->withAdded(
                 'upload',
                 (new Task(UploadImage::class))
-                    ->withArguments('${filename}')
+                    ->withArguments(['filename' => '${filename}'])
             );
     }
 

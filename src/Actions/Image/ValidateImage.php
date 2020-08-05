@@ -13,20 +13,23 @@ declare(strict_types=1);
 
 namespace Chevereto\Actions\Image;
 
+use Chevere\Components\Parameter\Parameter;
+use Chevere\Components\Parameter\Parameters;
 use Chevere\Components\Response\ResponseSuccess;
+use Chevere\Components\Workflow\Action;
+use Chevere\Interfaces\Parameter\ArgumentsInterface;
+use Chevere\Interfaces\Parameter\ParametersInterface;
 use Chevere\Interfaces\Response\ResponseInterface;
-use Chevere\Interfaces\Workflow\ActionInterface;
 
-class ValidateImage implements ActionInterface
+class ValidateImage extends Action
 {
-    // private string $filename;
-
-    public function __construct(string $filename)
+    public function getParameters(): ParametersInterface
     {
-        // $this->filename = $filename;
+        return (new Parameters)
+            ->withAdded(new Parameter('filename'));
     }
 
-    public function execute(): ResponseInterface
+    public function run(ArgumentsInterface $arguments): ResponseInterface
     {
         return new ResponseSuccess([]);
     }
