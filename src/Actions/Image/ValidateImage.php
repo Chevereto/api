@@ -13,10 +13,10 @@ declare(strict_types=1);
 
 namespace Chevereto\Actions\Image;
 
+use Chevere\Components\Action\Action;
 use Chevere\Components\Parameter\Parameter;
 use Chevere\Components\Parameter\Parameters;
 use Chevere\Components\Response\ResponseSuccess;
-use Chevere\Components\Workflow\Action;
 use Chevere\Interfaces\Parameter\ArgumentsInterface;
 use Chevere\Interfaces\Parameter\ParametersInterface;
 use Chevere\Interfaces\Response\ResponseInterface;
@@ -31,6 +31,10 @@ class ValidateImage extends Action
 
     public function run(ArgumentsInterface $arguments): ResponseInterface
     {
+        // input
+        // fetch source *duh
+        // validate integrity
+        // get real extension - fix it
         return new ResponseSuccess([]);
     }
 }
