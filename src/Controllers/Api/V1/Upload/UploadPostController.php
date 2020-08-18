@@ -14,6 +14,7 @@ declare(strict_types=1);
 namespace Chevereto\Controllers\Api\V1\Upload;
 
 use Chevere\Components\Controller\Controller;
+use Chevere\Components\Message\Message;
 use Chevere\Components\Parameter\Parameter;
 use Chevere\Components\Parameter\ParameterOptional;
 use Chevere\Components\Parameter\Parameters;
@@ -21,9 +22,12 @@ use Chevere\Components\Plugin\PluggableAnchors;
 use Chevere\Components\Plugin\Plugs\Hooks\Traits\PluggableHooksTrait;
 use Chevere\Components\Regex\Regex;
 use Chevere\Components\Response\ResponseSuccess;
+use Chevere\Components\Str\StrBool;
 use Chevere\Components\Workflow\Task;
 use Chevere\Components\Workflow\Workflow;
 use Chevere\Components\Workflow\WorkflowRun;
+use Chevere\Exceptions\Core\InvalidArgumentException;
+use Chevere\Exceptions\Core\RuntimeException;
 use Chevere\Interfaces\Controller\ControllerInterface;
 use Chevere\Interfaces\Parameter\ArgumentsInterface;
 use Chevere\Interfaces\Parameter\ParametersInterface;
@@ -33,9 +37,10 @@ use Chevere\Interfaces\Response\ResponseInterface;
 use Chevere\Interfaces\Workflow\WorkflowInterface;
 use Chevereto\Actions\Image\UploadImage;
 use Chevereto\Actions\Image\ValidateImage;
+use Laminas\Uri\UriFactory;
 use function Chevere\Components\Workflow\workflowRunner;
 
-final class UploadGetController extends Controller implements PluggableHooksInterface
+final class UploadPostController extends Controller implements PluggableHooksInterface
 {
     use PluggableHooksTrait;
 
@@ -57,11 +62,11 @@ final class UploadGetController extends Controller implements PluggableHooksInte
     {
         return (new Parameters)
             ->withAdded(
-                (new Parameter('source', new Regex('/.*/')))
-                    ->withDescription('A base64 image string OR an image URL or a FILES single resource.')
+                (new Parameter('source'))
+                    ->withDescription('A base64 image string OR an image URL. It also takes image multipart/form-data.')
             )
             ->withAdded(
-                (new Parameter('key', new Regex('/.*/')))
+                (new Parameter('key'))
                     ->withDescription('API V1 key.')
             )
             ->withAdded(
@@ -100,9 +105,47 @@ final class UploadGetController extends Controller implements PluggableHooksInte
         /**
          * @var string $source
          */
-        $source = $arguments->get('source');
-        $filename = $source . '.tmp';
-        $array = ['filename' => $filename];
+        // $raw_source = $arguments->get('source');
+        // $unserialize = @unserialize($raw_source);
+        // if ($unserialize === false) {
+        //     $temp_file = tempnam(sys_get_temp_dir(), 'chv.temp');
+        //     if ($temp_file === false || !is_writable($temp_file)) {
+        //         throw new RuntimeException(
+        //             new Message("Can't get a tempnam."),
+        //             200
+        //         );
+        //     }
+        //     $uri = UriFactory::factory($source);
+        //     if ($uri->isValid()) {
+        //         // Fetch $source to a $temp_file
+        //         G\fetch_url($raw_source, $temp_file);
+        //     } else {
+        //         $source = trim(preg_replace('/\s+/', '', $raw_source));
+        //         $double = base64_encode(base64_decode($source));
+        //         if (!(new StrBool($source))->same($double)) {
+        //             throw new InvalidArgumentException(
+        //                 new Message('Invalid base64 string.'),
+        //                 120
+        //             );
+        //         }
+        //         unset($double);
+        //         $fh = fopen($temp_file, 'w');
+        //         stream_filter_append($fh, 'convert.base64-decode', STREAM_FILTER_WRITE);
+        //         if (!@fwrite($fh, $source)) {
+        //             throw new InvalidArgumentException(
+        //                 new Message('Invalid base64 string.'),
+        //                 130
+        //             );
+        //         }
+        //         fclose($fh);
+        //     }
+        // } else {
+        //     $temp_file = $source['tmp_name'];
+        // }
+
+        $temp_file = 'eee';
+
+        $array = ['filename' => $temp_file];
         $workflowRun = workflowRunner(new WorkflowRun($this->workflow, $array));
 
         return new ResponseSuccess([

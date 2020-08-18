@@ -31,8 +31,7 @@ class ValidateImage extends Action
 
     public function run(ArgumentsInterface $arguments): ResponseInterface
     {
-        // input
-        // fetch source *duh
+        $image = $arguments->get('filename');
         // validate integrity
         // get real extension - fix it
         return new ResponseSuccess([]);

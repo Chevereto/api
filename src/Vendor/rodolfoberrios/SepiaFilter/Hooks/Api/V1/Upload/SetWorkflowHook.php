@@ -16,7 +16,7 @@ namespace Chevereto\Vendor\rodolfoberrios\SepiaFilter\Api\V1\Upload;
 use Chevere\Components\Workflow\Task;
 use Chevere\Interfaces\Plugin\Plugs\Hooks\HookInterface;
 use Chevere\Interfaces\Workflow\WorkflowInterface;
-use Chevereto\Controllers\Api\V1\Upload\UploadGetController;
+use Chevereto\Controllers\Api\V1\Upload\UploadPostController;
 
 final class SetWorkflowHook implements HookInterface
 {
@@ -31,7 +31,7 @@ final class SetWorkflowHook implements HookInterface
                 'validate',
                 'rodolfoberrios-sepia-filter',
                 (new Task('vendorPath/sepiaFilter'))
-                    ->withArguments('${filename}')
+                    ->withArguments(['filename' => '${filename}'])
             );
     }
 
@@ -42,7 +42,7 @@ final class SetWorkflowHook implements HookInterface
 
     public function at(): string
     {
-        return UploadGetController::class;
+        return UploadPostController::class;
     }
 
     public function priority(): int

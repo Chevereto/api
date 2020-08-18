@@ -11,4 +11,6 @@
 
 declare(strict_types=1);
 
-return include 'GET.php';
+use Chevereto\Controllers\Api\V1\Upload\UploadPostController;
+
+return new UploadPostController;

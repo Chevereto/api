@@ -1,0 +1,16 @@
+{
+    "controller": {
+        "description": "Create a class",
+        "prefix": "class",
+        "body": [
+            "<?php",
+            "",
+            "namespace Chevereto\\\\${TM_DIRECTORY/.*src\\/(([^\\/]*)(\\/)?)|(\\/)([^\\/]*)/$2${3:+\\\\}${5:+\\\\}$5/g};",
+            "",
+            "final class $TM_FILENAME_BASE",
+            "{",
+            "\t${0}",
+            "}"
+        ]
+    }
+}

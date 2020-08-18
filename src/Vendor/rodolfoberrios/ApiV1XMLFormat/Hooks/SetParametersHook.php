@@ -16,7 +16,7 @@ namespace Chevereto\Vendor\rodolfoberrios\ApiV1XMLFormat\Hooks;
 use Chevere\Components\Regex\Regex;
 use Chevere\Interfaces\Parameter\ParametersInterface;
 use Chevere\Interfaces\Plugin\Plugs\Hooks\HookInterface;
-use Chevereto\Controllers\Api\V1\Upload\UploadGetController;
+use Chevereto\Controllers\Api\V1\Upload\UploadPostController;
 
 final class SetParametersHook implements HookInterface
 {
@@ -38,7 +38,7 @@ final class SetParametersHook implements HookInterface
 
     public function at(): string
     {
-        return UploadGetController::class;
+        return UploadPostController::class;
     }
 
     public function priority(): int

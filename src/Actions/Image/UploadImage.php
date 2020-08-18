@@ -85,8 +85,8 @@ class UploadImage extends Action implements ServiceableInterface
         // fix exif orientation
         // upload to storage (local, remote, whatever)
 
-        $this->logger->log('0', 'feeling good');
-        $filename = $arguments->get('filename');
+        // $this->logger->log('0', 'feeling good');
+        // $filename = $arguments->get('filename');
         // where to?
 
         return new ResponseSuccess(['id' => '123']);
