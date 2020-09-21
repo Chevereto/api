@@ -13,18 +13,18 @@ declare(strict_types=1);
 
 namespace Chevereto\Users;
 
-use Chevereto\Permissions\UserPermissions;
+use Chevereto\Permissions\Permissions;
 
 final class User
 {
-    private UserPermissions $permissions;
+    private Permissions $permissions;
 
-    public function __construct(UserPermissions $permissions)
+    public function __construct(Permissions $permissions)
     {
         $this->permissions = $permissions;
     }
 
-    public function permissions(): UserPermissions
+    public function permissions(): Permissions
     {
         return $this->permissions;
     }

@@ -13,17 +13,15 @@ declare(strict_types=1);
 
 namespace Chevereto\Permissions\Conditions;
 
-use Chevere\Components\Permission\Condition;
-
-final class ConditionCanUseApp extends Condition
+final class ConditionImageRemoveExif extends Condition
 {
     public function getDescription(): string
     {
-        return 'Determines if able to use the application.';
+        return 'Determines if image EXIF information should be removed.';
     }
 
     public function getDefault(): bool
     {
-        return true;
+        return false;
     }
 }

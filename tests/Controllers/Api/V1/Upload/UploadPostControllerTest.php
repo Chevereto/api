@@ -16,8 +16,6 @@ namespace CheveretoTests\Controllers\Api\V1\Upload;
 use Chevere\Components\Parameter\Arguments;
 use Chevere\Interfaces\Response\ResponseSuccessInterface;
 use Chevereto\Controllers\Api\V1\Upload\UploadPostController;
-use Chevereto\Permissions\Conditions\ConditionCanUseApp;
-use Chevereto\Vendor\rodolfoberrios\SepiaFilter\Permissions\Conditions\ConditionApply;
 use PHPUnit\Framework\TestCase;
 
 final class UploadPostControllerTest extends TestCase

@@ -13,14 +13,11 @@ declare(strict_types=1);
 
 namespace Chevereto\Permissions;
 
-use Chevere\Components\Permission\Conditions;
-use Chevere\Components\Permission\Enums;
 use Chevere\Interfaces\Permission\ConditionsInterface;
 use Chevere\Interfaces\Permission\EnumsInterface;
 use Chevere\Interfaces\Permission\RangesInterface;
-use Chevereto\Permissions\Conditions\ConditionCanUseApp;
 
-final class UserPermissions
+final class Permissions
 {
     private ConditionsInterface $conditions;
 
@@ -28,7 +25,7 @@ final class UserPermissions
 
     private RangesInterface $ranges;
 
-    public function withConditions(ConditionsInterface $conditions): UserPermissions
+    public function withConditions(ConditionsInterface $conditions): Permissions
     {
         $new = clone $this;
         $new->conditions = $conditions;
@@ -36,7 +33,7 @@ final class UserPermissions
         return $new;
     }
 
-    public function withEnums(EnumsInterface $enums): UserPermissions
+    public function withEnums(EnumsInterface $enums): Permissions
     {
         $new = clone $this;
         $new->enums = $enums;
@@ -44,7 +41,7 @@ final class UserPermissions
         return $new;
     }
 
-    public function withRanges(RangesInterface $ranges): UserPermissions
+    public function withRanges(RangesInterface $ranges): Permissions
     {
         $new = clone $this;
         $new->ranges = $ranges;
@@ -67,5 +64,3 @@ final class UserPermissions
         return $this->ranges;
     }
 }
- 
-$conditions = (new Conditions)->withAdded(new ConditionCanUseApp(true));

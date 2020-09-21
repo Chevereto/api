@@ -11,15 +11,15 @@
 
 declare(strict_types=1);
 
-namespace Chevereto\Vendor\rodolfoberrios\SepiaFilter\Permissions\Conditions;
+namespace Chevereto\Permissions\Conditions;
 
-use Chevereto\Permissions\Conditions\Condition;
+use Chevere\Components\Permission\Condition;
 
-final class ConditionApply extends Condition
+final class ConditionUseApp extends Condition
 {
     public function getDescription(): string
     {
-        return 'Determines if able to use the sepia filter.';
+        return 'Determines if able to use the application.';
     }
 
     public function getDefault(): bool
