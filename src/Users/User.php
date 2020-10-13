@@ -13,7 +13,7 @@ declare(strict_types=1);
 
 namespace Chevereto\Users;
 
-use Chevereto\Permissions\Permissions;
+use Chevereto\Attributes\Permissions;
 
 final class User
 {

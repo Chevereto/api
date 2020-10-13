@@ -11,7 +11,7 @@
 
 declare(strict_types=1);
 
-namespace Chevereto\Permissions\Conditions;
+namespace Chevereto\Attributes\Conditions;
 
 final class ConditionImageRemoveExif extends Condition
 {

@@ -11,7 +11,7 @@
 
 declare(strict_types=1);
 
-namespace Chevereto\Permissions\Conditions;
+namespace Chevereto\Attributes\Conditions;
 
 use Chevere\Components\Permission\Condition as BaseCondition;
 use Chevere\Components\Str\StrBool;

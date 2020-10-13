@@ -13,7 +13,7 @@ declare(strict_types=1);
 
 namespace Chevereto\Vendor\rodolfoberrios\SepiaFilter\Permissions\Conditions;
 
-use Chevereto\Permissions\Conditions\Condition;
+use Chevereto\Attributes\Conditions\Condition;
 
 final class ConditionApplyFilter extends Condition
 {

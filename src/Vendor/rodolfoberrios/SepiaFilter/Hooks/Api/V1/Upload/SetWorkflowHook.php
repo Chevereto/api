@@ -11,7 +11,7 @@
 
 declare(strict_types=1);
 
-namespace Chevereto\Vendor\rodolfoberrios\SepiaFilter\Api\V1\Upload;
+namespace Chevereto\Vendor\rodolfoberrios\SepiaFilter\Hooks\Api\V1\Upload;
 
 use Chevere\Components\Workflow\Task;
 use Chevere\Interfaces\Plugin\Plugs\Hooks\HookInterface;
