@@ -96,7 +96,10 @@ final class UploadPostController extends Controller implements PluggableHooksInt
             ->withAdded(
                 'upload',
                 (new Task(UploadImage::class))
-                    ->withArguments(['filename' => '${filename}'])
+                    ->withArguments([
+                        'filename' => '${filename}',
+                        'userId' => '${userId}'
+                    ])
             );
     }
 
@@ -145,7 +148,10 @@ final class UploadPostController extends Controller implements PluggableHooksInt
 
         $temp_file = 'eee';
 
-        $array = ['filename' => $temp_file];
+        $array = [
+            'filename' => $temp_file,
+            'userId' => null,
+        ];
         $workflowRun = workflowRunner(new WorkflowRun($this->workflow, $array));
 
         return new ResponseSuccess([
