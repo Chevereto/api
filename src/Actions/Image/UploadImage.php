@@ -33,8 +33,11 @@ class UploadImage extends Action implements ServiceableInterface
     public function getParameters(): ParametersInterface
     {
         return (new Parameters)
-        ->withAdded(new Parameter('filename'))
-        ->withAdded(new ParameterOptional('userId'));
+        ->withAdded(new Parameter('source'))
+        ->withAdded(new Parameter('uploadPath'))
+        ->withAdded(new Parameter('naming'))
+        ->withAdded(new Parameter('storageId'))
+        ->withAdded(new Parameter('userId'));
     }
 
     public function getServiceProviders(): ServiceProvidersInterface
@@ -55,14 +58,14 @@ class UploadImage extends Action implements ServiceableInterface
     public function run(ArgumentsInterface $arguments): ResponseInterface
     {
         /** UploadToWebsite */
-        // user
-        // check duplicates (md5, perceptual hash)
-        // pick storage id
-        // pick upload path
-        // pick filenaming
-        // pick default options for Upload
-        // dummy row for 'id" filenaming (name the actual file just like the ID)
-        // validate min/max stuff
+        //p user
+        //x check duplicates (md5, perceptual hash)
+        //p pick storage id
+        //p pick upload path
+        //p pick filenaming
+        //u pick default options for Upload
+        //? dummy row for 'id" filenaming (name the actual file just like the ID)
+        //?? validate min/max stuff
         // autoresize large images
         // generate medium + thumb -> removed, use image server on-the-fly
         // validate storage capacity, failover to *any if needed

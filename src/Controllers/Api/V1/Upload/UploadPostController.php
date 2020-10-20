@@ -87,17 +87,17 @@ final class UploadPostController extends Controller implements PluggableHooksInt
 
     public function getWorkflow(): WorkflowInterface
     {
-        return (new Workflow('api-v1-upload-get-controller'))
+        return (new Workflow(__CLASS__))
             ->withAdded(
                 'validate',
                 (new Task(ValidateImage::class))
-                    ->withArguments(['filename' => '${filename}'])
+                    ->withArguments(['source' => '${source}'])
             )
             ->withAdded(
                 'upload',
                 (new Task(UploadImage::class))
                     ->withArguments([
-                        'filename' => '${filename}',
+                        'source' => '${source}',
                         'userId' => '${userId}'
                     ])
             );
@@ -149,7 +149,7 @@ final class UploadPostController extends Controller implements PluggableHooksInt
         $temp_file = 'eee';
 
         $array = [
-            'filename' => $temp_file,
+            'source' => $temp_file,
             'userId' => null,
         ];
         $workflowRun = workflowRunner(new WorkflowRun($this->workflow, $array));
