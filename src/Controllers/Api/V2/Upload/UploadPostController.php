@@ -16,14 +16,27 @@ namespace Chevereto\Controllers\Api\V2\Upload;
 use Chevere\Components\Controller\Controller;
 use Chevere\Components\Parameter\Parameter;
 use Chevere\Components\Parameter\Parameters;
+use Chevere\Components\Plugin\PluggableAnchors;
+use Chevere\Components\Plugin\Plugs\Hooks\Traits\PluggableHooksTrait;
 use Chevere\Components\Regex\Regex;
 use Chevere\Components\Response\ResponseSuccess;
 use Chevere\Interfaces\Parameter\ArgumentsInterface;
 use Chevere\Interfaces\Parameter\ParametersInterface;
+use Chevere\Interfaces\Plugin\PluggableAnchorsInterface;
+use Chevere\Interfaces\Plugin\Plugs\Hooks\PluggableHooksInterface;
 use Chevere\Interfaces\Response\ResponseInterface;
 
-final class UploadPostController extends Controller
+final class UploadPostController extends Controller implements PluggableHooksInterface
 {
+    use PluggableHooksTrait;
+
+    public static function getHookAnchors(): PluggableAnchorsInterface
+    {
+        return (new PluggableAnchors)
+            ->withAdded('setParameters')
+            ->withAdded('setWorkflow');
+    }
+
     public function getDescription(): string
     {
         return 'Uploads the attached resource.';
@@ -36,6 +49,16 @@ final class UploadPostController extends Controller
                 new Parameter('source', new Regex('/.*/'))
             );
     }
+
+    // public function setUp(): ControllerInterface
+    // {
+    //     $new = clone $this;
+    //     $new->workflow = $this->getWorkflow();
+    //     $new->hook('setParameters', $new->parameters);
+    //     $new->hook('setWorkflow', $new->workflow);
+
+    //     return $new;
+    // }
 
     public function run(ArgumentsInterface $arguments): ResponseInterface
     {

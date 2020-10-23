@@ -15,6 +15,8 @@ namespace CheveretoTests\Controllers\Api\V1\Upload;
 
 use Chevere\Components\Parameter\Arguments;
 use Chevere\Interfaces\Response\ResponseSuccessInterface;
+use Chevereto\Components\Settings;
+use Chevereto\Components\User;
 use Chevereto\Controllers\Api\V1\Upload\UploadPostController;
 use PHPUnit\Framework\TestCase;
 use function Safe\json_encode;
@@ -29,11 +31,21 @@ final class UploadPostControllerTest extends TestCase
             $controller->getParameters(),
             [
                 'source' => 'string source',
-                'key' => 'some key',
+                'key' => 'api-key-value',
                 // 'format' => 'json' // auto-filled
             ]
         );
-        $controller = $controller->setUp();
+        $controller = $controller
+            ->setUp()
+            ->withUser(new User)
+            ->withSettings(
+                (new Settings)
+                    ->withPut('apiV1Key', 'api-key-value')
+                    ->withPut('uploadPath', '2020/10/23')
+                    ->withPut('naming', 'original')
+                    ->withPut('storageId', '123')
+            );
+
         $response = $controller->run($arguments);
         $this->assertInstanceOf(ResponseSuccessInterface::class, $response);
         $this->assertSame(json_encode(['id' => '123'], JSON_PRETTY_PRINT), $response->data()['raw']);

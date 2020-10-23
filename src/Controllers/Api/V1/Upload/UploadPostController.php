@@ -15,12 +15,9 @@ namespace Chevereto\Controllers\Api\V1\Upload;
 
 use Chevere\Components\Controller\Controller;
 use Chevere\Components\Message\Message;
-use Chevere\Components\Parameter\Parameter;
 use Chevere\Components\Parameter\ParameterOptional;
 use Chevere\Components\Parameter\ParameterRequired;
 use Chevere\Components\Parameter\Parameters;
-use Chevere\Components\Plugin\PluggableAnchors;
-use Chevere\Components\Plugin\Plugs\Hooks\Traits\PluggableHooksTrait;
 use Chevere\Components\Regex\Regex;
 use Chevere\Components\Response\ResponseSuccess;
 use Chevere\Components\Serialize\Unserialize;
@@ -34,15 +31,14 @@ use Chevere\Exceptions\Core\InvalidArgumentException;
 use Chevere\Interfaces\Controller\ControllerInterface;
 use Chevere\Interfaces\Parameter\ArgumentsInterface;
 use Chevere\Interfaces\Parameter\ParametersInterface;
-use Chevere\Interfaces\Plugin\PluggableAnchorsInterface;
-use Chevere\Interfaces\Plugin\Plugs\Hooks\PluggableHooksInterface;
 use Chevere\Interfaces\Response\ResponseInterface;
 use Chevere\Interfaces\Service\ServiceableInterface;
 use Chevere\Interfaces\Service\ServiceProvidersInterface;
 use Chevere\Interfaces\Workflow\WorkflowInterface;
 use Chevereto\Actions\Image\UploadImage;
 use Chevereto\Actions\Image\ValidateImage;
-use Chevereto\Users\User;
+use Chevereto\Components\Settings;
+use Chevereto\Components\User;
 use Laminas\Uri\UriFactory;
 use function Chevere\Components\Workflow\workflowRunner;
 use function Safe\fclose;
@@ -51,18 +47,19 @@ use function Safe\fwrite;
 use function Safe\stream_filter_append;
 use function Safe\tempnam;
 
-final class UploadPostController extends Controller implements PluggableHooksInterface, ServiceableInterface
+final class UploadPostController extends Controller implements ServiceableInterface
 {
-    use PluggableHooksTrait;
-
     private User $user;
+
+    private Settings $settings;
 
     private WorkflowInterface $workflow;
 
     public function getServiceProviders(): ServiceProvidersInterface
     {
         return (new ServiceProviders($this))
-            ->withAdded('withUser');
+            ->withAdded('withUser')
+            ->withAdded('withSettings');
     }
 
     public function withUser(User $user): self
@@ -73,11 +70,13 @@ final class UploadPostController extends Controller implements PluggableHooksInt
         return $new;
     }
 
-    public static function getHookAnchors(): PluggableAnchorsInterface
+    public function withSettings(Settings $settings): self
     {
-        return (new PluggableAnchors)
-            ->withAdded('setParameters')
-            ->withAdded('setWorkflow');
+        $settings->assertHasKey('apiV1Key', 'uploadPath', 'naming', 'storageId');
+        $new = clone $this;
+        $new->settings = $settings;
+
+        return $new;
     }
 
     public function getDescription(): string
@@ -105,16 +104,6 @@ final class UploadPostController extends Controller implements PluggableHooksInt
             );
     }
 
-    public function setUp(): ControllerInterface
-    {
-        $new = clone $this;
-        $new->workflow = $this->getWorkflow();
-        $new->hook('setParameters', $new->parameters);
-        $new->hook('setWorkflow', $new->workflow);
-
-        return $new;
-    }
-
     public function getWorkflow(): WorkflowInterface
     {
         return (new Workflow('upload'))
@@ -137,14 +126,22 @@ final class UploadPostController extends Controller implements PluggableHooksInt
             );
     }
 
+    public function setUp(): ControllerInterface
+    {
+        $new = clone $this;
+        $new->workflow = $this->getWorkflow();
+
+        return $new;
+    }
+
     public function run(ArgumentsInterface $arguments): ResponseInterface
     {
-        // if ($arguments->get('key') != __FILE__) {
-        //     throw new InvalidArgumentException(
-        //         new Message('Invalid API key provided'),
-        //         100
-        //     );
-        // }
+        if ($arguments->get('key') !== $this->settings->get('apiV1Key')) {
+            throw new InvalidArgumentException(
+                new Message('Invalid API key provided'),
+                100
+            );
+        }
         // $source will be a serialized PHP array if _FILES (+tryFiles attribute)
         $source = $arguments->get('source');
         try {
@@ -156,7 +153,6 @@ final class UploadPostController extends Controller implements PluggableHooksInt
             if ($uri->isValid()) {
                 // G\fetch_url($source, $uploadFile);
             } else {
-                // $source = trim(preg_replace('/\s+/', '', $source));
                 try {
                     $this->assertBase64String($source);
                     $this->storeDecodedBase64String($source, $uploadFile);
@@ -170,11 +166,11 @@ final class UploadPostController extends Controller implements PluggableHooksInt
         }
         $array = [
             'filename' => $uploadFile,
-            'uploadPath' => '2020/10/22',
-            'naming' => 'original|random|mixed',
-            'storageId' => '123',
-            'userId' => '321',
-            'albumId' => '111',
+            'uploadPath' => $this->settings->get('uploadPath'),
+            'naming' => $this->settings->get('naming'),
+            'storageId' => $this->settings->get('storageId'),
+            'userId' => (string) $this->user->id(),
+            'albumId' => '',
         ];
         $workflowRun = workflowRunner(new WorkflowRun($this->workflow, $array));
         $data = $workflowRun->get('upload')->data();
