@@ -30,15 +30,13 @@ class ValidateImage extends Action
             ->withAdded(new ParameterRequired('extensions'))
             ->withAdded(new ParameterRequired('maxWidth'))
             ->withAdded(new ParameterRequired('maxHeight'))
-            ->withAdded(new ParameterRequired('maxBytes'))
             ->withAdded(new ParameterRequired('minWidth'))
-            ->withAdded(new ParameterRequired('minHeight'))
-            ->withAdded(new ParameterRequired('minBytes'));
+            ->withAdded(new ParameterRequired('minHeight'));
     }
 
     public function run(ArgumentsInterface $arguments): ResponseInterface
     {
-        $image = $arguments->get('filename');
+        $filename = $arguments->get('filename');
         // validate integrity
         // get real extension - fix it
         return new ResponseSuccess([]);

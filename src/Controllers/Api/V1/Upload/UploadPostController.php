@@ -35,6 +35,7 @@ use Chevere\Interfaces\Response\ResponseInterface;
 use Chevere\Interfaces\Service\ServiceableInterface;
 use Chevere\Interfaces\Service\ServiceProvidersInterface;
 use Chevere\Interfaces\Workflow\WorkflowInterface;
+use Chevereto\Actions\File\ValidateFile;
 use Chevereto\Actions\Image\UploadImage;
 use Chevereto\Actions\Image\ValidateImage;
 use Chevereto\Components\Settings;
@@ -111,31 +112,42 @@ final class UploadPostController extends Controller implements ServiceableInterf
 
     public function getWorkflow(): WorkflowInterface
     {
-        return (new Workflow('upload'))
+        return (new Workflow('upload-api-v1'))
             ->withAdded(
-                'validate',
+                'validate-file',
+                (new Task(ValidateFile::class))
+                    ->withArguments(
+                        [
+                            'extensions' => '${extensions}',
+                            'filename' => '${filename}',
+                            'maxBytes' => '${maxBytes}',
+                            'minBytes' => '${minBytes}',
+                        ]
+                    )
+            )
+            ->withAdded(
+                'validate-image',
                 (new Task(ValidateImage::class))
-                    ->withArguments([
-                        'filename' => '${filename}',
-                        'extensions' => '${extensions}',
-                        'maxWidth' => '${maxWidth}',
-                        'maxHeight' => '${maxHeight}',
-                        'maxBytes' => '${maxBytes}',
-                        'minWidth' => '${minWidth}',
-                        'minHeight' => '${minHeight}',
-                        'minBytes' => '${minBytes}',
-                    ])
+                    ->withArguments(
+                        [
+                            'filename' => '${filename}',
+                            'maxHeight' => '${maxHeight}',
+                            'maxWidth' => '${maxWidth}',
+                            'minHeight' => '${minHeight}',
+                            'minWidth' => '${minWidth}',
+                        ]
+                    )
             )
             ->withAdded(
                 'upload',
                 (new Task(UploadImage::class))
                     ->withArguments([
+                        'albumId' => '${albumId}',
                         'filename' => '${filename}',
-                        'uploadPath' => '${uploadPath}',
                         'naming' => '${naming}',
                         'storageId' => '${storageId}',
+                        'uploadPath' => '${uploadPath}',
                         'userId' => '${userId}',
-                        'albumId' => '${albumId}',
                     ])
             );
     }

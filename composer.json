@@ -12,7 +12,8 @@
     "require": {
         "chevere/chevere": "dev-master",
         "phpunit/phpunit": "^9.2",
-        "laminas/laminas-uri": "^2.7"
+        "laminas/laminas-uri": "^2.7",
+        "ralouphie/mimey": "^2.1"
     },
     "autoload": {
         "psr-4": {
