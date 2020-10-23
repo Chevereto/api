@@ -17,34 +17,61 @@ use Chevere\Components\Controller\Controller;
 use Chevere\Components\Message\Message;
 use Chevere\Components\Parameter\Parameter;
 use Chevere\Components\Parameter\ParameterOptional;
+use Chevere\Components\Parameter\ParameterRequired;
 use Chevere\Components\Parameter\Parameters;
 use Chevere\Components\Plugin\PluggableAnchors;
 use Chevere\Components\Plugin\Plugs\Hooks\Traits\PluggableHooksTrait;
 use Chevere\Components\Regex\Regex;
 use Chevere\Components\Response\ResponseSuccess;
+use Chevere\Components\Serialize\Unserialize;
+use Chevere\Components\Service\ServiceProviders;
 use Chevere\Components\Str\StrBool;
 use Chevere\Components\Workflow\Task;
 use Chevere\Components\Workflow\Workflow;
 use Chevere\Components\Workflow\WorkflowRun;
+use Chevere\Exceptions\Core\Exception;
 use Chevere\Exceptions\Core\InvalidArgumentException;
-use Chevere\Exceptions\Core\RuntimeException;
 use Chevere\Interfaces\Controller\ControllerInterface;
 use Chevere\Interfaces\Parameter\ArgumentsInterface;
 use Chevere\Interfaces\Parameter\ParametersInterface;
 use Chevere\Interfaces\Plugin\PluggableAnchorsInterface;
 use Chevere\Interfaces\Plugin\Plugs\Hooks\PluggableHooksInterface;
 use Chevere\Interfaces\Response\ResponseInterface;
+use Chevere\Interfaces\Service\ServiceableInterface;
+use Chevere\Interfaces\Service\ServiceProvidersInterface;
 use Chevere\Interfaces\Workflow\WorkflowInterface;
 use Chevereto\Actions\Image\UploadImage;
 use Chevereto\Actions\Image\ValidateImage;
+use Chevereto\Users\User;
 use Laminas\Uri\UriFactory;
 use function Chevere\Components\Workflow\workflowRunner;
+use function Safe\fclose;
+use function Safe\fopen;
+use function Safe\fwrite;
+use function Safe\stream_filter_append;
+use function Safe\tempnam;
 
-final class UploadPostController extends Controller implements PluggableHooksInterface
+final class UploadPostController extends Controller implements PluggableHooksInterface, ServiceableInterface
 {
     use PluggableHooksTrait;
 
+    private User $user;
+
     private WorkflowInterface $workflow;
+
+    public function getServiceProviders(): ServiceProvidersInterface
+    {
+        return (new ServiceProviders($this))
+            ->withAdded('withUser');
+    }
+
+    public function withUser(User $user): self
+    {
+        $new = clone $this;
+        $new->user = $user;
+
+        return $new;
+    }
 
     public static function getHookAnchors(): PluggableAnchorsInterface
     {
@@ -62,15 +89,18 @@ final class UploadPostController extends Controller implements PluggableHooksInt
     {
         return (new Parameters)
             ->withAdded(
-                (new Parameter('source'))
+                (new ParameterRequired('source'))
                     ->withDescription('A base64 image string OR an image URL. It also takes image multipart/form-data.')
             )
             ->withAdded(
-                (new Parameter('key'))
+                (new ParameterRequired('key'))
                     ->withDescription('API V1 key.')
             )
             ->withAdded(
-                (new ParameterOptional('format', new Regex('/^(json|redirect|txt)$/')))
+                (new ParameterOptional('format'))
+                    ->withAddedAttribute('tryFiles') // Flags controller runner to "try" the argument for _FILES
+                    ->withRegex(new Regex('/^(json|txt)$/'))
+                    ->withDefault('json')
                     ->withDescription('Response document output format. Defaults to `json`.')
             );
     }
@@ -87,75 +117,100 @@ final class UploadPostController extends Controller implements PluggableHooksInt
 
     public function getWorkflow(): WorkflowInterface
     {
-        return (new Workflow(__CLASS__))
+        return (new Workflow('upload'))
             ->withAdded(
                 'validate',
                 (new Task(ValidateImage::class))
-                    ->withArguments(['source' => '${source}'])
+                    ->withArguments(['filename' => '${filename}'])
             )
             ->withAdded(
                 'upload',
                 (new Task(UploadImage::class))
                     ->withArguments([
-                        'source' => '${source}',
-                        'userId' => '${userId}'
+                        'filename' => '${filename}',
+                        'uploadPath' => '${uploadPath}',
+                        'naming' => '${naming}',
+                        'storageId' => '${storageId}',
+                        'userId' => '${userId}',
+                        'albumId' => '${albumId}',
                     ])
             );
     }
 
     public function run(ArgumentsInterface $arguments): ResponseInterface
     {
-        /**
-         * @var string $source
-         */
-        // $raw_source = $arguments->get('source');
-        // $unserialize = @unserialize($raw_source);
-        // if ($unserialize === false) {
-        //     $temp_file = tempnam(sys_get_temp_dir(), 'chv.temp');
-        //     if ($temp_file === false || !is_writable($temp_file)) {
-        //         throw new RuntimeException(
-        //             new Message("Can't get a tempnam."),
-        //             200
-        //         );
-        //     }
-        //     $uri = UriFactory::factory($source);
-        //     if ($uri->isValid()) {
-        //         // Fetch $source to a $temp_file
-        //         G\fetch_url($raw_source, $temp_file);
-        //     } else {
-        //         $source = trim(preg_replace('/\s+/', '', $raw_source));
-        //         $double = base64_encode(base64_decode($source));
-        //         if (!(new StrBool($source))->same($double)) {
-        //             throw new InvalidArgumentException(
-        //                 new Message('Invalid base64 string.'),
-        //                 120
-        //             );
-        //         }
-        //         unset($double);
-        //         $fh = fopen($temp_file, 'w');
-        //         stream_filter_append($fh, 'convert.base64-decode', STREAM_FILTER_WRITE);
-        //         if (!@fwrite($fh, $source)) {
-        //             throw new InvalidArgumentException(
-        //                 new Message('Invalid base64 string.'),
-        //                 130
-        //             );
-        //         }
-        //         fclose($fh);
-        //     }
-        // } else {
-        //     $temp_file = $source['tmp_name'];
+        // if ($arguments->get('key') != __FILE__) {
+        //     throw new InvalidArgumentException(
+        //         new Message('Invalid API key provided'),
+        //         100
+        //     );
         // }
-
-        $temp_file = 'eee';
-
+        // $source will be a serialized PHP array if _FILES (+tryFiles attribute)
+        $source = $arguments->get('source');
+        try {
+            $unserialize = new Unserialize($source);
+            $uploadFile = $unserialize->var()['tmp_name'];
+        } catch (Exception $e) {
+            $uploadFile = tempnam(sys_get_temp_dir(), 'chv.temp');
+            $uri = UriFactory::factory($source);
+            if ($uri->isValid()) {
+                // G\fetch_url($source, $uploadFile);
+            } else {
+                // $source = trim(preg_replace('/\s+/', '', $source));
+                try {
+                    $this->assertBase64String($source);
+                    $this->storeDecodedBase64String($source, $uploadFile);
+                } catch (Exception $e) {
+                    throw new InvalidArgumentException(
+                        new Message('Invalid base64 string'),
+                        $e->getCode()
+                    );
+                }
+            }
+        }
         $array = [
-            'source' => $temp_file,
-            'userId' => null,
+            'filename' => $uploadFile,
+            'uploadPath' => '2020/10/22',
+            'naming' => 'original|random|mixed',
+            'storageId' => '123',
+            'userId' => '321',
+            'albumId' => '111',
         ];
         $workflowRun = workflowRunner(new WorkflowRun($this->workflow, $array));
+        $data = $workflowRun->get('upload')->data();
+        if ($arguments->get('format') === 'txt') {
+            $raw = $data['url_viewer'];
+        } else {
+            $raw = json_encode($data, JSON_PRETTY_PRINT);
+        }
 
         return new ResponseSuccess([
-            'id' => $workflowRun->get('upload')->data()['id'],
+            'raw' => $raw
         ]);
+    }
+
+    public function assertBase64String(string $string): void
+    {
+        $double = base64_encode(base64_decode($string));
+        if (!(new StrBool($string))->same($double)) {
+            throw new Exception(
+                new Message('Invalid base64 formatting'),
+                1100
+            );
+        }
+        unset($double);
+    }
+
+    public function storeDecodedBase64String(string $base64, string $path): void
+    {
+        $fh = fopen($path, 'w');
+        stream_filter_append($fh, 'convert.base64-decode', STREAM_FILTER_WRITE);
+        if (!fwrite($fh, $base64)) {
+            throw new Exception(
+                new Message('Unable to store decoded base64 string'),
+                1200
+            );
+        }
+        fclose($fh);
     }
 }

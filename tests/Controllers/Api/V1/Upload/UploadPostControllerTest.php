@@ -17,6 +17,7 @@ use Chevere\Components\Parameter\Arguments;
 use Chevere\Interfaces\Response\ResponseSuccessInterface;
 use Chevereto\Controllers\Api\V1\Upload\UploadPostController;
 use PHPUnit\Framework\TestCase;
+use function Safe\json_encode;
 
 final class UploadPostControllerTest extends TestCase
 {
@@ -29,12 +30,12 @@ final class UploadPostControllerTest extends TestCase
             [
                 'source' => 'string source',
                 'key' => 'some key',
-                'format' => 'json'
+                // 'format' => 'json' // auto-filled
             ]
         );
         $controller = $controller->setUp();
         $response = $controller->run($arguments);
         $this->assertInstanceOf(ResponseSuccessInterface::class, $response);
-        $this->assertSame('123', $response->data()['id']);
+        $this->assertSame(json_encode(['id' => '123'], JSON_PRETTY_PRINT), $response->data()['raw']);
     }
 }

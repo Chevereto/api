@@ -15,6 +15,7 @@ namespace Chevereto\Actions\Image;
 
 use Chevere\Components\Action\Action;
 use Chevere\Components\Parameter\Parameter;
+use Chevere\Components\Parameter\ParameterRequired;
 use Chevere\Components\Parameter\Parameters;
 use Chevere\Components\Response\ResponseSuccess;
 use Chevere\Interfaces\Parameter\ArgumentsInterface;
@@ -26,7 +27,7 @@ class ValidateImage extends Action
     public function getParameters(): ParametersInterface
     {
         return (new Parameters)
-            ->withAdded(new Parameter('filename'));
+            ->withAdded(new ParameterRequired('filename'));
     }
 
     public function run(ArgumentsInterface $arguments): ResponseInterface

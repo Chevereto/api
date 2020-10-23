@@ -15,7 +15,7 @@ namespace Chevereto\Actions\Image;
 
 use Chevere\Components\Action\Action;
 use Chevere\Components\Parameter\Parameter;
-use Chevere\Components\Parameter\ParameterOptional;
+use Chevere\Components\Parameter\ParameterRequired;
 use Chevere\Components\Parameter\Parameters;
 use Chevere\Components\Response\ResponseSuccess;
 use Chevere\Components\Service\ServiceProviders;
@@ -33,11 +33,12 @@ class UploadImage extends Action implements ServiceableInterface
     public function getParameters(): ParametersInterface
     {
         return (new Parameters)
-        ->withAdded(new Parameter('source'))
-        ->withAdded(new Parameter('uploadPath'))
-        ->withAdded(new Parameter('naming'))
-        ->withAdded(new Parameter('storageId'))
-        ->withAdded(new Parameter('userId'));
+        ->withAdded(new ParameterRequired('filename'))
+        ->withAdded(new ParameterRequired('uploadPath'))
+        ->withAdded(new ParameterRequired('naming'))
+        ->withAdded(new ParameterRequired('storageId'))
+        ->withAdded(new ParameterRequired('userId'))
+        ->withAdded(new ParameterRequired('albumId'));
     }
 
     public function getServiceProviders(): ServiceProvidersInterface
@@ -60,9 +61,9 @@ class UploadImage extends Action implements ServiceableInterface
         /** UploadToWebsite */
         //p user
         //x check duplicates (md5, perceptual hash)
-        //p pick storage id
-        //p pick upload path
-        //p pick filenaming
+        //x pick storage id
+        //x pick upload path
+        //x pick filenaming
         //u pick default options for Upload
         //? dummy row for 'id" filenaming (name the actual file just like the ID)
         //?? validate min/max stuff
