@@ -58,21 +58,12 @@ final class UploadPostController extends Controller implements ServiceableInterf
     public function getServiceProviders(): ServiceProvidersInterface
     {
         return (new ServiceProviders($this))
-            ->withAdded('withUser')
             ->withAdded('withSettings');
-    }
-
-    public function withUser(User $user): self
-    {
-        $new = clone $this;
-        $new->user = $user;
-
-        return $new;
     }
 
     public function withSettings(Settings $settings): self
     {
-        $settings->assertHasKey('apiV1Key', 'uploadPath', 'naming', 'storageId');
+        $settings->assertHasKey('userId', 'apiV1Key', 'uploadPath', 'naming', 'storageId');
         $new = clone $this;
         $new->settings = $settings;
 
@@ -138,7 +129,7 @@ final class UploadPostController extends Controller implements ServiceableInterf
     {
         if ($arguments->get('key') !== $this->settings->get('apiV1Key')) {
             throw new InvalidArgumentException(
-                new Message('Invalid API key provided'),
+                new Message('Invalid API V1 key provided'),
                 100
             );
         }
@@ -164,15 +155,19 @@ final class UploadPostController extends Controller implements ServiceableInterf
                 }
             }
         }
-        $array = [
-            'filename' => $uploadFile,
-            'uploadPath' => $this->settings->get('uploadPath'),
-            'naming' => $this->settings->get('naming'),
-            'storageId' => $this->settings->get('storageId'),
-            'userId' => (string) $this->user->id(),
-            'albumId' => '',
-        ];
-        $workflowRun = workflowRunner(new WorkflowRun($this->workflow, $array));
+        $workflowRun = workflowRunner(
+            new WorkflowRun(
+                $this->workflow,
+                [
+                    'filename' => $uploadFile,
+                    'uploadPath' => $this->settings->get('uploadPath'),
+                    'naming' => $this->settings->get('naming'),
+                    'storageId' => $this->settings->get('storageId'),
+                    'userId' => $this->settings->get('userId'),
+                    'albumId' => '',
+                ]
+            )
+        );
         $data = $workflowRun->get('upload')->data();
         if ($arguments->get('format') === 'txt') {
             $raw = $data['url_viewer'];

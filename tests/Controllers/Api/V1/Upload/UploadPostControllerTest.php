@@ -37,13 +37,13 @@ final class UploadPostControllerTest extends TestCase
         );
         $controller = $controller
             ->setUp()
-            ->withUser(new User)
             ->withSettings(
                 (new Settings)
                     ->withPut('apiV1Key', 'api-key-value')
                     ->withPut('uploadPath', '2020/10/23')
                     ->withPut('naming', 'original')
                     ->withPut('storageId', '123')
+                    ->withPut('userId', '123')
             );
 
         $response = $controller->run($arguments);
