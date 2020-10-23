@@ -63,7 +63,21 @@ final class UploadPostController extends Controller implements ServiceableInterf
 
     public function withSettings(Settings $settings): self
     {
-        $settings->assertHasKey('userId', 'apiV1Key', 'uploadPath', 'naming', 'storageId');
+        $settings->assertHasKey(
+            'apiV1Key',
+            'extensions',
+            'maxBytes',
+            'maxHeight',
+            'maxWidth',
+            'minBytes',
+            'minHeight',
+            'minWidth',
+            'naming',
+            'storageId',
+            'uploadPath',
+            'userId',
+        );
+
         $new = clone $this;
         $new->settings = $settings;
 
@@ -101,7 +115,16 @@ final class UploadPostController extends Controller implements ServiceableInterf
             ->withAdded(
                 'validate',
                 (new Task(ValidateImage::class))
-                    ->withArguments(['filename' => '${filename}'])
+                    ->withArguments([
+                        'filename' => '${filename}',
+                        'extensions' => '${extensions}',
+                        'maxWidth' => '${maxWidth}',
+                        'maxHeight' => '${maxHeight}',
+                        'maxBytes' => '${maxBytes}',
+                        'minWidth' => '${minWidth}',
+                        'minHeight' => '${minHeight}',
+                        'minBytes' => '${minBytes}',
+                    ])
             )
             ->withAdded(
                 'upload',
@@ -155,17 +178,13 @@ final class UploadPostController extends Controller implements ServiceableInterf
                 }
             }
         }
+        $settings = $this->settings
+            ->withPut('filename', $uploadFile)
+            ->withPut('albumId', '');
         $workflowRun = workflowRunner(
             new WorkflowRun(
                 $this->workflow,
-                [
-                    'filename' => $uploadFile,
-                    'uploadPath' => $this->settings->get('uploadPath'),
-                    'naming' => $this->settings->get('naming'),
-                    'storageId' => $this->settings->get('storageId'),
-                    'userId' => $this->settings->get('userId'),
-                    'albumId' => '',
-                ]
+                $settings->mapCopy()->toArray()
             )
         );
         $data = $workflowRun->get('upload')->data();

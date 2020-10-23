@@ -26,7 +26,14 @@ class ValidateImage extends Action
     public function getParameters(): ParametersInterface
     {
         return (new Parameters)
-            ->withAdded(new ParameterRequired('filename'));
+            ->withAdded(new ParameterRequired('filename'))
+            ->withAdded(new ParameterRequired('extensions'))
+            ->withAdded(new ParameterRequired('maxWidth'))
+            ->withAdded(new ParameterRequired('maxHeight'))
+            ->withAdded(new ParameterRequired('maxBytes'))
+            ->withAdded(new ParameterRequired('minWidth'))
+            ->withAdded(new ParameterRequired('minHeight'))
+            ->withAdded(new ParameterRequired('minBytes'));
     }
 
     public function run(ArgumentsInterface $arguments): ResponseInterface

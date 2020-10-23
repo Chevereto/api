@@ -39,6 +39,13 @@ final class UploadPostControllerTest extends TestCase
             ->setUp()
             ->withSettings(
                 (new Settings)
+                    ->withPut('extensions', 'jpg|png|gif|webp')
+                    ->withPut('maxWidth', '20000')
+                    ->withPut('maxHeight', '20000')
+                    ->withPut('maxBytes', '20000000')
+                    ->withPut('minWidth', '20')
+                    ->withPut('minHeight', '20')
+                    ->withPut('minBytes', '1')
                     ->withPut('apiV1Key', 'api-key-value')
                     ->withPut('uploadPath', '2020/10/23')
                     ->withPut('naming', 'original')
