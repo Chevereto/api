@@ -26,6 +26,7 @@ use Chevere\Interfaces\Parameter\ArgumentsInterface;
 use Chevere\Interfaces\Parameter\ParametersInterface;
 use Chevere\Interfaces\Response\ResponseInterface;
 use Mimey\MimeTypes;
+use Throwable;
 use function Chevere\Components\Filesystem\fileForString;
 use function Safe\mime_content_type;
 
@@ -76,7 +77,7 @@ class ValidateFile extends Action
             $mimes = new MimeTypes;
             $extension = $mimes->getExtension($mime) ?? '';
             $this->assertExtension($extension);
-        } catch (InvalidArgumentException $e) {
+        } catch (Throwable $e) {
             return new ResponseFailure(
                 [
                     'message' => (new Message('%message% for file at %path%'))
