@@ -34,29 +34,12 @@ final class ValidateFileTest extends TestCase
         $response = $action->run($arguments);
         $this->assertSame(
             [
-                'filename' => __FILE__,
                 'bytes' => filesize(__FILE__),
                 'mime' => 'text/x-php',
                 'extension' => 'php'
             ],
             $response->data()
         );
-    }
-
-    public function testMinBytes(): void
-    {
-        $action = new ValidateFile;
-        $arguments = new Arguments(
-            $action->parameters(),
-            [
-                'filename' => __FILE__,
-                'extensions' => 'php',
-                'minBytes' => '20000000'
-            ]
-        );
-        $response = $action->run($arguments);
-        $this->assertInstanceOf(ResponseFailureInterface::class, $response);
-        $this->assertSame(1100, $response->data()['code']);
     }
 
     public function testMaxBytes(): void
@@ -77,6 +60,22 @@ final class ValidateFileTest extends TestCase
         $responseFailure = $action->run($badArguments);
         $this->assertInstanceOf(ResponseFailureInterface::class, $responseFailure);
         $this->assertSame(1101, $responseFailure->data()['code']);
+    }
+
+    public function testMinBytes(): void
+    {
+        $action = new ValidateFile;
+        $arguments = new Arguments(
+            $action->parameters(),
+            [
+                'filename' => __FILE__,
+                'extensions' => 'php',
+                'minBytes' => '20000000'
+            ]
+        );
+        $response = $action->run($arguments);
+        $this->assertInstanceOf(ResponseFailureInterface::class, $response);
+        $this->assertSame(1100, $response->data()['code']);
     }
 
     public function testExtension(): void

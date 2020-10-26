@@ -71,11 +71,11 @@ class ValidateFile extends Action
             $this->minBytes = (int) $this->arguments->get('minBytes');
             $filename = $this->arguments->get('filename');
             $bytes = filesize($filename);
-            $this->assertMinBytes($bytes);
             if ($this->arguments->has('maxBytes')) {
                 $this->maxBytes = (int) $this->arguments->get('maxBytes');
                 $this->assertMaxBytes($bytes);
             }
+            $this->assertMinBytes($bytes);
             $mime = mime_content_type($filename);
             $mimes = new MimeTypes;
             $extension = $mimes->getExtension($mime) ?? '';
@@ -83,7 +83,7 @@ class ValidateFile extends Action
         } catch (Throwable $e) {
             return new ResponseFailure(
                 [
-                    'message' => (new Message('%message% for file at %path%'))
+                    'message' => (new Message('%message% for file %path%'))
                         ->strong('%path%', $filename)
                         ->strtr('%message%', $e->getMessage())
                         ->toString(),
@@ -93,23 +93,10 @@ class ValidateFile extends Action
         }
 
         return new ResponseSuccess([
-            'filename' => $this->arguments->get('filename'),
             'bytes' => $bytes,
             'mime' => $mime,
             'extension' => $extension
         ]);
-    }
-
-    private function assertMinBytes(int $bytes)
-    {
-        if ($bytes < $this->minBytes) {
-            throw new InvalidArgumentException(
-                (new Message("Filesize (%fileSize%) doesn't meet the minimum bytes required (%required%)"))
-                    ->code('%fileSize%', (string) $bytes . ' B')
-                    ->code('%required%', (string) $this->minBytes . ' B'),
-                1100
-            );
-        }
     }
 
     private function assertMaxBytes(int $bytes): void
@@ -119,6 +106,18 @@ class ValidateFile extends Action
                 (new Message('Filesize (%fileSize%) exceeds the maximum bytes allowed (%allowed%)'))
                     ->code('%fileSize%', (string) $bytes . ' B')
                     ->code('%allowed%', (string) $this->maxBytes . ' B'),
+                1100
+            );
+        }
+    }
+
+    private function assertMinBytes(int $bytes)
+    {
+        if ($bytes < $this->minBytes) {
+            throw new InvalidArgumentException(
+                (new Message("Filesize (%fileSize%) doesn't meet the minimum bytes required (%required%)"))
+                    ->code('%fileSize%', (string) $bytes . ' B')
+                    ->code('%required%', (string) $this->minBytes . ' B'),
                 1101
             );
         }
