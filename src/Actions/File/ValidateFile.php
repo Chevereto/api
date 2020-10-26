@@ -27,16 +27,18 @@ use Chevere\Interfaces\Parameter\ParametersInterface;
 use Chevere\Interfaces\Response\ResponseInterface;
 use Mimey\MimeTypes;
 use Throwable;
-use function Chevere\Components\Filesystem\fileForString;
+use function Safe\filesize;
 use function Safe\mime_content_type;
 
 class ValidateFile extends Action
 {
     private array $extensions;
 
+    private int $maxBytes;
+
     private int $minBytes;
 
-    private int $maxBytes;
+    private ArgumentsInterface $arguments;
 
     public function getParameters(): ParametersInterface
     {
@@ -63,17 +65,18 @@ class ValidateFile extends Action
 
     public function run(ArgumentsInterface $arguments): ResponseInterface
     {
-        $this->extensions = explode(',', $arguments->get('extensions'));
-        $this->minBytes = (int) $arguments->get('minBytes');
         try {
-            $file = fileForString($arguments->get('filename'));
-            $bytes = $file->getSize();
+            $this->arguments = $arguments;
+            $this->extensions = explode(',', $this->arguments->get('extensions')) ?: [];
+            $this->minBytes = (int) $this->arguments->get('minBytes');
+            $filename = $this->arguments->get('filename');
+            $bytes = filesize($filename);
             $this->assertMinBytes($bytes);
-            if ($arguments->has('maxBytes')) {
-                $this->maxBytes = (int) $arguments->get('maxBytes');
+            if ($this->arguments->has('maxBytes')) {
+                $this->maxBytes = (int) $this->arguments->get('maxBytes');
                 $this->assertMaxBytes($bytes);
             }
-            $mime = mime_content_type($file->path()->absolute());
+            $mime = mime_content_type($filename);
             $mimes = new MimeTypes;
             $extension = $mimes->getExtension($mime) ?? '';
             $this->assertExtension($extension);
@@ -81,7 +84,7 @@ class ValidateFile extends Action
             return new ResponseFailure(
                 [
                     'message' => (new Message('%message% for file at %path%'))
-                        ->strong('%path%', $file->path()->absolute())
+                        ->strong('%path%', $filename)
                         ->strtr('%message%', $e->getMessage())
                         ->toString(),
                     'code' => $e->getCode()
@@ -90,7 +93,7 @@ class ValidateFile extends Action
         }
 
         return new ResponseSuccess([
-            'filename' => $arguments->get('filename'),
+            'filename' => $this->arguments->get('filename'),
             'bytes' => $bytes,
             'mime' => $mime,
             'extension' => $extension

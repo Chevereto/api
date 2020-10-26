@@ -58,12 +58,12 @@ class ValidateImage extends Action
     public function run(ArgumentsInterface $arguments): ResponseInterface
     {
         try {
-            $file = fileForString($arguments->get('filename'));
+            $filename = $arguments->get('filename');
         } catch (Throwable $e) {
             return new ResponseFailure(
                 [
                     'message' => (new Message('%message% for file at %path%'))
-                        ->strong('%path%', $file->path()->absolute())
+                        ->strong('%path%', $filename->path()->absolute())
                         ->strtr('%message%', $e->getMessage())
                         ->toString(),
                     'code' => $e->getCode()
