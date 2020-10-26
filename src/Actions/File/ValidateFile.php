@@ -79,7 +79,7 @@ class ValidateFile extends Action
         } catch (InvalidArgumentException $e) {
             return new ResponseFailure(
                 [
-                    'message' => (new Message('File %path% %message%'))
+                    'message' => (new Message('%message% for file at %path%'))
                         ->strong('%path%', $file->path()->absolute())
                         ->strtr('%message%', $e->getMessage())
                         ->toString(),
@@ -100,9 +100,9 @@ class ValidateFile extends Action
     {
         if ($bytes < $this->minBytes) {
             throw new InvalidArgumentException(
-                (new Message("size (%fileSize%) doesn't meet the minimum bytes required (%allowed%)"))
+                (new Message("Filesize (%fileSize%) doesn't meet the minimum bytes required (%required%)"))
                     ->code('%fileSize%', (string) $bytes . ' B')
-                    ->code('%allowed%', (string) $this->minBytes . ' B'),
+                    ->code('%required%', (string) $this->minBytes . ' B'),
                 1100
             );
         }
@@ -112,7 +112,7 @@ class ValidateFile extends Action
     {
         if ($bytes > $this->maxBytes) {
             throw new InvalidArgumentException(
-                (new Message('size (%fileSize%) exceeds the maximum bytes allowed (%allowed%)'))
+                (new Message('Filesize (%fileSize%) exceeds the maximum bytes allowed (%allowed%)'))
                     ->code('%fileSize%', (string) $bytes . ' B')
                     ->code('%allowed%', (string) $this->maxBytes . ' B'),
                 1101
@@ -125,14 +125,14 @@ class ValidateFile extends Action
         if ($extension === '') {
             // @codeCoverageIgnoreStart
             throw new InvalidArgumentException(
-                new Message('unable to detect extension'),
+                new Message('Unable to detect extension'),
                 1102
             );
             // @codeCoverageIgnoreEnd
         }
         if (!in_array($extension, $this->extensions)) {
             throw new InvalidArgumentException(
-                (new Message('extension %extension% is not in the list of allowed extensions: %allowed%'))
+                (new Message('Extension %extension% is not in the list of allowed extensions: %allowed%'))
                     ->code('%extension%', $extension)
                     ->code('%allowed%', implode(', ', $this->extensions)),
                 1103

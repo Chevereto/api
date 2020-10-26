@@ -27,7 +27,6 @@ class ValidateImage extends Action
     {
         return (new Parameters)
             ->withAdded(new ParameterRequired('filename'))
-            ->withAdded(new ParameterRequired('extensions'))
             ->withAdded(new ParameterRequired('maxWidth'))
             ->withAdded(new ParameterRequired('maxHeight'))
             ->withAdded(new ParameterRequired('minWidth'))

@@ -14,6 +14,7 @@ declare(strict_types=1);
 namespace Chevereto\Tests\Actions\File;
 
 use Chevere\Components\Parameter\Arguments;
+use Chevere\Components\Response\ResponseSuccess;
 use Chevere\Interfaces\Response\ResponseFailureInterface;
 use Chevereto\Actions\File\ValidateFile;
 use PHPUnit\Framework\TestCase;
@@ -61,17 +62,21 @@ final class ValidateFileTest extends TestCase
     public function testMaxBytes(): void
     {
         $action = new ValidateFile;
-        $arguments = new Arguments(
+        $parameters = [
+            'filename' => __FILE__,
+            'extensions' => 'php,txt',
+            'maxBytes' => '20000000'
+        ];
+        $arguments = new Arguments($action->parameters(), $parameters);
+        $responseSuccess = $action->run($arguments);
+        $this->assertInstanceOf(ResponseSuccess::class, $responseSuccess);
+        $badArguments = new Arguments(
             $action->parameters(),
-            [
-                'filename' => __FILE__,
-                'extensions' => 'php',
-                'maxBytes' => '1'
-            ]
+            array_merge($parameters, ['maxBytes' => '1'])
         );
-        $response = $action->run($arguments);
-        $this->assertInstanceOf(ResponseFailureInterface::class, $response);
-        $this->assertSame(1101, $response->data()['code']);
+        $responseFailure = $action->run($badArguments);
+        $this->assertInstanceOf(ResponseFailureInterface::class, $responseFailure);
+        $this->assertSame(1101, $responseFailure->data()['code']);
     }
 
     public function testExtension(): void

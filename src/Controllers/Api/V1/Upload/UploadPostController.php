@@ -152,7 +152,7 @@ final class UploadPostController extends Controller implements ServiceableInterf
             );
     }
 
-    public function setUp(): ControllerInterface
+    public function withSetUp(): self
     {
         $new = clone $this;
         $new->workflow = $this->getWorkflow();
@@ -193,10 +193,12 @@ final class UploadPostController extends Controller implements ServiceableInterf
         $settings = $this->settings
             ->withPut('filename', $uploadFile)
             ->withPut('albumId', '');
+        $settings = $settings->mapCopy()->toArray();
+        unset($settings['apiV1Key']);
         $workflowRun = workflowRunner(
             new WorkflowRun(
                 $this->workflow,
-                $settings->mapCopy()->toArray()
+                $settings
             )
         );
         $data = $workflowRun->get('upload')->data();
