@@ -26,7 +26,7 @@ use Chevere\Interfaces\Service\ServiceableInterface;
 use Chevere\Interfaces\Service\ServiceProvidersInterface;
 use Psr\Log\LoggerInterface;
 
-class UploadImage extends Action implements ServiceableInterface
+class UploadImageAction extends Action implements ServiceableInterface
 {
     private LoggerInterface $logger;
 

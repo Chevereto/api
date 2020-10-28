@@ -28,7 +28,7 @@ use Mimey\MimeTypes;
 use function Safe\filesize;
 use function Safe\mime_content_type;
 
-class ValidateFile extends Action
+class ValidateFileAction extends Action
 {
     private array $extensions;
 

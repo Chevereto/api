@@ -35,9 +35,9 @@ use Chevere\Interfaces\Response\ResponseInterface;
 use Chevere\Interfaces\Service\ServiceableInterface;
 use Chevere\Interfaces\Service\ServiceProvidersInterface;
 use Chevere\Interfaces\Workflow\WorkflowInterface;
-use Chevereto\Actions\File\ValidateFile;
-use Chevereto\Actions\Image\UploadImage;
-use Chevereto\Actions\Image\ValidateImage;
+use Chevereto\Actions\File\ValidateFileAction;
+use Chevereto\Actions\Image\UploadImageAction;
+use Chevereto\Actions\Image\ValidateImageAction;
 use Chevereto\Components\Settings;
 use Chevereto\Components\User;
 use Laminas\Uri\UriFactory;
@@ -115,7 +115,7 @@ final class UploadPostController extends Controller implements ServiceableInterf
         return (new Workflow('upload-api-v1'))
             ->withAdded(
                 'validate-file',
-                (new Task(ValidateFile::class))
+                (new Task(ValidateFileAction::class))
                     ->withArguments(
                         [
                             'extensions' => '${extensions}',
@@ -127,7 +127,7 @@ final class UploadPostController extends Controller implements ServiceableInterf
             )
             ->withAdded(
                 'validate-image',
-                (new Task(ValidateImage::class))
+                (new Task(ValidateImageAction::class))
                     ->withArguments(
                         [
                             'filename' => '${filename}',
@@ -140,7 +140,7 @@ final class UploadPostController extends Controller implements ServiceableInterf
             )
             ->withAdded(
                 'upload',
-                (new Task(UploadImage::class))
+                (new Task(UploadImageAction::class))
                     ->withArguments([
                         'albumId' => '${albumId}',
                         'filename' => '${filename}',

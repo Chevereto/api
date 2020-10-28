@@ -27,7 +27,7 @@ use Chevere\Interfaces\Response\ResponseInterface;
 use Intervention\Image\Image;
 use Intervention\Image\ImageManager;
 
-class ValidateImage extends Action
+class ValidateImageAction extends Action
 {
     private Image $image;
 

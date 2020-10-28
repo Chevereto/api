@@ -14,9 +14,9 @@ declare(strict_types=1);
 namespace Tests\Actions\Image;
 
 use Chevere\Components\Parameter\Arguments;
-use Chevereto\Actions\Image\ValidateImage;
-use Tests\Actions\Traits\ExpectInvalidArgumentExceptionCodeTrait;
+use Chevereto\Actions\Image\ValidateImageAction;
 use PHPUnit\Framework\TestCase;
+use Tests\Actions\Traits\ExpectInvalidArgumentExceptionCodeTrait;
 
 final class ValidateImageTest extends TestCase
 {
@@ -35,7 +35,7 @@ final class ValidateImageTest extends TestCase
 
     public function testConstruct(): void
     {
-        $action = new ValidateImage;
+        $action = new ValidateImageAction;
         $arguments = new Arguments(
             $action->parameters(),
             $this->getTestArguments([])
@@ -52,7 +52,7 @@ final class ValidateImageTest extends TestCase
 
     public function testMaxWidth(): void
     {
-        $action = new ValidateImage;
+        $action = new ValidateImageAction;
         $arguments = new Arguments(
             $action->parameters(),
             $this->getTestArguments([
@@ -65,7 +65,7 @@ final class ValidateImageTest extends TestCase
 
     public function testMaxHeight(): void
     {
-        $action = new ValidateImage;
+        $action = new ValidateImageAction;
         $arguments = new Arguments(
             $action->parameters(),
             $this->getTestArguments([
@@ -78,7 +78,7 @@ final class ValidateImageTest extends TestCase
 
     public function testMinWidth(): void
     {
-        $action = new ValidateImage;
+        $action = new ValidateImageAction;
         $arguments = new Arguments(
             $action->parameters(),
             $this->getTestArguments([
@@ -91,7 +91,7 @@ final class ValidateImageTest extends TestCase
 
     public function testMinHeight(): void
     {
-        $action = new ValidateImage;
+        $action = new ValidateImageAction;
         $arguments = new Arguments(
             $action->parameters(),
             $this->getTestArguments([

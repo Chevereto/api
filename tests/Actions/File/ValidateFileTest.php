@@ -15,7 +15,7 @@ namespace Tests\Actions\File;
 
 use Chevere\Components\Parameter\Arguments;
 use Chevere\Components\Response\ResponseSuccess;
-use Chevereto\Actions\File\ValidateFile;
+use Chevereto\Actions\File\ValidateFileAction;
 use PHPUnit\Framework\TestCase;
 use Tests\Actions\Traits\ExpectInvalidArgumentExceptionCodeTrait;
 
@@ -25,7 +25,7 @@ final class ValidateFileTest extends TestCase
 
     public function testConstruct(): void
     {
-        $action = new ValidateFile;
+        $action = new ValidateFileAction;
         $arguments = new Arguments(
             $action->parameters(),
             [
@@ -45,7 +45,7 @@ final class ValidateFileTest extends TestCase
 
     public function testMaxBytes(): void
     {
-        $action = new ValidateFile;
+        $action = new ValidateFileAction;
         $parameters = [
             'filename' => __FILE__,
             'extensions' => 'php,txt',
@@ -64,7 +64,7 @@ final class ValidateFileTest extends TestCase
 
     public function testMinBytes(): void
     {
-        $action = new ValidateFile;
+        $action = new ValidateFileAction;
         $arguments = new Arguments(
             $action->parameters(),
             [
@@ -79,7 +79,7 @@ final class ValidateFileTest extends TestCase
 
     public function testExtension(): void
     {
-        $action = new ValidateFile;
+        $action = new ValidateFileAction;
         $arguments = new Arguments(
             $action->parameters(),
             [
