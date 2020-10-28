@@ -18,7 +18,6 @@ use Chevere\Components\Message\Message;
 use Chevere\Components\Parameter\ParameterRequired;
 use Chevere\Components\Parameter\Parameters;
 use Chevere\Components\Regex\Regex;
-use Chevere\Components\Response\ResponseFailure;
 use Chevere\Components\Response\ResponseSuccess;
 use Chevere\Exceptions\Core\InvalidArgumentException;
 use Chevere\Interfaces\Message\MessageInterface;
@@ -27,7 +26,6 @@ use Chevere\Interfaces\Parameter\ParametersInterface;
 use Chevere\Interfaces\Response\ResponseInterface;
 use Intervention\Image\Image;
 use Intervention\Image\ImageManager;
-use Throwable;
 
 class ValidateImage extends Action
 {
@@ -70,29 +68,17 @@ class ValidateImage extends Action
 
     public function run(ArgumentsInterface $arguments): ResponseInterface
     {
-        try {
-            $filename = $arguments->get('filename');
-            $manager = new ImageManager(['driver' => 'Imagick']);
-            $this->image = $manager->make($filename);
-            $this->maxWidth = (int) $arguments->get('maxWidth');
-            $this->maxHeight = (int) $arguments->get('maxHeight');
-            $this->minWidth = (int) $arguments->get('minWidth');
-            $this->minHeight = (int) $arguments->get('minHeight');
-            $this->assertMaxWidth($this->image->width());
-            $this->assertMaxHeight($this->image->height());
-            $this->assertMinWidth($this->image->width());
-            $this->assertMinHeight($this->image->height());
-        } catch (Throwable $e) {
-            return new ResponseFailure(
-                [
-                    'message' => (new Message('%message% for file %path%'))
-                        ->strong('%path%', $filename)
-                        ->strtr('%message%', $e->getMessage())
-                        ->toString(),
-                    'code' => $e->getCode()
-                ]
-            );
-        }
+        $filename = $arguments->get('filename');
+        $manager = new ImageManager(['driver' => 'Imagick']);
+        $this->image = $manager->make($filename);
+        $this->maxWidth = (int) $arguments->get('maxWidth');
+        $this->maxHeight = (int) $arguments->get('maxHeight');
+        $this->minWidth = (int) $arguments->get('minWidth');
+        $this->minHeight = (int) $arguments->get('minHeight');
+        $this->assertMaxWidth($this->image->width());
+        $this->assertMaxHeight($this->image->height());
+        $this->assertMinWidth($this->image->width());
+        $this->assertMinHeight($this->image->height());
 
         return new ResponseSuccess([
             'width' => $this->image->width(),

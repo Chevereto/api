@@ -14,6 +14,7 @@ declare(strict_types=1);
 namespace Chevereto\Tests\Actions\Image;
 
 use Chevere\Components\Parameter\Arguments;
+use Chevere\Exceptions\Core\InvalidArgumentException;
 use Chevereto\Actions\Image\ValidateImage;
 use PHPUnit\Framework\TestCase;
 
@@ -28,6 +29,12 @@ final class ValidateImageTest extends TestCase
             'minWidth' => '100',
             'minHeight' => '100',
         ], $arguments);
+    }
+
+    private function expectInvalidArgumentException(int $code): void
+    {
+        $this->expectException(InvalidArgumentException::class);
+        $this->expectExceptionCode($code);
     }
 
     public function testConstruct(): void
@@ -56,8 +63,8 @@ final class ValidateImageTest extends TestCase
                 'maxWidth' => '299',
             ])
         );
-        $response = $action->run($arguments);
-        $this->assertSame(1100, $response->data()['code']);
+        $this->expectInvalidArgumentException(1100);
+        $action->run($arguments);
     }
 
     public function testMaxHeight(): void
@@ -69,8 +76,8 @@ final class ValidateImageTest extends TestCase
                 'maxHeight' => '299',
             ])
         );
-        $response = $action->run($arguments);
-        $this->assertSame(1101, $response->data()['code']);
+        $this->expectInvalidArgumentException(1101);
+        $action->run($arguments);
     }
 
     public function testMinWidth(): void
@@ -82,8 +89,8 @@ final class ValidateImageTest extends TestCase
                 'minWidth' => '301',
             ])
         );
-        $response = $action->run($arguments);
-        $this->assertSame(1102, $response->data()['code']);
+        $this->expectInvalidArgumentException(1102);
+        $action->run($arguments);
     }
 
     public function testMinHeight(): void
@@ -95,7 +102,7 @@ final class ValidateImageTest extends TestCase
                 'minHeight' => '301',
             ])
         );
-        $response = $action->run($arguments);
-        $this->assertSame(1103, $response->data()['code']);
+        $this->expectInvalidArgumentException(1103);
+        $action->run($arguments);
     }
 }
