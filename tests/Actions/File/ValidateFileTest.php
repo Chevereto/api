@@ -11,16 +11,18 @@
 
 declare(strict_types=1);
 
-namespace Chevereto\Tests\Actions\File;
+namespace Tests\Actions\File;
 
 use Chevere\Components\Parameter\Arguments;
 use Chevere\Components\Response\ResponseSuccess;
-use Chevere\Interfaces\Response\ResponseFailureInterface;
 use Chevereto\Actions\File\ValidateFile;
 use PHPUnit\Framework\TestCase;
+use Tests\Actions\Traits\ExpectInvalidArgumentExceptionCodeTrait;
 
 final class ValidateFileTest extends TestCase
 {
+    use ExpectInvalidArgumentExceptionCodeTrait;
+
     public function testConstruct(): void
     {
         $action = new ValidateFile;
@@ -57,9 +59,8 @@ final class ValidateFileTest extends TestCase
             $action->parameters(),
             array_merge($parameters, ['maxBytes' => '1'])
         );
-        $responseFailure = $action->run($badArguments);
-        $this->assertInstanceOf(ResponseFailureInterface::class, $responseFailure);
-        $this->assertSame(1101, $responseFailure->data()['code']);
+        $this->expectInvalidArgumentException(1100);
+        $action->run($badArguments);
     }
 
     public function testMinBytes(): void
@@ -73,9 +74,8 @@ final class ValidateFileTest extends TestCase
                 'minBytes' => '20000000'
             ]
         );
-        $response = $action->run($arguments);
-        $this->assertInstanceOf(ResponseFailureInterface::class, $response);
-        $this->assertSame(1100, $response->data()['code']);
+        $this->expectInvalidArgumentException(1101);
+        $action->run($arguments);
     }
 
     public function testExtension(): void
@@ -88,8 +88,7 @@ final class ValidateFileTest extends TestCase
                 'extensions' => 'txt',
             ]
         );
-        $response = $action->run($arguments);
-        $this->assertInstanceOf(ResponseFailureInterface::class, $response);
-        $this->assertSame(1103, $response->data()['code']);
+        $this->expectInvalidArgumentException(1103);
+        $action->run($arguments);
     }
 }

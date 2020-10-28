@@ -11,15 +11,17 @@
 
 declare(strict_types=1);
 
-namespace Chevereto\Tests\Actions\Image;
+namespace Tests\Actions\Image;
 
 use Chevere\Components\Parameter\Arguments;
-use Chevere\Exceptions\Core\InvalidArgumentException;
 use Chevereto\Actions\Image\ValidateImage;
+use Tests\Actions\Traits\ExpectInvalidArgumentExceptionCodeTrait;
 use PHPUnit\Framework\TestCase;
 
 final class ValidateImageTest extends TestCase
 {
+    use ExpectInvalidArgumentExceptionCodeTrait;
+
     private function getTestArguments(array $arguments): array
     {
         return array_replace([
@@ -29,12 +31,6 @@ final class ValidateImageTest extends TestCase
             'minWidth' => '100',
             'minHeight' => '100',
         ], $arguments);
-    }
-
-    private function expectInvalidArgumentException(int $code): void
-    {
-        $this->expectException(InvalidArgumentException::class);
-        $this->expectExceptionCode($code);
     }
 
     public function testConstruct(): void

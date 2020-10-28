@@ -19,7 +19,7 @@
     "autoload": {
         "psr-4": {
             "Chevereto\\": "src/",
-            "CheveretoTests\\": "tests/"
+            "Tests\\": "tests/"
         }
     },
     "repositories": {

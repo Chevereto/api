@@ -11,7 +11,7 @@
 
 declare(strict_types=1);
 
-namespace CheveretoTests\Controllers\Api\V1\Upload;
+namespace Tests\Controllers\Api\V1\Upload;
 
 use Chevere\Components\Parameter\Arguments;
 use Chevere\Interfaces\Response\ResponseSuccessInterface;
