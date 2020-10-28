@@ -35,7 +35,8 @@ use Chevere\Interfaces\Service\ServiceableInterface;
 use Chevere\Interfaces\Service\ServiceProvidersInterface;
 use Chevere\Interfaces\Workflow\WorkflowInterface;
 use Chevereto\Actions\File\ValidateFileAction;
-use Chevereto\Actions\Image\FetchMetaImageAction;
+use Chevereto\Actions\Image\FetchImageMetaAction;
+use Chevereto\Actions\Image\StripImageMetaAction;
 use Chevereto\Actions\Image\UploadImageAction;
 use Chevereto\Actions\Image\ValidateImageAction;
 use Chevereto\Components\Settings;
@@ -136,8 +137,21 @@ final class UploadPostController extends Controller implements ServiceableInterf
             )
             ->withAdded(
                 'fetch-meta',
-                (new Task(FetchMetaImageAction::class))
-                    ->withArguments(['filename' => '${filename}', ])
+                (new Task(FetchImageMetaAction::class))
+                    ->withArguments(['filename' => '${filename}'])
+            )
+            // ->withAdded(
+            //     'fix-orientation',
+            //     (new Task(FetchMetaImageAction::class))
+            //         ->withArguments([
+            //             'filename' => '${filename}',
+            //             'exif' => '${fetch-meta:exif}'
+            //         ])
+            // )
+            ->withAdded(
+                'strip-meta',
+                (new Task(StripImageMetaAction::class))
+                    ->withArguments(['filename' => '${filename}'])
             )
             ->withAdded(
                 'upload',
