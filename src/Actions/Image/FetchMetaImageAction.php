@@ -14,7 +14,6 @@ declare(strict_types=1);
 namespace Chevereto\Actions\Image;
 
 use Chevere\Components\Action\Action;
-use Chevere\Components\Parameter\ParameterOptional;
 use Chevere\Components\Parameter\ParameterRequired;
 use Chevere\Components\Parameter\Parameters;
 use Chevere\Components\Regex\Regex;
@@ -26,7 +25,7 @@ use Intervention\Image\ImageManager;
 use JeroenDesloovere\XmpMetadataExtractor\XmpMetadataExtractor;
 use Throwable;
 
-class ExtractMetaImageAction extends Action
+class FetchMetaImageAction extends Action
 {
     public function getParameters(): ParametersInterface
     {
@@ -48,8 +47,11 @@ class ExtractMetaImageAction extends Action
             $data['iptc'] = $image->iptc() ?? [];
             $xmpDataExtractor = new XmpMetadataExtractor();
             $data['xmp'] = $xmpDataExtractor->extractFromFile($filename);
-        } catch (Throwable $e) {
         }
+        // @codeCoverageIgnoreStart
+        catch (Throwable $e) {
+        }
+        // @codeCoverageIgnoreEnd
 
         return new ResponseSuccess($data);
     }

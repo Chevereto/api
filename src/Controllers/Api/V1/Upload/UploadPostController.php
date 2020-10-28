@@ -28,7 +28,6 @@ use Chevere\Components\Workflow\Workflow;
 use Chevere\Components\Workflow\WorkflowRun;
 use Chevere\Exceptions\Core\Exception;
 use Chevere\Exceptions\Core\InvalidArgumentException;
-use Chevere\Interfaces\Controller\ControllerInterface;
 use Chevere\Interfaces\Parameter\ArgumentsInterface;
 use Chevere\Interfaces\Parameter\ParametersInterface;
 use Chevere\Interfaces\Response\ResponseInterface;
@@ -36,6 +35,7 @@ use Chevere\Interfaces\Service\ServiceableInterface;
 use Chevere\Interfaces\Service\ServiceProvidersInterface;
 use Chevere\Interfaces\Workflow\WorkflowInterface;
 use Chevereto\Actions\File\ValidateFileAction;
+use Chevereto\Actions\Image\FetchMetaImageAction;
 use Chevereto\Actions\Image\UploadImageAction;
 use Chevereto\Actions\Image\ValidateImageAction;
 use Chevereto\Components\Settings;
@@ -116,27 +116,28 @@ final class UploadPostController extends Controller implements ServiceableInterf
             ->withAdded(
                 'validate-file',
                 (new Task(ValidateFileAction::class))
-                    ->withArguments(
-                        [
-                            'extensions' => '${extensions}',
-                            'filename' => '${filename}',
-                            'maxBytes' => '${maxBytes}',
-                            'minBytes' => '${minBytes}',
-                        ]
-                    )
+                    ->withArguments([
+                        'extensions' => '${extensions}',
+                        'filename' => '${filename}',
+                        'maxBytes' => '${maxBytes}',
+                        'minBytes' => '${minBytes}',
+                    ])
             )
             ->withAdded(
                 'validate-image',
                 (new Task(ValidateImageAction::class))
-                    ->withArguments(
-                        [
-                            'filename' => '${filename}',
-                            'maxHeight' => '${maxHeight}',
-                            'maxWidth' => '${maxWidth}',
-                            'minHeight' => '${minHeight}',
-                            'minWidth' => '${minWidth}',
-                        ]
-                    )
+                    ->withArguments([
+                        'filename' => '${filename}',
+                        'maxHeight' => '${maxHeight}',
+                        'maxWidth' => '${maxWidth}',
+                        'minHeight' => '${minHeight}',
+                        'minWidth' => '${minWidth}',
+                    ])
+            )
+            ->withAdded(
+                'fetch-meta',
+                (new Task(FetchMetaImageAction::class))
+                    ->withArguments(['filename' => '${filename}', ])
             )
             ->withAdded(
                 'upload',

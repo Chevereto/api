@@ -14,17 +14,17 @@ declare(strict_types=1);
 namespace Chevereto\Tests\Actions\Image;
 
 use Chevere\Components\Parameter\Arguments;
-use Chevereto\Actions\Image\ExtractMetaImageAction;
+use Chevereto\Actions\Image\FetchMetaImageAction;
 use PHPUnit\Framework\TestCase;
 use Tests\Actions\Traits\ExpectInvalidArgumentExceptionCodeTrait;
 
-final class ExtractMetaImageTest extends TestCase
+final class FetchMetaImageTest extends TestCase
 {
     use ExpectInvalidArgumentExceptionCodeTrait;
 
     public function testExif(): void
     {
-        $action = new ExtractMetaImageAction;
+        $action = new FetchMetaImageAction;
         $arguments = new Arguments(
             $action->parameters(),
             ['filename' => __DIR__ . '/assets/exif.jpg']
@@ -37,7 +37,7 @@ final class ExtractMetaImageTest extends TestCase
 
     public function testIptc(): void
     {
-        $action = new ExtractMetaImageAction;
+        $action = new FetchMetaImageAction;
         $arguments = new Arguments(
             $action->parameters(),
             ['filename' => __DIR__ . '/assets/iptc.jpg']
@@ -50,7 +50,7 @@ final class ExtractMetaImageTest extends TestCase
 
     public function testXmp(): void
     {
-        $action = new ExtractMetaImageAction;
+        $action = new FetchMetaImageAction;
         $arguments = new Arguments(
             $action->parameters(),
             ['filename' => __DIR__ . '/assets/all.jpg']
