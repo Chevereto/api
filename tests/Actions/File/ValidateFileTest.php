@@ -38,7 +38,6 @@ final class ValidateFileTest extends TestCase
             [
                 'bytes' => filesize(__FILE__),
                 'mime' => 'text/x-php',
-                'extension' => 'php'
             ],
             $response->data()
         );

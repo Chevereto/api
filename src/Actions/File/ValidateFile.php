@@ -75,13 +75,12 @@ class ValidateFile extends Action
         $this->assertMinBytes($bytes);
         $mime = mime_content_type($filename);
         $mimes = new MimeTypes;
-        $extension = $mimes->getExtension($mime) ?? '';
-        $this->assertExtension($extension);
+        $extensions = $mimes->getAllExtensions($mime);
+        $this->assertExtension($extensions);
 
         return new ResponseSuccess([
             'bytes' => $bytes,
             'mime' => $mime,
-            'extension' => $extension
         ]);
     }
 
@@ -109,20 +108,20 @@ class ValidateFile extends Action
         }
     }
 
-    private function assertExtension(string $extension): void
+    private function assertExtension(array $extensions): void
     {
-        if ($extension === '') {
+        if ($extensions === []) {
             // @codeCoverageIgnoreStart
             throw new InvalidArgumentException(
-                new Message('Unable to detect extension'),
+                new Message('Unable to detect file extension'),
                 1102
             );
             // @codeCoverageIgnoreEnd
         }
-        if (!in_array($extension, $this->extensions)) {
+        if (!array_intersect($extensions, $this->extensions)) {
             throw new InvalidArgumentException(
-                (new Message('Extension %extension% is not in the list of allowed extensions: %allowed%'))
-                    ->code('%extension%', $extension)
+                (new Message('File extension %extension% is not allowed (allows %allowed%)'))
+                    ->code('%extension%', implode(', ', $extensions))
                     ->code('%allowed%', implode(', ', $this->extensions)),
                 1103
             );
