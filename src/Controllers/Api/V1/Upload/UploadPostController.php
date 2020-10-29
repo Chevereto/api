@@ -15,9 +15,8 @@ namespace Chevereto\Controllers\Api\V1\Upload;
 
 use Chevere\Components\Controller\Controller;
 use Chevere\Components\Message\Message;
-use Chevere\Components\Parameter\Parameter;
-use Chevere\Components\Parameter\ParameterOptional;
 use Chevere\Components\Parameter\Parameters;
+use Chevere\Components\Parameter\StringParameter;
 use Chevere\Components\Regex\Regex;
 use Chevere\Components\Response\ResponseSuccess;
 use Chevere\Components\Serialize\Unserialize;
@@ -95,18 +94,18 @@ final class UploadPostController extends Controller implements ServiceableInterf
     {
         return (new Parameters)
             ->withAddedRequired(
-                (new Parameter('source'))
+                (new StringParameter('source'))
                     ->withDescription('A base64 image string OR an image URL. It also takes image multipart/form-data.')
             )
             ->withAddedRequired(
-                (new Parameter('key'))
+                (new StringParameter('key'))
                     ->withDescription('API V1 key.')
             )
             ->withAddedOptional(
-                (new Parameter('format'))
-                    ->withAddedAttribute('tryFiles') // Flags controller runner to "try" the argument for _FILES
+                (new StringParameter('format'))
                     ->withRegex(new Regex('/^(json|txt)$/'))
                     ->withDefault('json')
+                    ->withAddedAttribute('tryFiles') // Flags controller runner to "try" the argument for _FILES
                     ->withDescription('Response document output format. Defaults to `json`.')
             );
     }

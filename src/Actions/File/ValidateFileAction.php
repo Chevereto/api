@@ -15,8 +15,8 @@ namespace Chevereto\Actions\File;
 
 use Chevere\Components\Action\Action;
 use Chevere\Components\Message\Message;
-use Chevere\Components\Parameter\Parameter;
 use Chevere\Components\Parameter\Parameters;
+use Chevere\Components\Parameter\StringParameter;
 use Chevere\Components\Regex\Regex;
 use Chevere\Components\Response\ResponseSuccess;
 use Chevere\Exceptions\Core\InvalidArgumentException;
@@ -41,20 +41,20 @@ class ValidateFileAction extends Action
     {
         return (new Parameters)
             ->withAddedRequired(
-                (new Parameter('filename'))
+                (new StringParameter('filename'))
                     ->withRegex(new Regex('/^.+$/'))
             )
             ->withAddedRequired(
-                (new Parameter('extensions'))
-                    ->withDescription('Comma-separated list of allowed file extensions')
+                (new StringParameter('extensions'))
                     ->withRegex(new Regex('/^[\w]+(,[\w]+)*$/'))
+                    ->withDescription('Comma-separated list of allowed file extensions')
             )
             ->withAddedOptional(
-                (new Parameter('maxBytes'))
+                (new StringParameter('maxBytes'))
                     ->withRegex(new Regex('/^\d+$/'))
             )
             ->withAddedOptional(
-                (new Parameter('minBytes'))
+                (new StringParameter('minBytes'))
                     ->withRegex(new Regex('/^\d+$/'))
                     ->withDefault('0')
             );

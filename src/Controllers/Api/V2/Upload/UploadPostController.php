@@ -14,8 +14,8 @@ declare(strict_types=1);
 namespace Chevereto\Controllers\Api\V2\Upload;
 
 use Chevere\Components\Controller\Controller;
-use Chevere\Components\Parameter\Parameter;
 use Chevere\Components\Parameter\Parameters;
+use Chevere\Components\Parameter\StringParameter;
 use Chevere\Components\Plugin\PluggableAnchors;
 use Chevere\Components\Plugin\Plugs\Hooks\Traits\PluggableHooksTrait;
 use Chevere\Components\Regex\Regex;
@@ -45,8 +45,8 @@ final class UploadPostController extends Controller implements PluggableHooksInt
     public function getParameters(): ParametersInterface
     {
         return (new Parameters)
-            ->withAdded(
-                new Parameter('source', new Regex('/.*/'))
+            ->withAddedRequired(
+                (new StringParameter('source'))->withRegex(new Regex('/.*/'))
             );
     }
 

@@ -14,8 +14,8 @@ declare(strict_types=1);
 namespace Chevereto\Controllers\Api\V2\Album;
 
 use Chevere\Components\Controller\Controller;
-use Chevere\Components\Parameter\Parameter;
 use Chevere\Components\Parameter\Parameters;
+use Chevere\Components\Parameter\StringParameter;
 use Chevere\Components\Regex\Regex;
 use Chevere\Components\Response\ResponseSuccess;
 use Chevere\Interfaces\Parameter\ArgumentsInterface;
@@ -32,8 +32,9 @@ final class AlbumPostController extends Controller
     public function getParameters(): ParametersInterface
     {
         return (new Parameters)
-            ->withAdded(
-                new Parameter('name', new Regex('/\w+/'))
+            ->withAddedRequired(
+                (new StringParameter('name'))
+                    ->withRegex(new Regex('/\w+/'))
             );
     }
 

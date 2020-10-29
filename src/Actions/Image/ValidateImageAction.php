@@ -15,8 +15,8 @@ namespace Chevereto\Actions\Image;
 
 use Chevere\Components\Action\Action;
 use Chevere\Components\Message\Message;
-use Chevere\Components\Parameter\Parameter;
 use Chevere\Components\Parameter\Parameters;
+use Chevere\Components\Parameter\StringParameter;
 use Chevere\Components\Regex\Regex;
 use Chevere\Components\Response\ResponseSuccess;
 use Chevere\Exceptions\Core\InvalidArgumentException;
@@ -43,24 +43,24 @@ class ValidateImageAction extends Action
     {
         return (new Parameters)
             ->withAddedRequired(
-                (new Parameter('filename'))
+                (new StringParameter('filename'))
                     ->withRegex(new Regex('/^.+$/'))
             )
             ->withAddedRequired(
-                (new Parameter('maxWidth'))
+                (new StringParameter('maxWidth'))
                     ->withRegex(new Regex('/^\d+$/'))
             )
             ->withAddedRequired(
-                (new Parameter('maxHeight'))
+                (new StringParameter('maxHeight'))
                     ->withRegex(new Regex('/^\d+$/'))
             )
             ->withAddedRequired(
-                (new Parameter('minWidth'))
+                (new StringParameter('minWidth'))
                     ->withRegex(new Regex('/^\d+$/'))
                     ->withDefault('16')
             )
             ->withAddedRequired(
-                (new Parameter('minHeight'))
+                (new StringParameter('minHeight'))
                     ->withRegex(new Regex('/^\d+$/'))
                     ->withDefault('16')
             );
