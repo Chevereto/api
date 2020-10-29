@@ -15,7 +15,6 @@ namespace Chevereto\Actions\Image;
 
 use Chevere\Components\Action\Action;
 use Chevere\Components\Parameter\Parameter;
-use Chevere\Components\Parameter\ParameterRequired;
 use Chevere\Components\Parameter\Parameters;
 use Chevere\Components\Response\ResponseSuccess;
 use Chevere\Components\Service\ServiceProviders;
@@ -33,12 +32,12 @@ class UploadImageAction extends Action implements ServiceableInterface
     public function getParameters(): ParametersInterface
     {
         return (new Parameters)
-        ->withAdded(new ParameterRequired('filename'))
-        ->withAdded(new ParameterRequired('uploadPath'))
-        ->withAdded(new ParameterRequired('naming'))
-        ->withAdded(new ParameterRequired('storageId'))
-        ->withAdded(new ParameterRequired('userId'))
-        ->withAdded(new ParameterRequired('albumId'));
+            ->withAddedRequired(new Parameter('filename'))
+            ->withAddedRequired(new Parameter('uploadPath'))
+            ->withAddedRequired(new Parameter('naming'))
+            ->withAddedRequired(new Parameter('storageId'))
+            ->withAddedRequired(new Parameter('userId'))
+            ->withAddedRequired(new Parameter('albumId'));
     }
 
     public function getServiceProviders(): ServiceProvidersInterface

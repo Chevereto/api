@@ -14,7 +14,7 @@ declare(strict_types=1);
 namespace Chevereto\Actions\Image;
 
 use Chevere\Components\Action\Action;
-use Chevere\Components\Parameter\ParameterRequired;
+use Chevere\Components\Parameter\Parameter;
 use Chevere\Components\Parameter\Parameters;
 use Chevere\Components\Regex\Regex;
 use Chevere\Components\Response\ResponseSuccess;
@@ -28,8 +28,8 @@ class StripImageMetaAction extends Action
     public function getParameters(): ParametersInterface
     {
         return (new Parameters)
-            ->withAdded(
-                (new ParameterRequired('filename'))
+            ->withAddedRequired(
+                (new Parameter('filename'))
                     ->withRegex(new Regex('/^.+$/'))
             );
     }

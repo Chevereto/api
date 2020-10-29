@@ -15,7 +15,7 @@ namespace Chevereto\Actions\Image;
 
 use Chevere\Components\Action\Action;
 use Chevere\Components\Message\Message;
-use Chevere\Components\Parameter\ParameterRequired;
+use Chevere\Components\Parameter\Parameter;
 use Chevere\Components\Parameter\Parameters;
 use Chevere\Components\Regex\Regex;
 use Chevere\Components\Response\ResponseSuccess;
@@ -42,25 +42,25 @@ class ValidateImageAction extends Action
     public function getParameters(): ParametersInterface
     {
         return (new Parameters)
-            ->withAdded(
-                (new ParameterRequired('filename'))
+            ->withAddedRequired(
+                (new Parameter('filename'))
                     ->withRegex(new Regex('/^.+$/'))
             )
-            ->withAdded(
-                (new ParameterRequired('maxWidth'))
+            ->withAddedRequired(
+                (new Parameter('maxWidth'))
                     ->withRegex(new Regex('/^\d+$/'))
             )
-            ->withAdded(
-                (new ParameterRequired('maxHeight'))
+            ->withAddedRequired(
+                (new Parameter('maxHeight'))
                     ->withRegex(new Regex('/^\d+$/'))
             )
-            ->withAdded(
-                (new ParameterRequired('minWidth'))
+            ->withAddedRequired(
+                (new Parameter('minWidth'))
                     ->withRegex(new Regex('/^\d+$/'))
                     ->withDefault('16')
             )
-            ->withAdded(
-                (new ParameterRequired('minHeight'))
+            ->withAddedRequired(
+                (new Parameter('minHeight'))
                     ->withRegex(new Regex('/^\d+$/'))
                     ->withDefault('16')
             );
