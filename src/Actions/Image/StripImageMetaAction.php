@@ -14,14 +14,15 @@ declare(strict_types=1);
 namespace Chevereto\Actions\Image;
 
 use Chevere\Components\Action\Action;
+use Chevere\Components\Parameter\Parameter;
 use Chevere\Components\Parameter\Parameters;
-use Chevere\Components\Parameter\StringParameter;
-use Chevere\Components\Regex\Regex;
 use Chevere\Components\Response\ResponseSuccess;
+use Chevere\Components\Type\Type;
 use Chevere\Interfaces\Parameter\ArgumentsInterface;
 use Chevere\Interfaces\Parameter\ParametersInterface;
 use Chevere\Interfaces\Response\ResponseInterface;
 use Imagick;
+use Intervention\Image\Image;
 
 class StripImageMetaAction extends Action
 {
@@ -29,23 +30,24 @@ class StripImageMetaAction extends Action
     {
         return (new Parameters)
             ->withAddedRequired(
-                (new StringParameter('filename'))
-                    ->withRegex(new Regex('/^.+$/'))
+                new Parameter('image', new Type(Image::class))
             );
     }
 
     public function run(ArgumentsInterface $arguments): ResponseInterface
     {
-        $filename = $arguments->get('filename');
-        $image = new Imagick($filename);
-        $profiles = $image->getImageProfiles('icc', true);
-        $image->stripImage();
+        /**
+         * @var Image $image
+         * @var Imagick $image
+         */
+        $image = $arguments->get('image');
+        $imagick = $image->getCore();
+        $profiles = $imagick->getImageProfiles('icc', true);
+        $imagick->stripImage();
         if (!empty($profiles)) {
-            $image->profileImage('icc', $profiles['icc']); //@codeCoverageIgnore
+            $imagick->profileImage('icc', $profiles['icc']); //@codeCoverageIgnore
         }
-        $image->writeImage($filename);
-        $image->clear();
-        $image->destroy();
+        $image->save();
 
         return new ResponseSuccess([]);
     }

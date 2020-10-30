@@ -25,12 +25,10 @@ use Chevere\Interfaces\Parameter\ArgumentsInterface;
 use Chevere\Interfaces\Parameter\ParametersInterface;
 use Chevere\Interfaces\Response\ResponseInterface;
 use Intervention\Image\Image;
-use Intervention\Image\ImageManager;
+use function Chevereto\ImageManager\imageManager;
 
 class ValidateImageAction extends Action
 {
-    private Image $image;
-
     private int $maxWidth;
 
     private int $maxHeight;
@@ -69,20 +67,18 @@ class ValidateImageAction extends Action
     public function run(ArgumentsInterface $arguments): ResponseInterface
     {
         $filename = $arguments->get('filename');
-        $manager = new ImageManager(['driver' => 'Imagick']);
-        $this->image = $manager->make($filename);
+        $image = imageManager()->make($filename);
         $this->maxWidth = (int) $arguments->get('maxWidth');
         $this->maxHeight = (int) $arguments->get('maxHeight');
         $this->minWidth = (int) $arguments->get('minWidth');
         $this->minHeight = (int) $arguments->get('minHeight');
-        $this->assertMaxWidth($this->image->width());
-        $this->assertMaxHeight($this->image->height());
-        $this->assertMinWidth($this->image->width());
-        $this->assertMinHeight($this->image->height());
+        $this->assertMaxWidth($image->width());
+        $this->assertMaxHeight($image->height());
+        $this->assertMinWidth($image->width());
+        $this->assertMinHeight($image->height());
 
         return new ResponseSuccess([
-            'width' => $this->image->width(),
-            'height' => $this->image->height(),
+            'image' => $image,
         ]);
     }
 

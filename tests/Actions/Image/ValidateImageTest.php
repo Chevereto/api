@@ -15,6 +15,7 @@ namespace Tests\Actions\Image;
 
 use Chevere\Components\Parameter\Arguments;
 use Chevereto\Actions\Image\ValidateImageAction;
+use Intervention\Image\Image;
 use PHPUnit\Framework\TestCase;
 use Tests\Actions\Traits\ExpectInvalidArgumentExceptionCodeTrait;
 
@@ -41,13 +42,7 @@ final class ValidateImageTest extends TestCase
             $this->getTestArguments([])
         );
         $response = $action->run($arguments);
-        $this->assertSame(
-            [
-                'width' => 300,
-                'height' => 300,
-            ],
-            $response->data()
-        );
+        $this->assertInstanceOf(Image::class, $response->data()['image']);
     }
 
     public function testMaxWidth(): void

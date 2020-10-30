@@ -25,8 +25,6 @@ use Intervention\Image\Image;
 
 class FixImageOrientationAction extends Action
 {
-    private Image $image;
-
     public function getParameters(): ParametersInterface
     {
         return (new Parameters)
@@ -37,8 +35,11 @@ class FixImageOrientationAction extends Action
 
     public function run(ArgumentsInterface $arguments): ResponseInterface
     {
-        $this->image = $arguments->get('image');
-        $this->image->orientate()->save();
+        /**
+         * @var Image $image
+         */
+        $image = $arguments->get('image');
+        $image->orientate()->save();
 
         return new ResponseSuccess([]);
     }
