@@ -26,7 +26,7 @@ use Intervention\Image\Image;
 use JeroenDesloovere\XmpMetadataExtractor\XmpMetadataExtractor;
 use Throwable;
 
-class FetchImageMetaAction extends Action
+class FetchMetaAction extends Action
 {
     public function getParameters(): ParametersInterface
     {

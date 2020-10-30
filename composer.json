@@ -16,11 +16,12 @@
         "ralouphie/mimey": "^2.1",
         "intervention/image": "^2.5",
         "jeroendesloovere/xmp-metadata-extractor": "^2.0",
-        "ext-imagick": "^3.4"
+        "ext-imagick": "^3.4",
+        "jenssegers/imagehash": "^0.7.0"
     },
     "autoload": {
         "files": [
-            "src/ImageManager/functions.php"
+            "src/Image/functions.php"
         ],
         "psr-4": {
             "Chevereto\\": "src/",

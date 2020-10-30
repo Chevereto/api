@@ -24,10 +24,11 @@ use Chevere\Interfaces\Message\MessageInterface;
 use Chevere\Interfaces\Parameter\ArgumentsInterface;
 use Chevere\Interfaces\Parameter\ParametersInterface;
 use Chevere\Interfaces\Response\ResponseInterface;
-use Intervention\Image\Image;
-use function Chevereto\ImageManager\imageManager;
+use function Chevereto\Image\imageHash;
+use function Chevereto\Image\imageManager;
+use function Safe\md5_file;
 
-class ValidateImageAction extends Action
+class ValidateAction extends Action
 {
     private int $maxWidth;
 
@@ -79,6 +80,8 @@ class ValidateImageAction extends Action
 
         return new ResponseSuccess([
             'image' => $image,
+            'perceptual' => imageHash()->hash($filename)->toHex(),
+            'md5' => md5_file($filename)
         ]);
     }
 

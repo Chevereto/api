@@ -23,7 +23,7 @@ use Chevere\Interfaces\Parameter\ParametersInterface;
 use Chevere\Interfaces\Response\ResponseInterface;
 use Intervention\Image\Image;
 
-class FixImageOrientationAction extends Action
+class FixOrientationAction extends Action
 {
     public function getParameters(): ParametersInterface
     {

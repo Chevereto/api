@@ -16,7 +16,7 @@ namespace Chevereto\Tests\Actions\Image;
 use Chevere\Components\Parameter\Arguments;
 use Chevereto\Actions\Image\StripImageMetaAction;
 use PHPUnit\Framework\TestCase;
-use function Chevereto\ImageManager\imageManager;
+use function Chevereto\Image\imageManager;
 use function Safe\copy;
 use function Safe\unlink;
 

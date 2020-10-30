@@ -11,10 +11,12 @@
 
 declare(strict_types=1);
 
-namespace Chevereto\ImageManager;
+namespace Chevereto\Image;
 
+use Chevere\Exceptions\Core\LogicException;
 use Intervention\Image\ImageManager;
-use LogicException;
+use Jenssegers\ImageHash\ImageHash;
+use Jenssegers\ImageHash\Implementations\DifferenceHash;
 
 function imageManager(): ImageManager
 {
@@ -26,5 +28,18 @@ function imageManager(): ImageManager
         );
 
         return ImageManagerInstance::get();
+    }
+}
+
+function imageHash(): ImageHash
+{
+    try {
+        return ImageHashInstance::get();
+    } catch (LogicException $e) {
+        new ImageHashInstance(
+            new ImageHash(new DifferenceHash(16))
+        );
+
+        return ImageHashInstance::get();
     }
 }

@@ -25,13 +25,14 @@ use Chevere\Interfaces\Service\ServiceableInterface;
 use Chevere\Interfaces\Service\ServiceProvidersInterface;
 use Psr\Log\LoggerInterface;
 
-class UploadImageAction extends Action implements ServiceableInterface
+class UploadAction extends Action implements ServiceableInterface
 {
     private LoggerInterface $logger;
 
     public function getParameters(): ParametersInterface
     {
         return (new Parameters)
+            ->withAddedRequired(new StringParameter('expires'))
             ->withAddedRequired(new StringParameter('filename'))
             ->withAddedRequired(new StringParameter('uploadPath'))
             ->withAddedRequired(new StringParameter('naming'))
@@ -57,16 +58,8 @@ class UploadImageAction extends Action implements ServiceableInterface
 
     public function run(ArgumentsInterface $arguments): ResponseInterface
     {
-        /** UploadToWebsite */
-        //p user
         //x check duplicates (md5, perceptual hash)
-        //x pick storage id
-        //x pick upload path
-        //x pick filenaming
-        //u pick default options for Upload
         //? dummy row for 'id" filenaming (name the actual file just like the ID)
-        //?? validate min/max stuff
-        // autoresize large images
         // generate medium + thumb -> removed, use image server on-the-fly
         // validate storage capacity, failover to *any if needed
         // determine db image insert values
@@ -78,21 +71,8 @@ class UploadImageAction extends Action implements ServiceableInterface
         // bind to user
 
         /** Upload **/
-        // destination
-        // converts bmp to png
-        // options [max_size, filenaming, exif, allowed formats,]
-        // storageId
-        // filename
         // handle flood -> not here
-        // watermarks -> removed, use image server on-the-fly
-        // fetch exif
-        // clean exif from actual file
-        // fix exif orientation
         // upload to storage (local, remote, whatever)
-
-        // $this->logger->log('0', 'feeling good');
-        // $filename = $arguments->get('filename');
-        // where to?
 
         return new ResponseSuccess(['id' => '123']);
     }

@@ -14,20 +14,21 @@ declare(strict_types=1);
 namespace Chevereto\Tests\Actions\Image;
 
 use Chevere\Components\Parameter\Arguments;
-use Chevereto\Actions\Image\FetchImageMetaAction;
+use Chevereto\Actions\Image\FetchMetaAction;
 use PHPUnit\Framework\TestCase;
 use Tests\Actions\Traits\ExpectInvalidArgumentExceptionCodeTrait;
+use function Chevereto\Image\imageManager;
 
-final class FetchImageMetaTest extends TestCase
+final class FetchMetaTest extends TestCase
 {
     use ExpectInvalidArgumentExceptionCodeTrait;
 
     public function testExif(): void
     {
-        $action = new FetchImageMetaAction;
+        $action = new FetchMetaAction;
         $arguments = new Arguments(
             $action->parameters(),
-            ['filename' => __DIR__ . '/assets/exif.jpg']
+            ['image' => imageManager()->make(__DIR__ . '/assets/exif.jpg')]
         );
         $response = $action->run($arguments);
         $this->assertIsArray($response->data()['exif']);
@@ -37,10 +38,10 @@ final class FetchImageMetaTest extends TestCase
 
     public function testIptc(): void
     {
-        $action = new FetchImageMetaAction;
+        $action = new FetchMetaAction;
         $arguments = new Arguments(
             $action->parameters(),
-            ['filename' => __DIR__ . '/assets/iptc.jpg']
+            ['image' => imageManager()->make(__DIR__ . '/assets/iptc.jpg')]
         );
         $response = $action->run($arguments);
         $this->assertIsArray($response->data()['exif']);
@@ -50,10 +51,10 @@ final class FetchImageMetaTest extends TestCase
 
     public function testXmp(): void
     {
-        $action = new FetchImageMetaAction;
+        $action = new FetchMetaAction;
         $arguments = new Arguments(
             $action->parameters(),
-            ['filename' => __DIR__ . '/assets/all.jpg']
+            ['image' => imageManager()->make(__DIR__ . '/assets/all.jpg')]
         );
         $response = $action->run($arguments);
         $this->assertIsArray($response->data()['exif']);

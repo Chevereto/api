@@ -34,11 +34,12 @@ use Chevere\Interfaces\Service\ServiceableInterface;
 use Chevere\Interfaces\Service\ServiceProvidersInterface;
 use Chevere\Interfaces\Workflow\WorkflowInterface;
 use Chevereto\Actions\File\ValidateFileAction;
-use Chevereto\Actions\Image\FetchImageMetaAction;
-use Chevereto\Actions\Image\FixImageOrientationAction;
+use Chevereto\Actions\Image\DetectDuplicationAction;
+use Chevereto\Actions\Image\FetchMetaAction;
+use Chevereto\Actions\Image\FixOrientationAction;
 use Chevereto\Actions\Image\StripImageMetaAction;
-use Chevereto\Actions\Image\UploadImageAction;
-use Chevereto\Actions\Image\ValidateImageAction;
+use Chevereto\Actions\Image\UploadAction;
+use Chevereto\Actions\Image\ValidateAction;
 use Chevereto\Components\Settings;
 use Chevereto\Components\User;
 use Laminas\Uri\UriFactory;
@@ -125,8 +126,8 @@ final class UploadPostController extends Controller implements ServiceableInterf
                     ])
             )
             ->withAdded(
-                'validate-image',
-                (new Task(ValidateImageAction::class))
+                'validate',
+                (new Task(ValidateAction::class))
                     ->withArguments([
                         'filename' => '${filename}',
                         'maxHeight' => '${maxHeight}',
@@ -136,23 +137,31 @@ final class UploadPostController extends Controller implements ServiceableInterf
                     ])
             )
             ->withAdded(
+                'detect-duplication',
+                (new Task(DetectDuplicationAction::class))
+            )
+            ->withAdded(
                 'fetch-meta',
-                (new Task(FetchImageMetaAction::class))
-                    ->withArguments(['image' => '${validate-image:image}'])
+                (new Task(FetchMetaAction::class))
+                    ->withArguments(['image' => '${validate:image}'])
             )
             ->withAdded(
                 'fix-orientation',
-                (new Task(FixImageOrientationAction::class))
-                    ->withArguments(['image' => '${validate-image:image}'])
+                (new Task(FixOrientationAction::class))
+                    ->withArguments(['image' => '${validate:image}'])
             )
-            ->withAdded(
-                'strip-meta',
-                (new Task(StripImageMetaAction::class))
-                    ->withArguments(['image' => '${validate-image:image}'])
-            )
+            // Plug step
+            // ->withAdded(
+            //     'strip-meta',
+            //     (new Task(StripImageMetaAction::class))
+            //         ->withArguments(['image' => '${validate:image}'])
+            // )
+            // ->withAdded(
+            //     'dupe-md5-check',
+            // )
             ->withAdded(
                 'upload',
-                (new Task(UploadImageAction::class))
+                (new Task(UploadAction::class))
                     ->withArguments([
                         'albumId' => '${albumId}',
                         'filename' => '${filename}',

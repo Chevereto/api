@@ -11,7 +11,7 @@
 
 declare(strict_types=1);
 
-namespace Chevereto\ImageManager;
+namespace Chevereto\Image;
 
 use Chevere\Components\Message\Message;
 use Chevere\Exceptions\Core\LogicException;
