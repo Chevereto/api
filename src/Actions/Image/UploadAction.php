@@ -23,7 +23,6 @@ use Chevere\Interfaces\Parameter\ParametersInterface;
 use Chevere\Interfaces\Response\ResponseInterface;
 use Chevere\Interfaces\Service\ServiceableInterface;
 use Chevere\Interfaces\Service\ServiceProvidersInterface;
-use Psr\Log\LoggerInterface;
 
 /**
  * Upload the image to the target destination.
@@ -33,8 +32,6 @@ use Psr\Log\LoggerInterface;
  */
 class UploadAction extends Action implements ServiceableInterface
 {
-    private LoggerInterface $logger;
-
     public function getParameters(): ParametersInterface
     {
         return (new Parameters)
@@ -44,31 +41,19 @@ class UploadAction extends Action implements ServiceableInterface
             ->withAddedRequired(new StringParameter('filename'))
             ->withAddedRequired(new StringParameter('uploadPath'))
             ->withAddedRequired(new StringParameter('naming'))
-            ->withAddedRequired(new StringParameter('storageId'))
-            ->withAddedRequired(new StringParameter('userId'))
-            ->withAddedRequired(new StringParameter('albumId'));
+            ->withAddedRequired(new StringParameter('storageId'));
     }
 
     public function getServiceProviders(): ServiceProvidersInterface
     {
         return (new ServiceProviders($this))
-            ->withAdded('withUploader')
             ->withAdded('withLogger');
-    }
-
-    public function withLogger(LoggerInterface $logger): self
-    {
-        $new = clone $this;
-        $new->logger = $logger;
-
-        return $new;
     }
 
     public function run(ArgumentsInterface $arguments): ResponseInterface
     {
         //? dummy row for 'id" filenaming (name the actual file just like the ID)
         // validate storage capacity, failover to *any if needed
-        // determine db image insert values
         // upload to external storage -> to any* storage
         // inject db values (from exif and so on)
         // bind to album

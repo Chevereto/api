@@ -159,13 +159,21 @@ final class UploadPostController extends Controller implements ServiceableInterf
             //         ->withArguments(['image' => '${validate:image}'])
             // )
             ->withAdded(
+                'user-quota-check',
+                (new Task())
+            )
+            ->withAdded(
+                'storage-failover-quota',
+                (new Task())
+            )
+            ->withAdded(
                 'upload',
                 (new Task(UploadAction::class))
                     ->withArguments([
                         'filename' => '${filename}',
+                        'uploadPath' => '${uploadPath}',
                         'naming' => '${naming}',
                         'storageId' => '${storageId}',
-                        'uploadPath' => '${uploadPath}',
                     ])
             )
             ->withAdded(

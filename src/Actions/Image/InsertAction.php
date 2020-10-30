@@ -39,6 +39,7 @@ class InsertAction extends Action
 
     public function run(ArgumentsInterface $arguments): ResponseInterface
     {
+        // determine db image insert values
         return new ResponseSuccess([]);
     }
 }
