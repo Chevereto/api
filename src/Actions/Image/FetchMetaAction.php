@@ -26,6 +26,12 @@ use Intervention\Image\Image;
 use JeroenDesloovere\XmpMetadataExtractor\XmpMetadataExtractor;
 use Throwable;
 
+/**
+ * Fetch image metadata.
+ *
+ * Provides a run method returning a `ResponseSuccess` with
+ * data `['exif' => <array>, 'iptc' => <array>, 'xmp' => <array>]`.
+ */
 class FetchMetaAction extends Action
 {
     public function getParameters(): ParametersInterface

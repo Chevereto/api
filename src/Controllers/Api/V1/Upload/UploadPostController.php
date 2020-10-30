@@ -34,10 +34,11 @@ use Chevere\Interfaces\Service\ServiceableInterface;
 use Chevere\Interfaces\Service\ServiceProvidersInterface;
 use Chevere\Interfaces\Workflow\WorkflowInterface;
 use Chevereto\Actions\File\ValidateFileAction;
-use Chevereto\Actions\Image\DetectDuplicationAction;
+use Chevereto\Actions\Image\DetectUploadDuplicatedAction;
 use Chevereto\Actions\Image\FetchMetaAction;
 use Chevereto\Actions\Image\FixOrientationAction;
-use Chevereto\Actions\Image\StripImageMetaAction;
+use Chevereto\Actions\Image\InsertAction;
+use Chevereto\Actions\Image\StripMetaAction;
 use Chevereto\Actions\Image\UploadAction;
 use Chevereto\Actions\Image\ValidateAction;
 use Chevereto\Components\Settings;
@@ -136,18 +137,19 @@ final class UploadPostController extends Controller implements ServiceableInterf
                         'minWidth' => '${minWidth}',
                     ])
             )
+            // Plug step
+            // ->withAdded(
+            //     'detect-duplication',
+            //     (new Task(DetectDuplicationAction::class))
+            // )
             ->withAdded(
-                'detect-duplication',
-                (new Task(DetectDuplicationAction::class))
+                'fix-orientation',
+                (new Task(FixOrientationAction::class))
+                    ->withArguments(['image' => '${validate:image}'])
             )
             ->withAdded(
                 'fetch-meta',
                 (new Task(FetchMetaAction::class))
-                    ->withArguments(['image' => '${validate:image}'])
-            )
-            ->withAdded(
-                'fix-orientation',
-                (new Task(FixOrientationAction::class))
                     ->withArguments(['image' => '${validate:image}'])
             )
             // Plug step
@@ -156,20 +158,27 @@ final class UploadPostController extends Controller implements ServiceableInterf
             //     (new Task(StripImageMetaAction::class))
             //         ->withArguments(['image' => '${validate:image}'])
             // )
-            // ->withAdded(
-            //     'dupe-md5-check',
-            // )
             ->withAdded(
                 'upload',
                 (new Task(UploadAction::class))
                     ->withArguments([
-                        'albumId' => '${albumId}',
                         'filename' => '${filename}',
                         'naming' => '${naming}',
                         'storageId' => '${storageId}',
                         'uploadPath' => '${uploadPath}',
-                        'userId' => '${userId}',
                     ])
+            )
+            ->withAdded(
+                'insert',
+                (new Task(InsertAction::class))
+                    ->withArguments(
+                        [
+                            'albumId' => '${albumId}',
+                            'storageId' => '${storageId}',
+                            'expires' => '${expires}',
+                            'userId' => '${userId}',
+                        ]
+                    )
             );
     }
 

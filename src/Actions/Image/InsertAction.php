@@ -14,39 +14,31 @@ declare(strict_types=1);
 namespace Chevereto\Actions\Image;
 
 use Chevere\Components\Action\Action;
-use Chevere\Components\Parameter\Parameter;
 use Chevere\Components\Parameter\Parameters;
+use Chevere\Components\Parameter\StringParameter;
 use Chevere\Components\Response\ResponseSuccess;
-use Chevere\Components\Type\Type;
 use Chevere\Interfaces\Parameter\ArgumentsInterface;
 use Chevere\Interfaces\Parameter\ParametersInterface;
 use Chevere\Interfaces\Response\ResponseInterface;
-use Intervention\Image\Image;
 
 /**
- * Fix the image orientation based on Exif Orientation (if any, if needed).
+ * Insert the image in the database.
  *
  * Provides a run method returning a `ResponseSuccess` with
  * data `[]`.
  */
-class FixOrientationAction extends Action
+class InsertAction extends Action
 {
     public function getParameters(): ParametersInterface
     {
         return (new Parameters)
             ->withAddedRequired(
-                new Parameter('image', new Type(Image::class))
+                new StringParameter('required')
             );
     }
 
     public function run(ArgumentsInterface $arguments): ResponseInterface
     {
-        /**
-         * @var Image $image
-         */
-        $image = $arguments->get('image');
-        $image->orientate()->save();
-
         return new ResponseSuccess([]);
     }
 }

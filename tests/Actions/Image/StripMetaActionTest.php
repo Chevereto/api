@@ -14,13 +14,13 @@ declare(strict_types=1);
 namespace Chevereto\Tests\Actions\Image;
 
 use Chevere\Components\Parameter\Arguments;
-use Chevereto\Actions\Image\StripImageMetaAction;
+use Chevereto\Actions\Image\StripMetaAction;
 use PHPUnit\Framework\TestCase;
 use function Chevereto\Image\imageManager;
 use function Safe\copy;
 use function Safe\unlink;
 
-final class StripImageMetaActionTest extends TestCase
+final class StripMetaActionTest extends TestCase
 {
     public function testConstruct(): void
     {
@@ -29,7 +29,7 @@ final class StripImageMetaActionTest extends TestCase
         copy($source, $strip);
         $sourceImage = imageManager()->make($source);
         $stripImage = imageManager()->make($strip);
-        $action = new StripImageMetaAction;
+        $action = new StripMetaAction;
         $arguments = new Arguments(
             $action->getParameters(),
             ['image' => $stripImage]

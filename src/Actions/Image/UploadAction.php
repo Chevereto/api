@@ -25,6 +25,12 @@ use Chevere\Interfaces\Service\ServiceableInterface;
 use Chevere\Interfaces\Service\ServiceProvidersInterface;
 use Psr\Log\LoggerInterface;
 
+/**
+ * Upload the image to the target destination.
+ *
+ * Provides a run method returning a `ResponseSuccess` with
+ * data `[]`.
+ */
 class UploadAction extends Action implements ServiceableInterface
 {
     private LoggerInterface $logger;
@@ -32,7 +38,9 @@ class UploadAction extends Action implements ServiceableInterface
     public function getParameters(): ParametersInterface
     {
         return (new Parameters)
-            ->withAddedRequired(new StringParameter('expires'))
+            ->withAddedRequired(
+                (new StringParameter('expires'))
+            )
             ->withAddedRequired(new StringParameter('filename'))
             ->withAddedRequired(new StringParameter('uploadPath'))
             ->withAddedRequired(new StringParameter('naming'))
@@ -58,15 +66,11 @@ class UploadAction extends Action implements ServiceableInterface
 
     public function run(ArgumentsInterface $arguments): ResponseInterface
     {
-        //x check duplicates (md5, perceptual hash)
         //? dummy row for 'id" filenaming (name the actual file just like the ID)
-        // generate medium + thumb -> removed, use image server on-the-fly
         // validate storage capacity, failover to *any if needed
         // determine db image insert values
-        // pick expirable uploads
         // upload to external storage -> to any* storage
         // inject db values (from exif and so on)
-        // private upload triggers create private album
         // bind to album
         // bind to user
 

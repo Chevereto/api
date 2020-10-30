@@ -27,6 +27,12 @@ use Mimey\MimeTypes;
 use function Safe\filesize;
 use function Safe\mime_content_type;
 
+/**
+ * Validate file type and its size.
+ *
+ * Provides a run method returning a `ResponseSuccess` with
+ * data `['bytes' => <int>, 'mime' => <string>]`.
+ */
 class ValidateFileAction extends Action
 {
     private array $extensions;

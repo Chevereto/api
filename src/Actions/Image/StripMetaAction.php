@@ -24,7 +24,13 @@ use Chevere\Interfaces\Response\ResponseInterface;
 use Imagick;
 use Intervention\Image\Image;
 
-class StripImageMetaAction extends Action
+/**
+ * Strip image metadata.
+ *
+ * Provides a run method returning a `ResponseSuccess` with
+ * data `[]`.
+ */
+class StripMetaAction extends Action
 {
     public function getParameters(): ParametersInterface
     {

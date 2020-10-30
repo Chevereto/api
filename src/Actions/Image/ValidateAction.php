@@ -28,6 +28,12 @@ use function Chevereto\Image\imageHash;
 use function Chevereto\Image\imageManager;
 use function Safe\md5_file;
 
+/**
+ * Validates an image against the image processing and file dimensions.
+ *
+ * Provides a run method returning a `ResponseSuccess` with
+ * data `['image' => <\Intervention\Image\Image>, 'perceptual' => <string>, 'md5' => <string>]`.
+ */
 class ValidateAction extends Action
 {
     private int $maxWidth;
