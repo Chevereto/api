@@ -13,14 +13,14 @@ declare(strict_types=1);
 
 namespace Chevereto\Attributes\Conditions;
 
-use Chevere\Components\Permission\Condition as BaseCondition;
+use Chevere\Components\Attribute\Condition as BaseCondition;
 use Chevere\Components\Str\StrBool;
 
 abstract class Condition extends BaseCondition
 {
     final public function getIdentifier(): string
     {
-        $identifier = $this->getClassNameIdentifier();
+        $identifier = $this->getIdentifier();
         if ((new StrBool(static::class))->startsWith('Chevereto\\Vendor\\')) {
             $explode = explode('\\', static::class);
             $vendor = mb_strtolower($explode[2]);

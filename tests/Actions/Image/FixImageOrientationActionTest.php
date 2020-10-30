@@ -15,21 +15,33 @@ namespace Chevereto\Tests\Actions\Image;
 
 use Chevere\Components\Parameter\Arguments;
 use Chevere\Exceptions\Core\InvalidArgumentException;
+use Chevere\Interfaces\Response\ResponseSuccessInterface;
 use Chevereto\Actions\Image\FixImageOrientationAction;
 use PHPUnit\Framework\TestCase;
+use function Chevereto\ImageManager\imageManager;
 
 final class FixImageOrientationActionTest extends TestCase
 {
     public function testConstruct(): void
     {
+        $source = __DIR__ . '/assets/right-mirrored.jpg';
+        $orient = str_replace('.', '-orient.', $source);
+        copy($source, $orient);
+        $sourceImage = imageManager()->make($source);
+        $orientImage = imageManager()->make($orient);
         $action = new FixImageOrientationAction;
-        $this->expectException(InvalidArgumentException::class);
+        $this->assertSame(7, $sourceImage->exif()['Orientation']);
         $arguments = new Arguments(
             $action->parameters(),
             [
-                'image' => __DIR__ . '/assets/Landscape_3-alt.jpg',
+                'image' => $orientImage,
             ]
         );
-        $action->run($arguments);
+        $response = $action->run($arguments);
+        $this->assertInstanceOf(ResponseSuccessInterface::class, $response);
+        $this->assertSame(0, $orientImage->exif()['Orientation']);
+        if (!unlink($orient)) {
+            $this->markTestIncomplete("Failed to remove $orient");
+        }
     }
 }

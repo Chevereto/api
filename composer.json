@@ -19,6 +19,9 @@
         "ext-imagick": "^3.4"
     },
     "autoload": {
+        "files": [
+            "src/ImageManager/functions.php"
+        ],
         "psr-4": {
             "Chevereto\\": "src/",
             "Tests\\": "tests/"
