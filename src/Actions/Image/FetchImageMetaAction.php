@@ -44,7 +44,8 @@ class FetchImageMetaAction extends Action
         $filename = $arguments->get('filename');
         $manager = new ImageManager(['driver' => 'Imagick']);
         $image = $manager->make($filename);
-        $data = ['exif' => [], 'iptc' => [], 'xmp' => []];
+        $keys = ['exif', 'iptc', 'xmp'];
+        $data = array_fill_keys($keys, []);
         try {
             $data['exif'] = $image->exif() ?? [];
             $data['iptc'] = $image->iptc() ?? [];
