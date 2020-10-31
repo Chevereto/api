@@ -52,20 +52,20 @@ class ValidateAction extends Action
                     ->withRegex(new Regex('/^.+$/'))
             )
             ->withAddedRequired(
-                (new StringParameter('maxWidth'))
-                    ->withRegex(new Regex('/^\d+$/'))
-            )
-            ->withAddedRequired(
                 (new StringParameter('maxHeight'))
                     ->withRegex(new Regex('/^\d+$/'))
             )
             ->withAddedRequired(
-                (new StringParameter('minWidth'))
+                (new StringParameter('maxWidth'))
+                    ->withRegex(new Regex('/^\d+$/'))
+            )
+            ->withAddedRequired(
+                (new StringParameter('minHeight'))
                     ->withRegex(new Regex('/^\d+$/'))
                     ->withDefault('16')
             )
             ->withAddedRequired(
-                (new StringParameter('minHeight'))
+                (new StringParameter('minWidth'))
                     ->withRegex(new Regex('/^\d+$/'))
                     ->withDefault('16')
             );

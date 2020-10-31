@@ -32,8 +32,8 @@ class InsertAction extends Action
     public function getParameters(): ParametersInterface
     {
         return (new Parameters)
-            ->withAddedRequired(
-                new StringParameter('required')
+            ->withAddedOptional(
+                (new StringParameter('expires'))
             );
     }
 

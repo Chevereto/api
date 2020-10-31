@@ -14,15 +14,19 @@ declare(strict_types=1);
 namespace Chevereto\Actions\Image;
 
 use Chevere\Components\Action\Action;
+use Chevere\Components\Parameter\Parameter;
 use Chevere\Components\Parameter\Parameters;
 use Chevere\Components\Parameter\StringParameter;
+use Chevere\Components\Regex\Regex;
 use Chevere\Components\Response\ResponseSuccess;
 use Chevere\Components\Service\ServiceProviders;
+use Chevere\Components\Type\Type;
 use Chevere\Interfaces\Parameter\ArgumentsInterface;
 use Chevere\Interfaces\Parameter\ParametersInterface;
 use Chevere\Interfaces\Response\ResponseInterface;
 use Chevere\Interfaces\Service\ServiceableInterface;
 use Chevere\Interfaces\Service\ServiceProvidersInterface;
+use Intervention\Image\Image;
 
 /**
  * Upload the image to the target destination.
@@ -35,13 +39,20 @@ class UploadAction extends Action implements ServiceableInterface
     public function getParameters(): ParametersInterface
     {
         return (new Parameters)
+            ->withAddedRequired(new Parameter('image', new Type(Image::class)))
             ->withAddedRequired(
-                (new StringParameter('expires'))
+                (new StringParameter('naming'))
+                    ->withRegex(new Regex('/^(original|random|mixed|id)$/'))
+                    ->withDefault('original')
             )
-            ->withAddedRequired(new StringParameter('filename'))
-            ->withAddedRequired(new StringParameter('uploadPath'))
-            ->withAddedRequired(new StringParameter('naming'))
-            ->withAddedRequired(new StringParameter('storageId'));
+            ->withAddedRequired(
+                (new StringParameter('originalName'))
+                    ->withRegex(new Regex('/^.+\.[a-zA-Z]{3}$/'))
+            )
+            ->withAddedRequired(
+                new Parameter('storageId', new Type(Type::INTEGER))
+            )
+            ->withAddedRequired(new StringParameter('uploadPath'));
     }
 
     public function getServiceProviders(): ServiceProvidersInterface

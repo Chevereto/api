@@ -33,7 +33,7 @@ use function Safe\mime_content_type;
  * Provides a run method returning a `ResponseSuccess` with
  * data `['bytes' => <int>, 'mime' => <string>]`.
  */
-class ValidateFileAction extends Action
+class ValidateAction extends Action
 {
     private array $extensions;
 
@@ -46,14 +46,14 @@ class ValidateFileAction extends Action
     public function getParameters(): ParametersInterface
     {
         return (new Parameters)
+        ->withAddedRequired(
+            (new StringParameter('extensions'))
+                ->withRegex(new Regex('/^[\w]+(,[\w]+)*$/'))
+                ->withDescription('Comma-separated list of allowed file extensions')
+        )
             ->withAddedRequired(
                 (new StringParameter('filename'))
                     ->withRegex(new Regex('/^.+$/'))
-            )
-            ->withAddedRequired(
-                (new StringParameter('extensions'))
-                    ->withRegex(new Regex('/^[\w]+(,[\w]+)*$/'))
-                    ->withDescription('Comma-separated list of allowed file extensions')
             )
             ->withAddedOptional(
                 (new StringParameter('maxBytes'))

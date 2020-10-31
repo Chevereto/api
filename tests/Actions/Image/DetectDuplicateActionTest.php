@@ -14,23 +14,20 @@ declare(strict_types=1);
 namespace Chevereto\Tests\Actions\Image;
 
 use Chevere\Components\Parameter\Arguments;
-use Chevereto\Actions\Image\DetectUploadDuplicatedAction;
-use Jenssegers\ImageHash\ImageHash;
-use Jenssegers\ImageHash\Implementations\DifferenceHash;
+use Chevereto\Actions\Image\DetectDuplicateAction;
 use PHPUnit\Framework\TestCase;
-use function Chevereto\Image\imageHash;
 
-final class DetectUploadDuplicatedActionTest extends TestCase
+final class DetectDuplicateActionTest extends TestCase
 {
     public function testConstruct(): void
     {
         $this->expectNotToPerformAssertions();
-        $action = new DetectUploadDuplicatedAction;
+        $action = new DetectDuplicateAction;
         new Arguments(
             $action->parameters(),
             [
+                'md5' => 'ad9ad3a94cff902a07058f5be9b2aea0',
                 'perceptual' => '63686576657265746f',
-                'md5' => 'ad9ad3a94cff902a07058f5be9b2aea0'
             ]
         );
     }

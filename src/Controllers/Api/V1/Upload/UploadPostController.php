@@ -33,8 +33,8 @@ use Chevere\Interfaces\Response\ResponseInterface;
 use Chevere\Interfaces\Service\ServiceableInterface;
 use Chevere\Interfaces\Service\ServiceProvidersInterface;
 use Chevere\Interfaces\Workflow\WorkflowInterface;
-use Chevereto\Actions\File\ValidateFileAction;
-use Chevereto\Actions\Image\DetectUploadDuplicatedAction;
+use Chevereto\Actions\File\ValidateAction as ValidateFileAction;
+use Chevereto\Actions\Image\DetectDuplicateAction;
 use Chevereto\Actions\Image\FetchMetaAction;
 use Chevereto\Actions\Image\FixOrientationAction;
 use Chevereto\Actions\Image\InsertAction;
@@ -138,10 +138,16 @@ final class UploadPostController extends Controller implements ServiceableInterf
                     ])
             )
             // Plug step
-            // ->withAdded(
-            //     'detect-duplication',
-            //     (new Task(DetectDuplicationAction::class))
-            // )
+            ->withAdded(
+                'detect-duplication',
+                (new Task(DetectDuplicateAction::class))
+                    ->withArguments([
+                        'md5' => '${validate:md5}',
+                        'perceptual' => '${validate:perceptual}',
+                        'ipv4' => '${ipv4}',
+                        'ipv6' => '${ipv6}',
+                    ])
+            )
             ->withAdded(
                 'fix-orientation',
                 (new Task(FixOrientationAction::class))
@@ -153,40 +159,45 @@ final class UploadPostController extends Controller implements ServiceableInterf
                     ->withArguments(['image' => '${validate:image}'])
             )
             // Plug step
+            ->withAdded(
+                'strip-meta',
+                (new Task(StripMetaAction::class))
+                    ->withArguments(['image' => '${validate:image}'])
+            )
             // ->withAdded(
-            //     'strip-meta',
-            //     (new Task(StripImageMetaAction::class))
-            //         ->withArguments(['image' => '${validate:image}'])
+            //     'user-quota-check',
+            //     (new Task())
             // )
-            ->withAdded(
-                'user-quota-check',
-                (new Task())
-            )
-            ->withAdded(
-                'storage-failover-quota',
-                (new Task())
-            )
+            // ->withAdded(
+            //     'storage-failover',
+            //     (new Task())
+            // )
             ->withAdded(
                 'upload',
                 (new Task(UploadAction::class))
                     ->withArguments([
-                        'filename' => '${filename}',
-                        'uploadPath' => '${uploadPath}',
+                        'image' => '${validate:image}',
                         'naming' => '${naming}',
-                        'storageId' => '${storageId}',
+                        'originalName' => '${originalName}',
+                        'storageId' => '${storage-failover:storageId}',
+                        'uploadPath' => '${uploadPath}',
                     ])
             )
             ->withAdded(
                 'insert',
                 (new Task(InsertAction::class))
-                    ->withArguments(
-                        [
-                            'albumId' => '${albumId}',
-                            'storageId' => '${storageId}',
-                            'expires' => '${expires}',
-                            'userId' => '${userId}',
-                        ]
-                    )
+                    ->withArguments([
+                        'albumId' => '${albumId}',
+                        'exif' => '${fetch-meta:exif}',
+                        'expires' => '${expires}',
+                        'image' => '${validate:image}',
+                        'iptc' => '${fetch-meta:iptc}',
+                        'md5' => '${validate:md5}',
+                        'perceptual' => '${validate:perceptual}',
+                        'storageId' => '${storage-failover:storageId}',
+                        'userId' => '${userId}',
+                        'xmp' => '${fetch-meta:xmp}',
+                    ])
             );
     }
 
