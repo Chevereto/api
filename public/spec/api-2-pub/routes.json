@@ -1,0 +1,90 @@
+{
+    "name": "api-2-pub",
+    "spec": "\/spec\/api-2-pub\/routes.json",
+    "routes": {
+        "image-id": {
+            "name": "image-id",
+            "spec": "\/spec\/api-2-pub\/image-id\/route.json",
+            "path": "\/api\/2\/pub\/image\/{id:\\d+}\/",
+            "regex": "~^(?|\/api\/2\/pub\/image\/(\\d+)\/)$~",
+            "wildcards": {
+                "id": "^\\d+$"
+            },
+            "endpoints": {
+                "GET": {
+                    "method": "GET",
+                    "spec": "\/spec\/api-2-pub\/image-id\/GET.json",
+                    "description": "Get the image identified by its id.",
+                    "parameters": {}
+                }
+            }
+        },
+        "upload": {
+            "name": "upload",
+            "spec": "\/spec\/api-2-pub\/upload\/route.json",
+            "path": "\/api\/2\/pub\/upload\/",
+            "regex": "#\/api\/2\/pub\/upload\/#",
+            "wildcards": {},
+            "endpoints": {
+                "POST": {
+                    "method": "POST",
+                    "spec": "\/spec\/api-2-pub\/upload\/POST.json",
+                    "description": "Uploads the attached resource.",
+                    "parameters": {
+                        "source": {
+                            "name": "source",
+                            "regex": "\/.*\/",
+                            "description": "",
+                            "isRequired": true
+                        }
+                    }
+                }
+            }
+        },
+        "album-id": {
+            "name": "album-id",
+            "spec": "\/spec\/api-2-pub\/album-id\/route.json",
+            "path": "\/api\/2\/pub\/album\/{id:.*}\/",
+            "regex": "~^(?|\/api\/2\/pub\/album\/(.*)\/)$~",
+            "wildcards": {
+                "id": "^.*$"
+            },
+            "endpoints": {
+                "GET": {
+                    "method": "GET",
+                    "spec": "\/spec\/api-2-pub\/album-id\/GET.json",
+                    "description": "Get an album identified by its id.",
+                    "parameters": {}
+                },
+                "PATCH": {
+                    "method": "PATCH",
+                    "spec": "\/spec\/api-2-pub\/album-id\/PATCH.json",
+                    "description": "Updates an album identified by its id.",
+                    "parameters": {}
+                }
+            }
+        },
+        "album": {
+            "name": "album",
+            "spec": "\/spec\/api-2-pub\/album\/route.json",
+            "path": "\/api\/2\/pub\/album\/",
+            "regex": "#\/api\/2\/pub\/album\/#",
+            "wildcards": {},
+            "endpoints": {
+                "POST": {
+                    "method": "POST",
+                    "spec": "\/spec\/api-2-pub\/album\/POST.json",
+                    "description": "Creates an album.",
+                    "parameters": {
+                        "name": {
+                            "name": "name",
+                            "regex": "\/\\w+\/",
+                            "description": "",
+                            "isRequired": true
+                        }
+                    }
+                }
+            }
+        }
+    }
+}

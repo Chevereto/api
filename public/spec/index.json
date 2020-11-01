@@ -1,21 +1,61 @@
 {
     "groups": {
-        "api": {
-            "name": "api",
-            "spec": "\/spec\/api\/routes.json",
+        "api-1": {
+            "name": "api-1",
+            "spec": "\/spec\/api-1\/routes.json",
+            "routes": {
+                "api-1-upload": {
+                    "name": "api-1-upload",
+                    "spec": "\/spec\/api-1\/api-1-upload\/route.json",
+                    "path": "\/api\/1\/upload\/",
+                    "regex": "#\/api\/1\/upload\/#",
+                    "wildcards": {},
+                    "endpoints": {
+                        "POST": {
+                            "method": "POST",
+                            "spec": "\/spec\/api-1\/api-1-upload\/POST.json",
+                            "description": "Uploads an image resource.",
+                            "parameters": {
+                                "source": {
+                                    "name": "source",
+                                    "regex": "\/^.*$\/",
+                                    "description": "A base64 image string OR an image URL. It also takes image multipart\/form-data.",
+                                    "isRequired": true
+                                },
+                                "key": {
+                                    "name": "key",
+                                    "regex": "\/^.*$\/",
+                                    "description": "API V1 key.",
+                                    "isRequired": true
+                                },
+                                "format": {
+                                    "name": "format",
+                                    "regex": "\/^(json|txt)$\/",
+                                    "description": "Response document output format. Defaults to `json`.",
+                                    "isRequired": false
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "api-2-pub": {
+            "name": "api-2-pub",
+            "spec": "\/spec\/api-2-pub\/routes.json",
             "routes": {
                 "image-id": {
                     "name": "image-id",
-                    "spec": "\/spec\/api\/image-id\/route.json",
-                    "path": "\/api\/2\/image\/{id:.*}\/",
-                    "regex": "~^(?|\/api\/2\/image\/(.*)\/)$~",
+                    "spec": "\/spec\/api-2-pub\/image-id\/route.json",
+                    "path": "\/api\/2\/pub\/image\/{id:\\d+}\/",
+                    "regex": "~^(?|\/api\/2\/pub\/image\/(\\d+)\/)$~",
                     "wildcards": {
-                        "id": "^.*$"
+                        "id": "^\\d+$"
                     },
                     "endpoints": {
                         "GET": {
                             "method": "GET",
-                            "spec": "\/spec\/api\/image-id\/GET.json",
+                            "spec": "\/spec\/api-2-pub\/image-id\/GET.json",
                             "description": "Get the image identified by its id.",
                             "parameters": {}
                         }
@@ -23,19 +63,19 @@
                 },
                 "upload": {
                     "name": "upload",
-                    "spec": "\/spec\/api\/upload\/route.json",
-                    "path": "\/api\/2\/upload\/",
-                    "regex": "#\/api\/2\/upload\/#",
+                    "spec": "\/spec\/api-2-pub\/upload\/route.json",
+                    "path": "\/api\/2\/pub\/upload\/",
+                    "regex": "#\/api\/2\/pub\/upload\/#",
                     "wildcards": {},
                     "endpoints": {
                         "POST": {
                             "method": "POST",
-                            "spec": "\/spec\/api\/upload\/POST.json",
+                            "spec": "\/spec\/api-2-pub\/upload\/POST.json",
                             "description": "Uploads the attached resource.",
                             "parameters": {
                                 "source": {
                                     "name": "source",
-                                    "regex": "\/^.*$\/",
+                                    "regex": "\/.*\/",
                                     "description": "",
                                     "isRequired": true
                                 }
@@ -45,22 +85,22 @@
                 },
                 "album-id": {
                     "name": "album-id",
-                    "spec": "\/spec\/api\/album-id\/route.json",
-                    "path": "\/api\/2\/album\/{id:.*}\/",
-                    "regex": "~^(?|\/api\/2\/album\/(.*)\/)$~",
+                    "spec": "\/spec\/api-2-pub\/album-id\/route.json",
+                    "path": "\/api\/2\/pub\/album\/{id:.*}\/",
+                    "regex": "~^(?|\/api\/2\/pub\/album\/(.*)\/)$~",
                     "wildcards": {
                         "id": "^.*$"
                     },
                     "endpoints": {
                         "GET": {
                             "method": "GET",
-                            "spec": "\/spec\/api\/album-id\/GET.json",
+                            "spec": "\/spec\/api-2-pub\/album-id\/GET.json",
                             "description": "Get an album identified by its id.",
                             "parameters": {}
                         },
                         "PATCH": {
                             "method": "PATCH",
-                            "spec": "\/spec\/api\/album-id\/PATCH.json",
+                            "spec": "\/spec\/api-2-pub\/album-id\/PATCH.json",
                             "description": "Updates an album identified by its id.",
                             "parameters": {}
                         }
@@ -68,109 +108,23 @@
                 },
                 "album": {
                     "name": "album",
-                    "spec": "\/spec\/api\/album\/route.json",
-                    "path": "\/api\/2\/album\/",
-                    "regex": "#\/api\/2\/album\/#",
+                    "spec": "\/spec\/api-2-pub\/album\/route.json",
+                    "path": "\/api\/2\/pub\/album\/",
+                    "regex": "#\/api\/2\/pub\/album\/#",
                     "wildcards": {},
                     "endpoints": {
                         "POST": {
                             "method": "POST",
-                            "spec": "\/spec\/api\/album\/POST.json",
+                            "spec": "\/spec\/api-2-pub\/album\/POST.json",
                             "description": "Creates an album.",
                             "parameters": {
                                 "name": {
                                     "name": "name",
-                                    "regex": "\/^.*$\/",
+                                    "regex": "\/\\w+\/",
                                     "description": "",
                                     "isRequired": true
                                 }
                             }
-                        }
-                    }
-                }
-            }
-        },
-        "api-legacy": {
-            "name": "api-legacy",
-            "spec": "\/spec\/api-legacy\/routes.json",
-            "routes": {
-                "legacy-upload": {
-                    "name": "legacy-upload",
-                    "spec": "\/spec\/api-legacy\/legacy-upload\/route.json",
-                    "path": "\/api\/1\/upload\/",
-                    "regex": "#\/api\/1\/upload\/#",
-                    "wildcards": {},
-                    "endpoints": {
-                        "GET": {
-                            "method": "GET",
-                            "spec": "\/spec\/api-legacy\/legacy-upload\/GET.json",
-                            "description": "Uploads an image resource.",
-                            "parameters": {
-                                "source": {
-                                    "name": "source",
-                                    "regex": "\/^.*$\/",
-                                    "description": "A base64 image string OR an image URL or a FILES single resource.",
-                                    "isRequired": true
-                                },
-                                "key": {
-                                    "name": "key",
-                                    "regex": "\/^.*$\/",
-                                    "description": "API V1 key.",
-                                    "isRequired": true
-                                },
-                                "format": {
-                                    "name": "format",
-                                    "regex": "\/^.*$\/",
-                                    "description": "Response document output format. Defaults to `json`.",
-                                    "isRequired": false
-                                }
-                            }
-                        },
-                        "POST": {
-                            "method": "POST",
-                            "spec": "\/spec\/api-legacy\/legacy-upload\/POST.json",
-                            "description": "Uploads an image resource.",
-                            "parameters": {
-                                "source": {
-                                    "name": "source",
-                                    "regex": "\/^.*$\/",
-                                    "description": "A base64 image string OR an image URL or a FILES single resource.",
-                                    "isRequired": true
-                                },
-                                "key": {
-                                    "name": "key",
-                                    "regex": "\/^.*$\/",
-                                    "description": "API V1 key.",
-                                    "isRequired": true
-                                },
-                                "format": {
-                                    "name": "format",
-                                    "regex": "\/^.*$\/",
-                                    "description": "Response document output format. Defaults to `json`.",
-                                    "isRequired": false
-                                }
-                            }
-                        }
-                    }
-                }
-            }
-        },
-        "web": {
-            "name": "web",
-            "spec": "\/spec\/web\/routes.json",
-            "routes": {
-                "web": {
-                    "name": "web",
-                    "spec": "\/spec\/web\/web\/route.json",
-                    "path": "\/",
-                    "regex": "#\/#",
-                    "wildcards": {},
-                    "endpoints": {
-                        "GET": {
-                            "method": "GET",
-                            "spec": "\/spec\/web\/web\/GET.json",
-                            "description": "Presents the user interface.",
-                            "parameters": {}
                         }
                     }
                 }

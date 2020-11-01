@@ -1,0 +1,13 @@
+{
+    "method": "POST",
+    "spec": "\/spec\/api-2-pub\/upload\/POST.json",
+    "description": "Uploads the attached resource.",
+    "parameters": {
+        "source": {
+            "name": "source",
+            "regex": "\/.*\/",
+            "description": "",
+            "isRequired": true
+        }
+    }
+}

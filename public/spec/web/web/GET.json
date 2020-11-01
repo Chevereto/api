@@ -1,6 +1,0 @@
-{
-    "method": "GET",
-    "spec": "\/spec\/web\/web\/GET.json",
-    "description": "Presents the user interface.",
-    "parameters": {}
-}
