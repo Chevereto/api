@@ -14,16 +14,25 @@ It provides an extensible API, built on top of the [Chevere](https://chevere.org
 
 ### Why Chevereto?
 
-- 🌏 **Huge volume**
-  Chevereto has been proved to be capable of manage collections big as 10 M images with a reasonable machine usage.
-- 🧔🏾 **Experienced**
-  Born in 2007, Chevereto is a project with mature development with 4 major releases. Continuos updates are steady delivered.
-- 😉 **Community driven**
-  A [community](https://chevereto.com/community/) drives the development of Chevereto.
-- 🏛 **MIT Licensed**
-  It is released under the MIT License, without the _caveats_ of other open source licenses.
-- 💎 **Modern architecture**
-  Chevereto is PHP 8 software running under its own application servers. The application runtime can be tweaked to the bone for ultimate performance.
+#### 🌏 Huge volume
+
+Chevereto has been proved to be capable of manage collections big as 10 M images with a reasonable machine usage.
+
+#### 🧔🏾 Experienced
+
+Born in 2007, Chevereto is a project with mature development with 4 major releases. Continuos updates are steady delivered.
+
+#### 😉 Community driven
+
+A [community](https://chevereto.com/community/) drives the development of Chevereto.
+
+#### 🏛 MIT Licensed
+
+It is released under the MIT License, without the _caveats_ of other open source licenses.
+
+#### 💎 Modern architecture
+
+Chevereto is PHP 8 software running under its own application servers. The application runtime can be tweaked to the bone for ultimate performance.
 
 ### Powered by Chevereto
 
