@@ -1,0 +1,23 @@
+{
+    "name": "album-id",
+    "spec": "\/spec\/api-2-pub\/album-id\/route.json",
+    "path": "\/api\/2\/pub\/album\/{id:.*}\/",
+    "regex": "~^(?|\/api\/2\/pub\/album\/(.*)\/)$~",
+    "wildcards": {
+        "id": "^.*$"
+    },
+    "endpoints": {
+        "GET": {
+            "method": "GET",
+            "spec": "\/spec\/api-2-pub\/album-id\/GET.json",
+            "description": "Get an album identified by its id.",
+            "parameters": {}
+        },
+        "PATCH": {
+            "method": "PATCH",
+            "spec": "\/spec\/api-2-pub\/album-id\/PATCH.json",
+            "description": "Updates an album identified by its id.",
+            "parameters": {}
+        }
+    }
+}

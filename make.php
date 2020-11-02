@@ -18,7 +18,7 @@ use Chevere\Components\Routing\RoutingDescriptorsMaker;
 use Chevere\Components\Spec\SpecMaker;
 use Chevere\Components\Spec\SpecPath;
 use Chevere\Components\VarExportable\VarExportable;
-use function Chevere\Components\Filesystem\dirForString;
+use function Chevere\Components\Filesystem\dirForPath;
 use function Chevere\Components\Routing\routerForRoutingDescriptors;
 
 require 'vendor/autoload.php';
@@ -26,10 +26,10 @@ require 'vendor/autoload.php';
 set_error_handler('Chevere\Components\ThrowableHandler\errorsAsExceptions');
 set_exception_handler('Chevere\Components\ThrowableHandler\consoleHandler');
 
-$dir = dirForString(__DIR__ . '/');
+$dir = dirForPath(__DIR__ . '/');
 $routingDir = $dir->getChild('app/routing/');
 $router = new Router;
-foreach (['api', 'api-legacy', 'web'] as $group) {
+foreach (['api-1', 'api-2-pub', 'api-2-admin'] as $group) {
     $routerForGroup = routerForRoutingDescriptors(
         (new RoutingDescriptorsMaker(
             $routingDir->getChild("$group/")
