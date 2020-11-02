@@ -12,11 +12,22 @@ You can use Chevereto to build your own image hosting service for your own perso
 
 It provides an extensible API, built on top of the [Chevere](https://chevere.org/) framework with support for addons. With Chevereto you can build _exactly_ what you need around your media. You can rely your project in a tested, solid, clean and highly-proficient code base, all maintained by a [highly-dedicated](https://github.com/rodolfoberrios) developer.
 
+### Why Chevereto?
+
+- 🌏 **Huge volume**
+  Chevereto has been proved to be capable of manage collections big as 10 M images with a reasonable machine usage.
+- 🧔🏾 **Experienced**
+  Born in 2007, Chevereto is a project with mature development with 4 major releases. Continuos updates are steady delivered.
+- 😉 **Community driven**
+  A [community](https://chevereto.com/community/) drives the development of Chevereto.
+- 🏛 **MIT Licensed**
+  It is released under the MIT License, without the _caveats_ of other open source licenses.
+- 💎 **Modern architecture**
+  Chevereto is PHP 8 software running under its own application servers. The application runtime can be tweaked to the bone for ultimate performance.
+
 ### Powered by Chevereto
 
-The following notable websites are using Chevereto (including previous release).
-
-> 👀 Know a notable website using Chevereto? [Let me know](#contact) to add it to this list.
+There should be about **10~15K** Chevereto installations out there, each one hosting from zero up to ten million images. The following [notable websites](https://chevereto.com/community/threads/big-chevereto-hosts.8808/) are using Chevereto (any release).
 
 - [Forumbilder](https://forumbilder.com/)
 - [Freeimage.host](https://freeimage.host/)
@@ -106,14 +117,16 @@ I want to run a [cloud](https://chevereto.cloud/) version of Chevereto. Are you 
 
 ## Alternatives
 
-There are many software that overlaps with Chevereto in many functionalities so it could be the case that other software will fit better your particular needs. I recognize a serious (and ongoing) time investment, care and effort in these projects so please give them a try if you are into it.
+There are many software that overlaps with Chevereto in some functionalities so it could be the case that other software will fit better your particular needs. I recognize a serious (and ongoing) time investment, care and effort in these projects so please give them a try if you are into it.
 
-| Project                                                | Description                           |
-| ------------------------------------------------------ | ------------------------------------- |
-| [Photoprism](https://github.com/photoprism/photoprism) | Personal Photo Management             |
-| [Piwigo](https://github.com/Piwigo/Piwigo)             | Photo gallery application for the web |
-| [Pixelfed](https://github.com/pixelfed/pixelfed)       | Like a federated Instagram            |
-| [Lychee](https://github.com/LycheeOrg/Lychee)          | Manage and share photos               |
+| Project                                     | Description                           |
+| ------------------------------------------- | ------------------------------------- |
+| [Photoprism](https://photoprism.org/)       | Personal Photo Management             |
+| [Piwigo](https://piwigo.org/)               | Photo gallery application for the web |
+| [Pixelfed](https://pixelfed.org/)           | Like a federated Instagram            |
+| [Lychee](https://lycheeorg.github.io/)      | Manage and share photos               |
+| [Zenphoto](https://www.zenphoto.org/)       | Gallery and CMS                       |
+| [MediaGoblin](https://www.mediagoblin.org/) | Media publishing platform             |
 
 👍🏾 If you love some feature present in that software (or any other) don't hesitate to [purpose it]([issues](https://github.com/chevereto/chevereto/issues/new)) for considering add it to Chevereto.
 
