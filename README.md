@@ -1,5 +1,7 @@
 # Chevereto
 
+![Chevereto](LOGO.svg)
+
 Chevereto is a server-side software for creating a multi-user, full-featured media sharing solution. It is headless, providing a both auto-mapped and self-described REST API that allows to use it under many different situations and use cases.
 
 It's your application. Your rules, your eyes. Say goodbye to closures, restrictions and data mining on your media.
@@ -39,8 +41,6 @@ The project is under alpha development and is not recommended to use it for prod
 - I'm [ripping apart](https://chevereto.com/community/threads/features-to-deprecate-for-v4.11531/) all the _excess_ of features present in V3 (that plugins will be needed to keep some features)
 - Documentation (for the Chevere framework)
 
-> At this time there's no contribution guidelines. Feel free to contact `rodolfo@chevereto.com` me for more information.
-
 ## History
 
 Chevereto project began in 2007 as a self-hosted alternative to services like ImageShack, Photobucket, Flickr, imgur, 500px, etc. Development has ben carried **all this time** exclusively by [Rodolfo Berrios](https://rodolfoberrios.com/) who works only in Chevereto.
@@ -64,27 +64,31 @@ On August 2016 a fork, named [Chevereto-Free](https://github.com/chevereto/cheve
 
 The intention has been always to make the project profitable to sustain its ongoing development and I've managed to making my living out of it. I'm proud of being able to focus exclusively on Chevereto development and nothing else.
 
-### Extra features (addons)
+### Extra features (license addons)
 
 By [purchasing](https://chevereto.com/pricing/) a V3 license you get access to extra features and an additional support response. Paid licensing is still available for V3, and it represent the main source of income for the project ongoing expenses.
 
 > **Note:** Most V3 paid features will be delivered as stand-alone plugins for V4. There will be a special plugin price for those coming from paid V3.
 
+Chevereto won't be possible thanks to the support of all those who have purchased a license already. ❤ THANK YOU VERY MUCH.
+
 ### Custom development
 
-Custom development is available for those who can afford it (I'm expensive). Feel free to [contact](#contact) me for a quote.
+Custom development is available, although it has a very tall price. However, if you want to build your application around Chevereto I'm your ultimate choice as I created on my own the entire framework and application architecture.
 
 ### Donations
 
-The development of this software is a life project that has consumed many years of my time. I don't work for any company, I'm not backed by anyone else except users of this software.
+The development of this software is a life project that has consumed many years of my time. **I don't work for any company**, I'm not backed by anyone else except users of this software.
 
 Donations are welcome and highly appreciated and help to sustain development. You can send your one-time donation via [PayPal](https://paypal.me/RodolfoBerrios). Common assets required in development are also welcome like hosting, servers, computers, etc.
 
-I thank very much all our [donors](DONORS.md).
+<!-- ❤ I thank very much all my [donors](DONORS.md). -->
 
 ### Sponsoring development
 
-Any [issue](https://github.com/Chevereto/chevereto/issues) or [RFC](https://github.com/Chevereto/rfc-sourcing/blob/master/RFC.md) can be sponsored to be pushed for development. Our [sponsors](SPONSORS.md) get listed and their contribution is highly appreciated.
+Any [issue](https://github.com/Chevereto/chevereto/issues) or [RFC](https://github.com/Chevereto/rfc-sourcing/blob/master/RFC.md) can be sponsored to be pushed for development.
+
+<!-- 👏🏾 My [sponsors](SPONSORS.md) get listed and their contribution is highly appreciated. -->
 
 ### Servicing
 
@@ -112,7 +116,7 @@ There are many software that overlaps with Chevereto in many functionalities so 
 | [Pixelfed](https://github.com/pixelfed/pixelfed)       | Like a federated Instagram            |
 | [Lychee](https://github.com/LycheeOrg/Lychee)          | Manage and share photos               |
 
-👍🏾 If you love some feature present in that software (or any other) don't hesitate to [purpose it](issues) for considering add it to Chevereto.
+👍🏾 If you love some feature present in that software (or any other) don't hesitate to [purpose it]([issues](https://github.com/chevereto/chevereto/issues/new)) for considering add it to Chevereto.
 
 ## License
 
