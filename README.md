@@ -110,7 +110,6 @@ There are many software that overlaps with Chevereto in many functionalities so 
 
 | Project                                                | Description                           |
 | ------------------------------------------------------ | ------------------------------------- |
-| [OwnPhotos](https://github.com/hooram/ownphotos)       | Alternative to Google Photos          |
 | [Photoprism](https://github.com/photoprism/photoprism) | Personal Photo Management             |
 | [Piwigo](https://github.com/Piwigo/Piwigo)             | Photo gallery application for the web |
 | [Pixelfed](https://github.com/pixelfed/pixelfed)       | Like a federated Instagram            |
