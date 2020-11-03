@@ -14,7 +14,7 @@ jobs:
         uses: shivammathur/setup-php@v2
         with:
           php-version: 7.4
-          extensions: opcache, mbstring, ds
+          extensions: opcache, mbstring, ds, imagick
           ini-values: opcache.enable_cli = 1, opcache.enable = 1, extension="ds.so"
           coverage: pcov
 
