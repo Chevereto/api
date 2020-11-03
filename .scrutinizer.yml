@@ -8,6 +8,7 @@ build:
       version: 7.4
       pecl_extensions:
         - ds
+        - imagick
       ini:
         "date.timezone": "UTC"
         "opcache.enable_cli": 1
