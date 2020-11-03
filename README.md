@@ -43,8 +43,9 @@ Chevereto is PHP 8 software running under its own application servers. The appli
 
 ### Powered by Chevereto
 
-There should be about **10~15K** Chevereto installations out there, each one hosting from zero up to ten million images. The following [notable websites](https://chevereto.com/community/threads/big-chevereto-hosts.8808/) are using Chevereto (any release).
+There should be about **10~15K** Chevereto installations out there, each one hosting from zero up to ten million images. The following [notable public websites](https://chevereto.com/community/threads/big-chevereto-hosts.8808/) are using Chevereto (any release).
 
+- [comss.pics](https://comss.pics/)
 - [Forumbilder](https://forumbilder.com/)
 - [Freeimage.host](https://freeimage.host/)
 - [Gifyu](https://gifyu.com/)
@@ -58,7 +59,7 @@ There should be about **10~15K** Chevereto installations out there, each one hos
 - [lensdump](https://lensdump.com/)
 - [nickpic](https://nickpic.host/)
 - [qpix](https://qpix.com/)
-- [Upld.im](https://upld.im/)
+- [UPLD.IM](https://upld.im/)
 
 ## Contribution
 
