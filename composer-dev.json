@@ -27,5 +27,14 @@
             "Chevereto\\": "src/",
             "Tests\\": "tests/"
         }
+    },
+    "repositories": {
+        "dev-package": {
+            "type": "path",
+            "url": "/home/rodolfo/git/chevere/chevere",
+            "options": {
+                "symlink": true
+            }
+        }
     }
 }
