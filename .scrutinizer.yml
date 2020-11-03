@@ -14,7 +14,10 @@ build:
         "opcache.enable_cli": 1
         "opcache.enable": 1
         "extension": "ds.so"
+        "extension": "imagick.so"
   dependencies:
+    before:
+      - sudo apt -y install imagemagick libmagickwand-dev
     override:
       - composer install --prefer-dist --classmap-authoritative
   nodes:
