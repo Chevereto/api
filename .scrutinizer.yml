@@ -4,6 +4,9 @@ filter:
 
 build:
   environment:
+    apt_packages:
+      - libmagickwand-dev
+      - libmagickcore-dev
     php:
       version: 7.4
       pecl_extensions:
@@ -16,8 +19,6 @@ build:
         "extension": "ds.so"
         "extension": "imagick.so"
   dependencies:
-    before:
-      - sudo apt -y install imagemagick libmagickwand-dev
     override:
       - composer install --prefer-dist --classmap-authoritative
   nodes:
