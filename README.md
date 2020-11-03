@@ -1,5 +1,7 @@
 # Chevereto
 
+[![Scrutinizer Code Quality](https://scrutinizer-ci.com/g/Chevereto/chevereto/badges/quality-score.png?b=master)](https://scrutinizer-ci.com/g/Chevereto/chevereto/?branch=master)
+
 ![Chevereto](LOGO.svg)
 
 Chevereto is a server-side software for creating a multi-user, full-featured media sharing solution. It is headless, providing a both auto-mapped and self-described REST API that allows to use it under many different situations and use cases.
