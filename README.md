@@ -1,6 +1,11 @@
 # Chevereto
 
-[![Scrutinizer Code Quality](https://scrutinizer-ci.com/g/Chevereto/chevereto/badges/quality-score.png?b=master)](https://scrutinizer-ci.com/g/Chevereto/chevereto/?branch=master)
+[![Scrutinizer Code
+Quality](https://img.shields.io/scrutinizer/quality/g/chevereto/chevereto?style=flat-square)](https://scrutinizer-ci.com/g/chevereto/chevereto/?branch=master) [![codecov](https://img.shields.io/codecov/c/github/chevereto/chevereto?style=flat-square)](https://codecov.io/gh/chevereto/chevereto)
+[![CodeFactor](https://img.shields.io/codefactor/grade/github/chevereto/chevereto?label=code%20grade&style=flat-square)](https://www.codefactor.io/repository/github/chevereto/chevereto)
+[![Codacy Badge](https://img.shields.io/codacy/grade/9bc0696e742b438cabb258f9240cac66?style=flat-square)](https://www.codacy.com/gh/chevereto/chevereto?utm_source=github.com&utm_medium=referral&utm_content=chevere/chevere&utm_campaign=Badge_Grade)
+[![Maintainability](https://img.shields.io/codeclimate/maintainability/Chevereto/chevereto?style=flat-square)](https://codeclimate.com/github/chevereto/chevereto)
+[![Tech Debt](https://img.shields.io/codeclimate/tech-debt/Chevereto/chevereto?style=flat-square)](https://codeclimate.com/github/chevereto/chevereto)
 
 ![Chevereto](LOGO.svg)
 
