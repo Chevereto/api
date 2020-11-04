@@ -13,6 +13,7 @@ declare(strict_types=1);
 
 namespace Chevereto\Vendor\rodolfoberrios\ApiV1XMLFormat\Hooks;
 
+use Chevere\Components\Parameter\StringParameter;
 use Chevere\Components\Regex\Regex;
 use Chevere\Interfaces\Parameter\ParametersInterface;
 use Chevere\Interfaces\Plugin\Plugs\Hooks\HookInterface;
@@ -25,9 +26,12 @@ final class SetParametersHook implements HookInterface
      */
     public function __invoke(&$parameters): void
     {
+        /**
+         * @var StringParameter $parameter
+         */
+        $parameter = $parameters->get('format');
         $parameters = $parameters->withModify(
-            $parameters->get('format')
-                ->withRegex(new Regex('/^(json|redirect|txt|xml)$/'))
+            $parameter->withRegex(new Regex('/^(json|redirect|txt|xml)$/'))
         );
     }
 

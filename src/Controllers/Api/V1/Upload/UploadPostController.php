@@ -53,7 +53,7 @@ use function Safe\tempnam;
 
 final class UploadPostController extends Controller implements ServiceableInterface
 {
-    private User $user;
+    // private User $user;
 
     private Settings $settings;
 

@@ -16,7 +16,6 @@ namespace Chevereto\Actions\Image;
 use Chevere\Components\Action\Action;
 use Chevere\Components\Parameter\Parameter;
 use Chevere\Components\Parameter\Parameters;
-use Chevere\Components\Parameter\StringParameter;
 use Chevere\Components\Response\ResponseSuccess;
 use Chevere\Components\Type\Type;
 use Chevere\Interfaces\Parameter\ArgumentsInterface;
@@ -50,16 +49,10 @@ class FetchMetaAction extends Action
         $image = $arguments->get('image');
         $keys = ['exif', 'iptc', 'xmp'];
         $data = array_fill_keys($keys, []);
-        try {
-            $data['exif'] = $image->exif() ?? [];
-            $data['iptc'] = $image->iptc() ?? [];
-            $xmpDataExtractor = new XmpMetadataExtractor();
-            $data['xmp'] = $xmpDataExtractor->extractFromFile($image->filename);
-        }
-        // @codeCoverageIgnoreStart
-        catch (Throwable $e) {
-        }
-        // @codeCoverageIgnoreEnd
+        $data['exif'] = $image->exif() ?? [];
+        $data['iptc'] = $image->iptc() ?? [];
+        $xmpDataExtractor = new XmpMetadataExtractor();
+        $data['xmp'] = $xmpDataExtractor->extractFromFile($image->basePath());
 
         return new ResponseSuccess($data);
     }

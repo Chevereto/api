@@ -22,4 +22,8 @@ trait ExpectInvalidArgumentExceptionCodeTrait
         $this->expectException(InvalidArgumentException::class);
         $this->expectExceptionCode($code);
     }
+
+    abstract public function expectException(string $exception): void;
+
+    abstract public function expectExceptionCode($code): void;
 }
