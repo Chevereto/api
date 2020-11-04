@@ -44,9 +44,11 @@ class StripMetaAction extends Action
     {
         /**
          * @var Image $image
-         * @var Imagick $image
          */
         $image = $arguments->get('image');
+        /**
+         * @var Imagick $imagick
+         */
         $imagick = $image->getCore();
         $profiles = $imagick->getImageProfiles('icc', true);
         $imagick->stripImage();
