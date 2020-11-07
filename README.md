@@ -9,6 +9,8 @@ Quality](https://img.shields.io/scrutinizer/quality/g/chevereto/chevereto?style=
 
 ![Chevereto](LOGO.svg)
 
+> 🔔 Subscribe to the [newsletter](https://newsletter.chevereto.com/subscription?f=PmL892XuTdfErVq763PCycJQrvZ8PYc9JbsVUttqiPV1zXt6DDtf7lhepEStqE8LhGs8922ZYmGT7CYjMH5uSx23pL6Q) to don't miss any update regarding Chevereto V4.
+
 Chevereto is a server-side software for creating a multi-user, full-featured media sharing solution. It is headless, providing a both auto-mapped and self-described REST API that allows to use it under many different situations and use cases.
 
 It's your application. Your rules, your eyes. Say goodbye to closures, restrictions and data mining on your media.
@@ -106,17 +108,13 @@ Custom development is available, although it has a very tall price. However, if 
 
 ### Donations
 
-The development of this software is a life project that has consumed many years of my time. **I don't work for any company**, I'm not backed by anyone else except users of this software.
+Development of this software is a life project that has consumed many years of my time. **I don't work for any company**, I'm not backed by anyone else except users of this software.
 
-Donations are welcome and highly appreciated and help to sustain development. You can send your one-time donation via [PayPal](https://paypal.me/RodolfoBerrios). Common assets required in development are also welcome like hosting, servers, computers, etc.
-
-<!-- ❤ I thank very much all my [donors](DONORS.md). -->
+❤ I thank very much all my [donors](DONORS.md).
 
 ### Sponsoring development
 
-Any [issue](https://github.com/Chevereto/chevereto/issues) or [RFC](https://github.com/Chevereto/rfc-sourcing/blob/master/RFC.md) can be sponsored to be pushed for development.
-
-<!-- 👏🏾 My [sponsors](SPONSORS.md) get listed and their contribution is highly appreciated. -->
+Any [issue](https://github.com/Chevereto/chevereto/issues) or [RFC](https://github.com/Chevereto/rfc-sourcing/blob/master/RFC.md) can be [sponsored](SPONSORS.md) to be pushed for development.
 
 ### Servicing
 
