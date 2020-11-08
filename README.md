@@ -132,21 +132,6 @@ I've the intention of allowing third-party tech support. That way, others can de
 
 I want to run a [cloud](https://chevereto.cloud/) version of Chevereto. Are you someone with plenty experience in delivering cloud applications? Feel free to [contact](#contact) me.
 
-## Alternatives
-
-There are many software that overlaps with Chevereto in some functionalities so it could be the case that other software will fit better your particular needs. I recognize a serious (and ongoing) time investment, care and effort in these projects so please give them a try if you are into it.
-
-| Project                                     | Description                           |
-| ------------------------------------------- | ------------------------------------- |
-| [Photoprism](https://photoprism.org/)       | Personal Photo Management             |
-| [Piwigo](https://piwigo.org/)               | Photo gallery application for the web |
-| [Pixelfed](https://pixelfed.org/)           | Like a federated Instagram            |
-| [Lychee](https://lycheeorg.github.io/)      | Manage and share photos               |
-| [Zenphoto](https://www.zenphoto.org/)       | Gallery and CMS                       |
-| [MediaGoblin](https://www.mediagoblin.org/) | Media publishing platform             |
-
-👍🏾 If you love some feature present in that software (or any other) don't hesitate to [purpose it]([issues](https://github.com/chevereto/chevereto/issues/new)) for considering add it to Chevereto.
-
 ## License
 
 Copyright [Rodolfo Berrios A.](https://rodolfoberrios.com/) Chevereto is licensed under the [MIT license](LICENSE).
