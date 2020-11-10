@@ -11,7 +11,7 @@
 
 declare(strict_types=1);
 
-namespace Chevereto\Actions\Image;
+namespace Chevereto\Actions\File;
 
 use Chevere\Components\Action\Action;
 use Chevere\Components\Parameter\Parameters;
@@ -23,7 +23,7 @@ use Chevere\Interfaces\Parameter\ParametersInterface;
 use Chevere\Interfaces\Response\ResponseInterface;
 
 /**
- * Detects image duplication based in both perceptual and file hashing, against the uploading frequency.
+ * Detects file duplication based in both perceptual and file hashing, against the uploading frequency.
  *
  * Provides a run method returning a `ResponseSuccess` with
  * data `[]`.

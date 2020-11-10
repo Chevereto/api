@@ -11,10 +11,10 @@
 
 declare(strict_types=1);
 
-namespace Chevereto\Tests\Actions\Image;
+namespace Chevereto\Tests\Actions\File;
 
 use Chevere\Components\Parameter\Arguments;
-use Chevereto\Actions\Image\DetectDuplicateAction;
+use Chevereto\Actions\File\DetectDuplicateAction;
 use PHPUnit\Framework\TestCase;
 
 final class DetectDuplicateActionTest extends TestCase
