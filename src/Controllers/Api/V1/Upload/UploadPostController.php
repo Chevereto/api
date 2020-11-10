@@ -32,6 +32,7 @@ use Chevere\Interfaces\Parameter\ParametersInterface;
 use Chevere\Interfaces\Response\ResponseInterface;
 use Chevere\Interfaces\Service\ServiceableInterface;
 use Chevere\Interfaces\Service\ServiceProvidersInterface;
+use Chevere\Interfaces\Workflow\TaskInterface;
 use Chevere\Interfaces\Workflow\WorkflowInterface;
 use Chevereto\Actions\File\ValidateAction as ValidateFileAction;
 use Chevereto\Actions\Image\DetectDuplicateAction;
@@ -113,57 +114,98 @@ final class UploadPostController extends Controller implements ServiceableInterf
             );
     }
 
+    private function getValidateFileTask(): TaskInterface
+    {
+        return (new Task(ValidateFileAction::class))
+            ->withArguments([
+                'extensions' => '${extensions}',
+                'filename' => '${filename}',
+                'maxBytes' => '${maxBytes}',
+                'minBytes' => '${minBytes}',
+            ]);
+    }
+
+    private function getValidateTask(): TaskInterface
+    {
+        return (new Task(ValidateAction::class))
+            ->withArguments([
+                'filename' => '${filename}',
+                'maxHeight' => '${maxHeight}',
+                'maxWidth' => '${maxWidth}',
+                'minHeight' => '${minHeight}',
+                'minWidth' => '${minWidth}',
+            ]);
+    }
+
+    private function getDetectDuplicateTask(): TaskInterface
+    {
+        return (new Task(DetectDuplicateAction::class))
+            ->withArguments([
+                'md5' => '${validate:md5}',
+                'perceptual' => '${validate:perceptual}',
+                'ipv4' => '${ipv4}',
+                'ipv6' => '${ipv6}',
+            ]);
+    }
+
+    private function getFixOrientationTask(): TaskInterface
+    {
+        return (new Task(FixOrientationAction::class))
+            ->withArguments(['image' => '${validate:image}']);
+    }
+
+    private function getFetchMetaTask(): TaskInterface
+    {
+        return (new Task(FetchMetaAction::class))
+            ->withArguments(['image' => '${validate:image}']);
+    }
+
+    private function getStripMetaTask(): TaskInterface
+    {
+        return (new Task(StripMetaAction::class))
+            ->withArguments(['image' => '${validate:image}']);
+    }
+
+    private function getUploadTask(): TaskInterface
+    {
+        return (new Task(UploadAction::class))
+            ->withArguments([
+                'image' => '${validate:image}',
+                'naming' => '${naming}',
+                'originalName' => '${originalName}',
+                'storageId' => '${storage-failover:storageId}',
+                'uploadPath' => '${uploadPath}',
+            ]);
+    }
+
+    private function getInsertTask(): TaskInterface
+    {
+        return (new Task(InsertAction::class))
+            ->withArguments([
+                'albumId' => '${albumId}',
+                'exif' => '${fetch-meta:exif}',
+                'expires' => '${expires}',
+                'image' => '${validate:image}',
+                'iptc' => '${fetch-meta:iptc}',
+                'md5' => '${validate:md5}',
+                'perceptual' => '${validate:perceptual}',
+                'storageId' => '${storage-failover:storageId}',
+                'userId' => '${userId}',
+                'xmp' => '${fetch-meta:xmp}',
+            ]);
+    }
+
     public function getWorkflow(): WorkflowInterface
     {
         return (new Workflow('upload-api-v1'))
-            ->withAdded(
-                'validate-file',
-                (new Task(ValidateFileAction::class))
-                    ->withArguments([
-                        'extensions' => '${extensions}',
-                        'filename' => '${filename}',
-                        'maxBytes' => '${maxBytes}',
-                        'minBytes' => '${minBytes}',
-                    ])
-            )
-            ->withAdded(
-                'validate',
-                (new Task(ValidateAction::class))
-                    ->withArguments([
-                        'filename' => '${filename}',
-                        'maxHeight' => '${maxHeight}',
-                        'maxWidth' => '${maxWidth}',
-                        'minHeight' => '${minHeight}',
-                        'minWidth' => '${minWidth}',
-                    ])
-            )
+            ->withAdded('validate-file', $this->getValidateFileTask())
+            ->withAdded('validate', $this->getValidateTask())
             // Plug step
-            ->withAdded(
-                'detect-duplication',
-                (new Task(DetectDuplicateAction::class))
-                    ->withArguments([
-                        'md5' => '${validate:md5}',
-                        'perceptual' => '${validate:perceptual}',
-                        'ipv4' => '${ipv4}',
-                        'ipv6' => '${ipv6}',
-                    ])
-            )
-            ->withAdded(
-                'fix-orientation',
-                (new Task(FixOrientationAction::class))
-                    ->withArguments(['image' => '${validate:image}'])
-            )
-            ->withAdded(
-                'fetch-meta',
-                (new Task(FetchMetaAction::class))
-                    ->withArguments(['image' => '${validate:image}'])
-            )
+            ->withAdded('detect-duplication', $this->getDetectDuplicateTask())
+            ->withAdded('fix-orientation', $this->getFixOrientationTask())
+            ->withAdded('fetch-meta', $this->getFetchMetaTask())
             // Plug step
-            ->withAdded(
-                'strip-meta',
-                (new Task(StripMetaAction::class))
-                    ->withArguments(['image' => '${validate:image}'])
-            )
+            ->withAdded('strip-meta', $this->getStripMetaTask())
             // ->withAdded(
             //     'user-quota-check',
             //     (new Task())
@@ -174,30 +216,11 @@ final class UploadPostController extends Controller implements ServiceableInterf
             // )
             ->withAdded(
                 'upload',
-                (new Task(UploadAction::class))
-                    ->withArguments([
-                        'image' => '${validate:image}',
-                        'naming' => '${naming}',
-                        'originalName' => '${originalName}',
-                        'storageId' => '${storage-failover:storageId}',
-                        'uploadPath' => '${uploadPath}',
-                    ])
+                $this->getUploadTask()
             )
             ->withAdded(
                 'insert',
-                (new Task(InsertAction::class))
-                    ->withArguments([
-                        'albumId' => '${albumId}',
-                        'exif' => '${fetch-meta:exif}',
-                        'expires' => '${expires}',
-                        'image' => '${validate:image}',
-                        'iptc' => '${fetch-meta:iptc}',
-                        'md5' => '${validate:md5}',
-                        'perceptual' => '${validate:perceptual}',
-                        'storageId' => '${storage-failover:storageId}',
-                        'userId' => '${userId}',
-                        'xmp' => '${fetch-meta:xmp}',
-                    ])
+                $this->getInsertTask()
             );
     }
 

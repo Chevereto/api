@@ -11,6 +11,6 @@
 
 declare(strict_types=1);
 
-use Chevere\Components\Route\RouteName;
+use Chevereto\Controllers\Api\V2\Image\ImagePostController;
 
-return new RouteName('upload') ;
+return new ImagePostController;

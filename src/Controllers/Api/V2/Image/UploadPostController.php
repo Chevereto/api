@@ -11,7 +11,7 @@
 
 declare(strict_types=1);
 
-namespace Chevereto\Controllers\Api\V2\Upload;
+namespace Chevereto\Controllers\Api\V2\Image;
 
 use Chevere\Components\Controller\Controller;
 use Chevere\Components\Parameter\Parameters;
@@ -26,7 +26,7 @@ use Chevere\Interfaces\Plugin\PluggableAnchorsInterface;
 use Chevere\Interfaces\Plugin\Plugs\Hooks\PluggableHooksInterface;
 use Chevere\Interfaces\Response\ResponseInterface;
 
-final class UploadPostController extends Controller implements PluggableHooksInterface
+final class ImagePostController extends Controller implements PluggableHooksInterface
 {
     use PluggableHooksTrait;
 

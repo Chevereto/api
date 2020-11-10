@@ -17,15 +17,15 @@ use Chevere\Components\Parameter\Arguments;
 use Chevere\Interfaces\Response\ResponseSuccessInterface;
 use Chevereto\Components\Settings;
 use Chevereto\Components\User;
-use Chevereto\Controllers\Api\V1\Upload\UploadPostController;
+use Chevereto\Controllers\Api\V1\Upload\ImagePostController;
 use PHPUnit\Framework\TestCase;
 use function Safe\json_encode;
 
-final class UploadPostControllerTest extends TestCase
+final class ImagePostControllerTest extends TestCase
 {
     // public function testConstruct(): void
     // {
-    //     $controller = new UploadPostController;
+    //     $controller = new ImagePostController;
     //     $this->assertIsString($controller->getDescription());
     //     $arguments = new Arguments(
     //         $controller->getParameters(),

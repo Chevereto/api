@@ -9,7 +9,7 @@ Quality](https://img.shields.io/scrutinizer/quality/g/chevereto/chevereto?style=
 
 ![Chevereto](LOGO.svg)
 
-> 🔔 Subscribe to the [newsletter](https://newsletter.chevereto.com/subscription?f=PmL892XuTdfErVq763PCycJQrvZ8PYc9JbsVUttqiPV1zXt6DDtf7lhepEStqE8LhGs8922ZYmGT7CYjMH5uSx23pL6Q) to don't miss any update regarding Chevereto V4.
+> 🔔 Subscribe to the [newsletter](https://newsletter.chevereto.com/subscription?f=PmL892XuTdfErVq763PCycJQrvZ8PYc9JbsVUttqiPV1zXt6DDtf7lhepEStqE8LhGs8922ZYmGT7CYjMH5uSx23pL6Q) to don't miss any update regarding Chevereto.
 
 Chevereto is a server-side software for creating a multi-user, full-featured media sharing solution. It is headless, providing a both auto-mapped and self-described REST API that allows to use it under many different situations and use cases.
 
