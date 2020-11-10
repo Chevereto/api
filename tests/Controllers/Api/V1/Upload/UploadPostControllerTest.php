@@ -14,18 +14,58 @@ declare(strict_types=1);
 namespace Tests\Controllers\Api\V1\Upload;
 
 use Chevere\Components\Parameter\Arguments;
+use Chevere\Exceptions\Core\OutOfBoundsException;
 use Chevere\Interfaces\Response\ResponseSuccessInterface;
+use Chevere\Interfaces\Workflow\TaskInterface;
+use Chevere\Interfaces\Workflow\WorkflowInterface;
 use Chevereto\Components\Settings;
 use Chevereto\Components\User;
-use Chevereto\Controllers\Api\V1\Upload\ImagePostController;
+use Chevereto\Controllers\Api\V1\Upload\UploadPostController;
 use PHPUnit\Framework\TestCase;
 use function Safe\json_encode;
 
-final class ImagePostControllerTest extends TestCase
+final class UploadPostControllerTest extends TestCase
 {
+    public function testConstruct(): void
+    {
+        $controller = new UploadPostController;
+        $serviceProviders = $controller->getServiceProviders();
+        $this->assertSame('withSettings', $serviceProviders->getGenerator()->key());
+        $this->expectException(OutOfBoundsException::class);
+        $controller = $controller->withSettings(new Settings([]));
+    }
+
+    public function testWithSettings(): void
+    {
+        // $this->expectNotToPerformAssertions();
+        $settings = new Settings([
+            'apiV1Key' => 'api-key-value',
+            'extensions' => 'php',
+            'maxBytes' => '20000000',
+            'maxHeight' => '20000',
+            'maxWidth' => '20000',
+            'minBytes' => '0',
+            'minHeight' => '20',
+            'minWidth' => '20',
+            'naming' => 'original',
+            'storageId' => '123',
+            'uploadPath' => '2020/10/23',
+            'userId' => '123',
+        ]);
+        $controller = (new UploadPostController)->withSettings($settings);
+        $this->assertSame($settings, $controller->settings());
+    }
+
+    public function testWorkflow(): void
+    {
+        $this->assertInstanceOf(
+            WorkflowInterface::class,
+            (new UploadPostController)->getWorkflow()
+        );
+    }
+
     // public function testConstruct(): void
     // {
-    //     $controller = new ImagePostController;
     //     $this->assertIsString($controller->getDescription());
     //     $arguments = new Arguments(
     //         $controller->getParameters(),

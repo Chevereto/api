@@ -18,11 +18,18 @@ use Chevere\Components\Description\Traits\DescriptorTrait;
 use Chevere\Components\Message\Message;
 use Chevere\Exceptions\Core\OutOfBoundsException;
 use Chevere\Interfaces\Service\ServiceInterface;
+use Ds\Map;
 
 final class Settings implements ServiceInterface
 {
     use DescriptorTrait;
     use MapTrait;
+
+    public function __construct(array $settingValue)
+    {
+        $this->map = new Map;
+        $this->map->putAll($settingValue);
+    }
 
     public function withPut(string $setting, string $value): self
     {
@@ -32,6 +39,9 @@ final class Settings implements ServiceInterface
         return $new;
     }
 
+    /**
+     * @throws OutOfBoundsException
+     */
     public function assertHasKey(string ...$key): void
     {
         $missing = [];
@@ -48,6 +58,9 @@ final class Settings implements ServiceInterface
         }
     }
 
+    /**
+     * @throws OutOfBoundsException
+     */
     public function get(string $key): string
     {
         try {

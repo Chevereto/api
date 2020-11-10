@@ -27,6 +27,7 @@ use Chevere\Components\Workflow\Workflow;
 use Chevere\Components\Workflow\WorkflowRun;
 use Chevere\Exceptions\Core\Exception;
 use Chevere\Exceptions\Core\InvalidArgumentException;
+use Chevere\Exceptions\Core\OutOfBoundsException;
 use Chevere\Interfaces\Parameter\ArgumentsInterface;
 use Chevere\Interfaces\Parameter\ParametersInterface;
 use Chevere\Interfaces\Response\ResponseInterface;
@@ -42,8 +43,8 @@ use Chevereto\Actions\Image\InsertAction;
 use Chevereto\Actions\Image\StripMetaAction;
 use Chevereto\Actions\Image\UploadAction;
 use Chevereto\Actions\Image\ValidateAction;
+use Chevereto\Actions\Storage\FailoverAction;
 use Chevereto\Components\Settings;
-use Chevereto\Components\User;
 use Laminas\Uri\UriFactory;
 use function Chevere\Components\Workflow\workflowRunner;
 use function Safe\fclose;
@@ -54,8 +55,6 @@ use function Safe\tempnam;
 
 final class UploadPostController extends Controller implements ServiceableInterface
 {
-    // private User $user;
-
     private Settings $settings;
 
     private WorkflowInterface $workflow;
@@ -66,6 +65,9 @@ final class UploadPostController extends Controller implements ServiceableInterf
             ->withAdded('withSettings');
     }
 
+    /**
+     * @throws OutOfBoundsException
+     */
     public function withSettings(Settings $settings): self
     {
         $settings->assertHasKey(
@@ -87,6 +89,11 @@ final class UploadPostController extends Controller implements ServiceableInterf
         $new->settings = $settings;
 
         return $new;
+    }
+
+    public function settings(): Settings
+    {
+        return $this->settings;
     }
 
     public function getDescription(): string
@@ -178,20 +185,28 @@ final class UploadPostController extends Controller implements ServiceableInterf
             ]);
     }
 
+    private function getStorageFailoverTask(): TaskInterface
+    {
+        return (new Task(FailoverAction::class))
+            ->withArguments([
+                'storageId' => 0
+            ]);
+    }
+
     private function getInsertTask(): TaskInterface
     {
         return (new Task(InsertAction::class))
             ->withArguments([
-                'albumId' => '${albumId}',
-                'exif' => '${fetch-meta:exif}',
+                // 'albumId' => '${albumId}',
+                // 'exif' => '${fetch-meta:exif}',
                 'expires' => '${expires}',
-                'image' => '${validate:image}',
-                'iptc' => '${fetch-meta:iptc}',
-                'md5' => '${validate:md5}',
-                'perceptual' => '${validate:perceptual}',
-                'storageId' => '${storage-failover:storageId}',
-                'userId' => '${userId}',
-                'xmp' => '${fetch-meta:xmp}',
+                // 'image' => '${validate:image}',
+                // 'iptc' => '${fetch-meta:iptc}',
+                // 'md5' => '${validate:md5}',
+                // 'perceptual' => '${validate:perceptual}',
+                // 'storageId' => '${storage-failover:storageId}',
+                // 'userId' => '${userId}',
+                // 'xmp' => '${fetch-meta:xmp}',
             ]);
     }
 
@@ -210,18 +225,9 @@ final class UploadPostController extends Controller implements ServiceableInterf
             //     'user-quota-check',
             //     (new Task())
             // )
-            // ->withAdded(
-            //     'storage-failover',
-            //     (new Task())
-            // )
-            ->withAdded(
-                'upload',
-                $this->getUploadTask()
-            )
-            ->withAdded(
-                'insert',
-                $this->getInsertTask()
-            );
+            ->withAdded('storage-failover', $this->getStorageFailoverTask())
+            ->withAdded('upload', $this->getUploadTask())
+            ->withAdded('insert', $this->getInsertTask());
     }
 
     public function withSetUp(): self
