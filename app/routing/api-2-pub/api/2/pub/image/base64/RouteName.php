@@ -13,4 +13,4 @@ declare(strict_types=1);
 
 use Chevere\Components\Route\RouteName;
 
-return new RouteName('api-2-pub-image-id') ;
+return new RouteName('api-2-pub-image-base64') ;

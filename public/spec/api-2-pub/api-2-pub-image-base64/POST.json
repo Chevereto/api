@@ -1,0 +1,13 @@
+{
+    "method": "POST",
+    "spec": "\/spec\/api-2-pub\/api-2-pub-image-base64\/POST.json",
+    "description": "Uploads a base64 encoded image resource.",
+    "parameters": {
+        "source": {
+            "name": "source",
+            "regex": "\/^[a-zA-Z0-9\\\/\\r\\n+]*={0,2}$\/",
+            "description": "A base64 encoded image string.",
+            "isRequired": true
+        }
+    }
+}

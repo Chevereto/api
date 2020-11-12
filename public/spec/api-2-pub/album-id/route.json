@@ -1,10 +1,10 @@
 {
     "name": "album-id",
     "spec": "\/spec\/api-2-pub\/album-id\/route.json",
-    "path": "\/api\/2\/pub\/album\/{id:.*}\/",
-    "regex": "~^(?|\/api\/2\/pub\/album\/(.*)\/)$~",
+    "path": "\/api\/2\/pub\/album\/{id:\\d+}\/",
+    "regex": "~^(?|\/api\/2\/pub\/album\/(\\d+)\/)$~",
     "wildcards": {
-        "id": "^.*$"
+        "id": "^\\d+$"
     },
     "endpoints": {
         "GET": {

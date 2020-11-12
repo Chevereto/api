@@ -1,0 +1,22 @@
+{
+    "name": "api-2-pub-image-url",
+    "spec": "\/spec\/api-2-pub\/api-2-pub-image-url\/route.json",
+    "path": "\/api\/2\/pub\/image\/url\/",
+    "regex": "#\/api\/2\/pub\/image\/url\/#",
+    "wildcards": {},
+    "endpoints": {
+        "POST": {
+            "method": "POST",
+            "spec": "\/spec\/api-2-pub\/api-2-pub-image-url\/POST.json",
+            "description": "Uploads an image URL image resource.",
+            "parameters": {
+                "source": {
+                    "name": "source",
+                    "regex": "\/^(https?|ftp)+\\:\\\/\\\/.+$\/",
+                    "description": "An image URL.",
+                    "isRequired": true
+                }
+            }
+        }
+    }
+}

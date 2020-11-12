@@ -13,6 +13,7 @@ declare(strict_types=1);
 
 namespace Chevereto\Tests\Controllers\Api\V2\Image;
 
+use Chevere\Interfaces\Workflow\WorkflowInterface;
 use Chevereto\Controllers\Api\V2\Image\ImagePostBase64Controller;
 use PHPUnit\Framework\TestCase;
 
@@ -46,13 +47,13 @@ final class ImagePostBase64ControllerTest extends TestCase
     //     $this->assertSame($settings, $controller->settings());
     // }
 
-    // public function testWorkflow(): void
-    // {
-    //     // $this->assertInstanceOf(
-    //     //     WorkflowInterface::class,
-    //     //     (new ImagePostBase64Controller)->getWorkflow()
-    //     // );
-    // }
+    public function testWorkflow(): void
+    {
+        $this->assertInstanceOf(
+            WorkflowInterface::class,
+            (new ImagePostBase64Controller)->getWorkflow()
+        );
+    }
 
     public function testAssertStoreSource(): void
     {

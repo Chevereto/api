@@ -22,6 +22,9 @@ abstract class ImagePostController extends Controller implements ServiceableInte
 {
     use ImagePostTrait;
 
+    /**
+     * @codeCoverageIgnore
+     */
     public function withWorkflow(WorkflowInterface $workflow): self
     {
         $new = clone $this;
