@@ -1,5 +1,5 @@
 {
-    "controller": {
+    "class": {
         "description": "Create a class",
         "prefix": "class",
         "body": [
@@ -12,5 +12,18 @@
             "\t${0}",
             "}"
         ]
-    }
+    },
+    "trait": {
+        "description": "Create a trait",
+        "prefix": "trait",
+        "body": [
+            "<?php",
+            "namespace Chevereto\\\\${TM_DIRECTORY/.*src\\/(([^\\/]*)(\\/)?)|(\\/)([^\\/]*)/$2${3:+\\\\}${5:+\\\\}$5/g};",
+            "",
+            "trait $TM_FILENAME_BASE",
+            "{",
+            "\t$0",
+            "}"
+        ]
+    },
 }

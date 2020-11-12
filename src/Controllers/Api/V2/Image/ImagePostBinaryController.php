@@ -13,17 +13,13 @@ declare(strict_types=1);
 
 namespace Chevereto\Controllers\Api\V2\Image;
 
-use Chevere\Components\Message\Message;
-use Chevere\Components\Parameter\StringParameter;
-use Chevere\Components\Serialize\Unserialize;
-use Chevere\Exceptions\Core\InvalidArgumentException;
 use Chevere\Interfaces\Parameter\StringParameterInterface;
-use Safe\Exceptions\FilesystemException;
-use Throwable;
-use function Safe\copy;
+use Chevereto\Controllers\Api\V2\File\Traits\AssertStoreBinarySourceTrait;
 
 final class ImagePostBinaryController extends ImagePostController
 {
+    use AssertStoreBinarySourceTrait;
+
     public function getDescription(): string
     {
         return 'Uploads a binary image resource.';
@@ -31,27 +27,7 @@ final class ImagePostBinaryController extends ImagePostController
 
     public function getSourceParameter(): StringParameterInterface
     {
-        return (new StringParameter('source'))
-            ->withAddedAttribute('tryFiles')
+        return $this->getBinaryStringParameter('source')
             ->withDescription('A binary image.');
-    }
-
-    /**
-     * @param string $source A serialized PHP `$_FILES['source']` variable
-     *
-     * @throws InvalidArgumentException
-     * @throws FilesystemException
-     */
-    public function assertStoreSource(string $source, string $path): void
-    {
-        try {
-            $unserialize = new Unserialize($source);
-            $filename = $unserialize->var()['tmp_name'];
-        } catch (Throwable $e) {
-            throw new InvalidArgumentException(
-                new Message('Invalid binary file'),
-            );
-        }
-        copy($filename, $path);
     }
 }

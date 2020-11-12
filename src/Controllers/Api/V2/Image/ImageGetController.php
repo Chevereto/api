@@ -24,6 +24,11 @@ use Chevere\Interfaces\Response\ResponseInterface;
 
 final class ImageGetController extends Controller
 {
+    public function getStringParameter(string $name): StringParameter
+    {
+        return new StringParameter($name);
+    }
+
     public function getDescription(): string
     {
         return 'Get the image identified by its id.';

@@ -11,28 +11,36 @@
 
 declare(strict_types=1);
 
-namespace Chevereto\Controllers\Api\V2\Image\Traits;
+namespace Chevereto\Controllers\Api\V2\Video\Traits;
 
+use Chevere\Components\Parameter\Parameters;
 use Chevere\Components\Response\ResponseSuccess;
+use Chevere\Components\Service\ServiceProviders;
 use Chevere\Components\Workflow\Task;
 use Chevere\Components\Workflow\Workflow;
 use Chevere\Components\Workflow\WorkflowRun;
 use Chevere\Exceptions\Core\OutOfBoundsException;
 use Chevere\Interfaces\Parameter\ArgumentsInterface;
+use Chevere\Interfaces\Parameter\ParametersInterface;
+use Chevere\Interfaces\Parameter\StringParameterInterface;
 use Chevere\Interfaces\Response\ResponseInterface;
+use Chevere\Interfaces\Service\ServiceProvidersInterface;
 use Chevere\Interfaces\Workflow\TaskInterface;
 use Chevere\Interfaces\Workflow\WorkflowInterface;
+use Chevereto\Actions\File\DetectDuplicateAction;
+use Chevereto\Actions\File\ValidateAction as ValidateFileAction;
 use Chevereto\Actions\Image\FetchMetaAction;
 use Chevereto\Actions\Image\FixOrientationAction;
 use Chevereto\Actions\Image\InsertAction;
 use Chevereto\Actions\Image\StripMetaAction;
 use Chevereto\Actions\Image\UploadAction;
 use Chevereto\Actions\Image\ValidateAction;
+use Chevereto\Actions\Storage\FailoverAction;
 use Chevereto\Components\Settings;
 use Chevereto\Controllers\Api\V2\File\Traits\FilePostTrait;
 use function Chevere\Components\Workflow\workflowRunner;
 
-trait ImagePostTrait
+trait VideoPostTrait
 {
     use FilePostTrait;
 
@@ -45,9 +53,11 @@ trait ImagePostTrait
             'extensions',
             'maxBytes',
             'maxHeight',
+            'maxLength',
             'maxWidth',
             'minBytes',
             'minHeight',
+            'minLength',
             'minWidth',
             'naming',
             'storageId',
@@ -60,64 +70,64 @@ trait ImagePostTrait
         return $new;
     }
 
-    public function getValidateTask(): TaskInterface
-    {
-        return (new Task(ValidateAction::class))
-            ->withArguments([
-                'filename' => '${filename}',
-                'maxHeight' => '${maxHeight}',
-                'maxWidth' => '${maxWidth}',
-                'minHeight' => '${minHeight}',
-                'minWidth' => '${minWidth}',
-            ]);
-    }
+    // public function getValidateTask(): TaskInterface
+    // {
+    //     return (new Task(ValidateAction::class))
+    //         ->withArguments([
+    //             'filename' => '${filename}',
+    //             'maxHeight' => '${maxHeight}',
+    //             'maxWidth' => '${maxWidth}',
+    //             'minHeight' => '${minHeight}',
+    //             'minWidth' => '${minWidth}',
+    //         ]);
+    // }
 
-    public function getFixOrientationTask(): TaskInterface
-    {
-        return (new Task(FixOrientationAction::class))
-            ->withArguments(['image' => '${validate:image}']);
-    }
+    // public function getFixOrientationTask(): TaskInterface
+    // {
+    //     return (new Task(FixOrientationAction::class))
+    //         ->withArguments(['image' => '${validate:image}']);
+    // }
 
-    public function getFetchMetaTask(): TaskInterface
-    {
-        return (new Task(FetchMetaAction::class))
-            ->withArguments(['image' => '${validate:image}']);
-    }
+    // public function getFetchMetaTask(): TaskInterface
+    // {
+    //     return (new Task(FetchMetaAction::class))
+    //         ->withArguments(['image' => '${validate:image}']);
+    // }
 
-    public function getStripMetaTask(): TaskInterface
-    {
-        return (new Task(StripMetaAction::class))
-            ->withArguments(['image' => '${validate:image}']);
-    }
+    // public function getStripMetaTask(): TaskInterface
+    // {
+    //     return (new Task(StripMetaAction::class))
+    //         ->withArguments(['image' => '${validate:image}']);
+    // }
 
-    public function getUploadTask(): TaskInterface
-    {
-        return (new Task(UploadAction::class))
-            ->withArguments([
-                'image' => '${validate:image}',
-                'naming' => '${naming}',
-                'originalName' => '${originalName}',
-                'storageId' => '${storage-failover:storageId}',
-                'uploadPath' => '${uploadPath}',
-            ]);
-    }
+    // public function getUploadTask(): TaskInterface
+    // {
+    //     return (new Task(UploadAction::class))
+    //         ->withArguments([
+    //             'image' => '${validate:image}',
+    //             'naming' => '${naming}',
+    //             'originalName' => '${originalName}',
+    //             'storageId' => '${storage-failover:storageId}',
+    //             'uploadPath' => '${uploadPath}',
+    //         ]);
+    // }
 
-    public function getInsertTask(): TaskInterface
-    {
-        return (new Task(InsertAction::class))
-            ->withArguments([
-                // 'albumId' => '${albumId}',
-                // 'exif' => '${fetch-meta:exif}',
-                'expires' => '${expires}',
-                // 'image' => '${validate:image}',
-                // 'iptc' => '${fetch-meta:iptc}',
-                // 'md5' => '${validate:md5}',
-                // 'perceptual' => '${validate:perceptual}',
-                // 'storageId' => '${storage-failover:storageId}',
-                // 'userId' => '${userId}',
-                // 'xmp' => '${fetch-meta:xmp}',
-            ]);
-    }
+    // public function getInsertTask(): TaskInterface
+    // {
+    //     return (new Task(InsertAction::class))
+    //         ->withArguments([
+    //             // 'albumId' => '${albumId}',
+    //             // 'exif' => '${fetch-meta:exif}',
+    //             'expires' => '${expires}',
+    //             // 'image' => '${validate:image}',
+    //             // 'iptc' => '${fetch-meta:iptc}',
+    //             // 'md5' => '${validate:md5}',
+    //             // 'perceptual' => '${validate:perceptual}',
+    //             // 'storageId' => '${storage-failover:storageId}',
+    //             // 'userId' => '${userId}',
+    //             // 'xmp' => '${fetch-meta:xmp}',
+    //         ]);
+    // }
 
     public function getWorkflow(): WorkflowInterface
     {
@@ -126,10 +136,10 @@ trait ImagePostTrait
             ->withAdded('validate', $this->getValidateTask())
             // Plug step
             ->withAdded('detect-duplication', $this->getDetectDuplicateTask())
-            ->withAdded('fix-orientation', $this->getFixOrientationTask())
-            ->withAdded('fetch-meta', $this->getFetchMetaTask())
+            // ->withAdded('fix-orientation', $this->getFixOrientationTask())
+            // ->withAdded('fetch-meta', $this->getFetchMetaTask())
             // Plug step
-            ->withAdded('strip-meta', $this->getStripMetaTask())
+            // ->withAdded('strip-meta', $this->getStripMetaTask())
             // ->withAdded(
             //     'user-quota-check',
             //     (new Task())

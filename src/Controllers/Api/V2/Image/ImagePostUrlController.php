@@ -13,18 +13,13 @@ declare(strict_types=1);
 
 namespace Chevereto\Controllers\Api\V2\Image;
 
-use Chevere\Components\Message\Message;
-use Chevere\Components\Parameter\StringParameter;
-use Chevere\Components\Regex\Regex;
-use Chevere\Exceptions\Core\InvalidArgumentException;
 use Chevere\Interfaces\Parameter\StringParameterInterface;
-use GuzzleHttp\Client;
-use Safe\Exceptions\FilesystemException;
-use Throwable;
-use function Safe\file_put_contents;
+use Chevereto\Controllers\Api\V2\File\Traits\AssertStoreUrlTrait;
 
 final class ImagePostUrlController extends ImagePostController
 {
+    use AssertStoreUrlTrait;
+
     public function getDescription(): string
     {
         return 'Uploads an image URL image resource.';
@@ -32,30 +27,7 @@ final class ImagePostUrlController extends ImagePostController
 
     public function getSourceParameter(): StringParameterInterface
     {
-        return (new StringParameter('source'))
-            ->withRegex(new Regex('/^(https?|ftp)+\:\/\/.+$/'))
+        return $this->getUrlStringParameter('source')
             ->withDescription('An image URL.');
-    }
-
-    /**
-     * @param string $source An URI with response body
-     *
-     * @throws InvalidArgumentException
-     * @throws FilesystemException
-     */
-    public function assertStoreSource(string $source, string $path): void
-    {
-        try {
-            $client = new Client([
-                'base_uri' => $source,
-                'timeout' => 2,
-            ]);
-            $response = $client->request('GET');
-        } catch (Throwable $e) {
-            throw new InvalidArgumentException(
-                (new Message($e->getMessage()))
-            );
-        }
-        file_put_contents($path, $response->getBody());
     }
 }
