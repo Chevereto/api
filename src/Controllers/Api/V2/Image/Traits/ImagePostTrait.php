@@ -14,7 +14,6 @@ declare(strict_types=1);
 namespace Chevereto\Controllers\Api\V2\Image\Traits;
 
 use Chevere\Components\Parameter\Parameters;
-use Chevere\Components\Parameter\StringParameter;
 use Chevere\Components\Response\ResponseSuccess;
 use Chevere\Components\Service\ServiceProviders;
 use Chevere\Components\Workflow\Task;
