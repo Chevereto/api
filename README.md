@@ -45,23 +45,26 @@ Chevereto is PHP 8 software running under its own application servers. The appli
 
 ### Powered by Chevereto
 
-There should be about **10~15K** Chevereto installations out there, each one hosting from zero up to ten million images. The following [notable public websites](https://chevereto.com/community/threads/big-chevereto-hosts.8808/) are using Chevereto (any release).
+There are about 10~15K Chevereto installations out there, each one hosting from zero up to million images. The following [notable public websites](https://chevereto.top/) are using Chevereto (any release).
 
-- [comss.pics](https://comss.pics/)
-- [Forumbilder](https://forumbilder.com/)
-- [Freeimage.host](https://freeimage.host/)
-- [Gifyu](https://gifyu.com/)
-- [ImageRide](https://imageride.com/)
-- [imgbb](https://imgbb.com/)
-- [imgchr](https://imgchr.com/)
-- [imghub.io](https://imghub.io/)
-- [imgyukle](https://imgyukle.com/)
-- [ipev.ru](https://ipev.ru/)
-- [Jerking](https://jerking.empornium.ph/)
-- [lensdump](https://lensdump.com/)
-- [nickpic](https://nickpic.host/)
-- [qpix](https://qpix.com/)
-- [UPLD.IM](https://upld.im/)
+| Website                                   | Images |
+| ----------------------------------------- | ------ |
+| [add.pics](https://add.pics/)             | 44K    |
+| [comss.pics](https://comss.pics/)         | 56k    |
+| [Forumbilder](https://forumbilder.com/)   | 1M     |
+| [Freeimage.host](https://freeimage.host/) | 100K   |
+| [Gifyu](https://gifyu.com/)               | 3M     |
+| [ImageRide](https://imageride.com/)       | 170K   |
+| [ImgBB](https://imgbb.com/)               | 1MB    |
+| [imgchr](https://imgchr.com/)             | 5M     |
+| [imghub.io](https://imghub.io/)           | 15k    |
+| [imgyukle](https://imgyukle.com/)         | ??     |
+| [ipev.ru](https://ipev.ru/)               | 250K   |
+| [Jerking](https://jerking.empornium.ph/)  | ??     |
+| [lensdump](https://lensdump.com/)         | ??     |
+| [nickpic](https://nickpic.host/)          | 2M     |
+| [qpix](https://qpix.com/)                 | 520K   |
+| [UPLD.IM](https://upld.im/)               | 174K   |
 
 ## Contribution
 
