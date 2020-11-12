@@ -271,7 +271,7 @@ final class UploadPostController extends Controller implements ServiceableInterf
         $settings = $this->settings
             ->withPut('filename', $uploadFile)
             ->withPut('albumId', '');
-        $settings = $settings->mapCopy()->toArray();
+        $settings = $settings->toArray();
         unset($settings['apiV1Key']);
         $workflowRun = workflowRunner(
             new WorkflowRun(

@@ -32,11 +32,17 @@ trait FilePostTrait
 
     private WorkflowInterface $workflow;
 
+    abstract public function getSettingsKeys(): array;
+
     abstract public function getDescription(): string;
 
     abstract public function assertStoreSource(string $source, string $uploadFile): void;
 
     abstract public function getSourceParameter(): StringParameterInterface;
+
+    abstract public function getValidateTask(): TaskInterface;
+
+    abstract public function getWorkflow(): WorkflowInterface;
 
     public function getServiceProviders(): ServiceProvidersInterface
     {
@@ -68,8 +74,6 @@ trait FilePostTrait
             ]);
     }
 
-    abstract public function getValidateTask(): TaskInterface;
-
     public function getDetectDuplicateTask(): TaskInterface
     {
         return (new Task(DetectDuplicateAction::class))
@@ -88,6 +92,4 @@ trait FilePostTrait
                 'storageId' => 0
             ]);
     }
-
-    abstract public function getWorkflow(): WorkflowInterface;
 }

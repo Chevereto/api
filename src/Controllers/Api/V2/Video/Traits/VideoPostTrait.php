@@ -44,12 +44,9 @@ trait VideoPostTrait
 {
     use FilePostTrait;
 
-    /**
-     * @throws OutOfBoundsException
-     */
-    public function withSettings(Settings $settings): self
+    public function getSettingsKeys(): array
     {
-        $settings->assertHasKey(
+        return [
             'extensions',
             'maxBytes',
             'maxHeight',
@@ -62,12 +59,8 @@ trait VideoPostTrait
             'naming',
             'storageId',
             'uploadPath',
-            'userId',
-        );
-        $new = clone $this;
-        $new->settings = $settings;
-
-        return $new;
+            'userId'
+        ];
     }
 
     // public function getValidateTask(): TaskInterface
@@ -158,7 +151,7 @@ trait VideoPostTrait
         $settings = $this->settings
             ->withPut('filename', $uploadFile)
             ->withPut('albumId', '');
-        $settings = $settings->mapCopy()->toArray();
+        $settings = $settings->toArray();
         unset($settings['apiV1Key']);
         $workflowRun = workflowRunner(
             new WorkflowRun(

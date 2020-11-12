@@ -17,7 +17,6 @@ use Chevere\Components\Response\ResponseSuccess;
 use Chevere\Components\Workflow\Task;
 use Chevere\Components\Workflow\Workflow;
 use Chevere\Components\Workflow\WorkflowRun;
-use Chevere\Exceptions\Core\OutOfBoundsException;
 use Chevere\Interfaces\Parameter\ArgumentsInterface;
 use Chevere\Interfaces\Response\ResponseInterface;
 use Chevere\Interfaces\Workflow\TaskInterface;
@@ -28,7 +27,6 @@ use Chevereto\Actions\Image\InsertAction;
 use Chevereto\Actions\Image\StripMetaAction;
 use Chevereto\Actions\Image\UploadAction;
 use Chevereto\Actions\Image\ValidateAction;
-use Chevereto\Components\Settings;
 use Chevereto\Controllers\Api\V2\File\Traits\FilePostTrait;
 use function Chevere\Components\Workflow\workflowRunner;
 
@@ -36,12 +34,9 @@ trait ImagePostTrait
 {
     use FilePostTrait;
 
-    /**
-     * @throws OutOfBoundsException
-     */
-    public function withSettings(Settings $settings): self
+    public function getSettingsKeys(): array
     {
-        $settings->assertHasKey(
+        return [
             'extensions',
             'maxBytes',
             'maxHeight',
@@ -52,12 +47,8 @@ trait ImagePostTrait
             'naming',
             'storageId',
             'uploadPath',
-            'userId',
-        );
-        $new = clone $this;
-        $new->settings = $settings;
-
-        return $new;
+            'userId'
+        ];
     }
 
     public function getValidateTask(): TaskInterface
@@ -148,7 +139,7 @@ trait ImagePostTrait
         $settings = $this->settings
             ->withPut('filename', $uploadFile)
             ->withPut('albumId', '');
-        $settings = $settings->mapCopy()->toArray();
+        $settings = $settings->toArray();
         unset($settings['apiV1Key']);
         $workflowRun = workflowRunner(
             new WorkflowRun(

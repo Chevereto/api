@@ -18,9 +18,10 @@ use Chevere\Components\Description\Traits\DescriptorTrait;
 use Chevere\Components\Message\Message;
 use Chevere\Exceptions\Core\OutOfBoundsException;
 use Chevere\Interfaces\Service\ServiceInterface;
+use Chevere\Interfaces\To\ToArrayInterface;
 use Ds\Map;
 
-final class Settings implements ServiceInterface
+final class Settings implements ServiceInterface, ToArrayInterface
 {
     use DescriptorTrait;
     use MapTrait;
@@ -73,5 +74,10 @@ final class Settings implements ServiceInterface
         }
 
         return $return;
+    }
+
+    public function toArray(): array
+    {
+        return $this->map->toArray();
     }
 }
