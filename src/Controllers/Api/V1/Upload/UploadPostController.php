@@ -106,6 +106,7 @@ final class UploadPostController extends Controller implements ServiceableInterf
         return (new Parameters)
             ->withAddedRequired(
                 (new StringParameter('source'))
+                    ->withAddedAttribute('tryFiles')
                     ->withDescription('A base64 image string OR an image URL. It also takes image multipart/form-data.')
             )
             ->withAddedRequired(
@@ -116,7 +117,6 @@ final class UploadPostController extends Controller implements ServiceableInterf
                 (new StringParameter('format'))
                     ->withRegex(new Regex('/^(json|txt)$/'))
                     ->withDefault('json')
-                    ->withAddedAttribute('tryFiles') // Flags controller runner to "try" the argument for _FILES
                     ->withDescription('Response document output format. Defaults to `json`.')
             );
     }
@@ -230,10 +230,10 @@ final class UploadPostController extends Controller implements ServiceableInterf
             ->withAdded('insert', $this->getInsertTask());
     }
 
-    public function withSetUp(): self
+    public function withWorkflow(WorkflowInterface $workflow): self
     {
         $new = clone $this;
-        $new->workflow = $this->getWorkflow();
+        $new->workflow = $workflow;
 
         return $new;
     }

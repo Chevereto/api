@@ -23,8 +23,8 @@ use Chevere\Components\Workflow\WorkflowRun;
 use Chevere\Exceptions\Core\OutOfBoundsException;
 use Chevere\Interfaces\Parameter\ArgumentsInterface;
 use Chevere\Interfaces\Parameter\ParametersInterface;
+use Chevere\Interfaces\Parameter\StringParameterInterface;
 use Chevere\Interfaces\Response\ResponseInterface;
-use Chevere\Interfaces\Response\ResponseSuccessInterface;
 use Chevere\Interfaces\Service\ServiceProvidersInterface;
 use Chevere\Interfaces\Workflow\TaskInterface;
 use Chevere\Interfaces\Workflow\WorkflowInterface;
@@ -45,6 +45,12 @@ trait ImagePostTrait
     private Settings $settings;
 
     private WorkflowInterface $workflow;
+
+    abstract public function getDescription(): string;
+
+    abstract public function assertStoreSource(string $source, string $uploadFile): void;
+
+    abstract public function getSourceParameter(): StringParameterInterface;
 
     public function getServiceProviders(): ServiceProvidersInterface
     {
@@ -81,15 +87,12 @@ trait ImagePostTrait
         return $this->settings;
     }
 
-    public function getDescription(): string
-    {
-        return 'Uploads an image resource.';
-    }
-
     public function getParameters(): ParametersInterface
     {
+        $source = $this->getSourceParameter();
+
         return (new Parameters)
-            ->withAddedRequired(new StringParameter('source'));
+            ->withAddedRequired($source);
     }
 
     private function getValidateFileTask(): TaskInterface
@@ -200,8 +203,6 @@ trait ImagePostTrait
             ->withAdded('upload', $this->getUploadTask())
             ->withAdded('insert', $this->getInsertTask());
     }
-
-    abstract public function assertStoreSource($source, string $uploadFile): void;
 
     public function run(ArgumentsInterface $arguments): ResponseInterface
     {

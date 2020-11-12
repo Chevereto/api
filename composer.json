@@ -17,11 +17,13 @@
         "intervention/image": "^2.5",
         "jeroendesloovere/xmp-metadata-extractor": "^2.0",
         "ext-imagick": "^3.4",
-        "jenssegers/imagehash": "^0.7.0"
+        "jenssegers/imagehash": "^0.7.0",
+        "guzzlehttp/guzzle": "^7.2"
     },
     "autoload": {
         "files": [
-            "src/Image/functions.php"
+            "src/Image/functions.php",
+            "src/Encoding/functions.php"
         ],
         "psr-4": {
             "Chevereto\\": "src/",

@@ -13,16 +13,11 @@ declare(strict_types=1);
 
 namespace Tests\Controllers\Api\V1\Upload;
 
-use Chevere\Components\Parameter\Arguments;
 use Chevere\Exceptions\Core\OutOfBoundsException;
-use Chevere\Interfaces\Response\ResponseSuccessInterface;
-use Chevere\Interfaces\Workflow\TaskInterface;
 use Chevere\Interfaces\Workflow\WorkflowInterface;
 use Chevereto\Components\Settings;
-use Chevereto\Components\User;
 use Chevereto\Controllers\Api\V1\Upload\UploadPostController;
 use PHPUnit\Framework\TestCase;
-use function Safe\json_encode;
 
 final class UploadPostControllerTest extends TestCase
 {
@@ -37,7 +32,6 @@ final class UploadPostControllerTest extends TestCase
 
     public function testWithSettings(): void
     {
-        // $this->expectNotToPerformAssertions();
         $settings = new Settings([
             'apiV1Key' => 'api-key-value',
             'extensions' => 'php',

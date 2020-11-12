@@ -13,53 +13,45 @@ declare(strict_types=1);
 
 namespace Chevereto\Controllers\Api\V2\Image;
 
-use Chevere\Components\Controller\Controller;
 use Chevere\Components\Message\Message;
-use Chevere\Components\Parameter\Parameters;
 use Chevere\Components\Parameter\StringParameter;
 use Chevere\Components\Serialize\Unserialize;
 use Chevere\Exceptions\Core\InvalidArgumentException;
-use Chevere\Interfaces\Parameter\ParametersInterface;
-use Chevere\Interfaces\Service\ServiceableInterface;
-use Chevereto\Controllers\Api\V2\Image\Traits\ImagePostTrait;
+use Chevere\Interfaces\Parameter\StringParameterInterface;
+use Safe\Exceptions\FilesystemException;
 use Throwable;
+use function Safe\copy;
 
-final class ImagePostBinaryController extends Controller implements ServiceableInterface
+final class ImagePostBinaryController extends ImagePostController
 {
-    use ImagePostTrait;
-
-    public function withSetUp(): self
-    {
-        $new = clone $this;
-        $new->workflow = $this->getWorkflow();
-
-        return $new;
-    }
-
     public function getDescription(): string
     {
         return 'Uploads a binary image resource.';
     }
 
-    public function getParameters(): ParametersInterface
+    public function getSourceParameter(): StringParameterInterface
     {
-        return (new Parameters)
-            ->withAddedRequired(
-                (new StringParameter('source'))
-                    ->withDescription('A binary image.')
-            );
+        return (new StringParameter('source'))
+            ->withAddedAttribute('tryFiles')
+            ->withDescription('A binary image.');
     }
 
-    public function assertStoreSource($source, string $uploadFile): void
+    /**
+     * @param string $source A serialized PHP `$_FILES['source']` variable
+     *
+     * @throws InvalidArgumentException
+     * @throws FilesystemException
+     */
+    public function assertStoreSource(string $source, string $path): void
     {
         try {
             $unserialize = new Unserialize($source);
-            $uploadFile = $unserialize->var()['tmp_name'];
+            $filename = $unserialize->var()['tmp_name'];
         } catch (Throwable $e) {
             throw new InvalidArgumentException(
-                new Message('Invalid binary image'),
-                $e->getCode()
+                new Message('Invalid binary file'),
             );
         }
+        copy($filename, $path);
     }
 }

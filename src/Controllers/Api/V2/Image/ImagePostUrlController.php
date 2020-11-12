@@ -13,56 +13,49 @@ declare(strict_types=1);
 
 namespace Chevereto\Controllers\Api\V2\Image;
 
-use Chevere\Components\Controller\Controller;
 use Chevere\Components\Message\Message;
-use Chevere\Components\Parameter\Parameters;
 use Chevere\Components\Parameter\StringParameter;
 use Chevere\Components\Regex\Regex;
 use Chevere\Exceptions\Core\InvalidArgumentException;
-use Chevere\Interfaces\Parameter\ParametersInterface;
-use Chevere\Interfaces\Service\ServiceableInterface;
-use Chevereto\Controllers\Api\V2\Image\Traits\ImagePostTrait;
-use Laminas\Uri\UriFactory;
+use Chevere\Interfaces\Parameter\StringParameterInterface;
+use GuzzleHttp\Client;
+use Safe\Exceptions\FilesystemException;
 use Throwable;
+use function Safe\file_put_contents;
 
-final class ImagePostUrlController extends Controller implements ServiceableInterface
+final class ImagePostUrlController extends ImagePostController
 {
-    use ImagePostTrait;
-
-    public function withSetUp(): self
-    {
-        $new = clone $this;
-        $new->workflow = $this->getWorkflow();
-
-        return $new;
-    }
-
     public function getDescription(): string
     {
         return 'Uploads an image URL image resource.';
     }
 
-    public function getParameters(): ParametersInterface
+    public function getSourceParameter(): StringParameterInterface
     {
-        return (new Parameters)
-            ->withAddedRequired(
-                (new StringParameter('source'))
-                    ->withRegex(new Regex('/^\w+\:\/\/.+$/'))
-                    ->withDescription('An image URL.')
-            );
+        return (new StringParameter('source'))
+            ->withRegex(new Regex('/^(https?|ftp)+\:\/\/.+$/'))
+            ->withDescription('An image URL.');
     }
 
-    public function assertStoreSource($source, string $uploadFile): void
+    /**
+     * @param string $source An URI with response body
+     *
+     * @throws InvalidArgumentException
+     * @throws FilesystemException
+     */
+    public function assertStoreSource(string $source, string $path): void
     {
         try {
-            $uri = UriFactory::factory($source);
-            if (!$uri->isAbsolute() && $uri->isValid()) {
-            }
+            $client = new Client([
+                'base_uri' => $source,
+                'timeout' => 2,
+            ]);
+            $response = $client->request('GET');
         } catch (Throwable $e) {
             throw new InvalidArgumentException(
-                new Message('Invalid image URL'),
-                $e->getCode()
+                (new Message($e->getMessage()))
             );
         }
+        file_put_contents($path, $response->getBody());
     }
 }

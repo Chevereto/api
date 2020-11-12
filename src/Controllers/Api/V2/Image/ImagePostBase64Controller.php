@@ -13,78 +13,41 @@ declare(strict_types=1);
 
 namespace Chevereto\Controllers\Api\V2\Image;
 
-use Chevere\Components\Controller\Controller;
-use Chevere\Components\Message\Message;
-use Chevere\Components\Parameter\Parameters;
 use Chevere\Components\Parameter\StringParameter;
-use Chevere\Components\Str\StrBool;
-use Chevere\Exceptions\Core\Exception;
 use Chevere\Exceptions\Core\InvalidArgumentException;
-use Chevere\Interfaces\Parameter\ParametersInterface;
-use Chevere\Interfaces\Service\ServiceableInterface;
-use Chevereto\Controllers\Api\V2\Image\Traits\ImagePostTrait;
+use Chevere\Exceptions\Core\RuntimeException;
+use Chevere\Interfaces\Parameter\StringParameterInterface;
+use Safe\Exceptions\FilesystemException;
+use Safe\Exceptions\StreamException;
+use function Chevereto\Encoding\assertBase64;
+use function Chevereto\Encoding\getBase64Regex;
+use function Chevereto\Encoding\storeDecodedBase64;
 
-final class ImagePostBase64Controller extends Controller implements ServiceableInterface
+final class ImagePostBase64Controller extends ImagePostController
 {
-    use ImagePostTrait;
-
-    public function withSetUp(): self
-    {
-        $new = clone $this;
-        $new->workflow = $this->getWorkflow();
-
-        return $new;
-    }
-
     public function getDescription(): string
     {
         return 'Uploads a base64 encoded image resource.';
     }
 
-    public function getParameters(): ParametersInterface
+    public function getSourceParameter(): StringParameterInterface
     {
-        return (new Parameters)
-            ->withAddedRequired(
-                (new StringParameter('source'))
-                    ->withDescription('A base64 image string.')
-            );
+        return (new StringParameter('source'))
+            ->withRegex(getBase64Regex())
+            ->withDescription('A base64 encoded image string.');
     }
 
-    public function assertStoreSource($source, string $uploadFile): void
+    /**
+     * @param string $source A base64 encoded file
+     *
+     * @throws InvalidArgumentException
+     * @throws FilesystemException
+     * @throws StreamException
+     * @throws RuntimeException
+     */
+    public function assertStoreSource(string $source, string $path): void
     {
-        try {
-            $this->assertBase64String($source);
-            $this->storeDecodedBase64String($source, $uploadFile);
-        } catch (Exception $e) {
-            throw new InvalidArgumentException(
-                new Message('Invalid base64 string'),
-                $e->getCode()
-            );
-        }
-    }
-
-    public function assertBase64String(string $string): void
-    {
-        $double = base64_encode(base64_decode($string));
-        if (!(new StrBool($string))->same($double)) {
-            throw new Exception(
-                new Message('Invalid base64 formatting'),
-                1100
-            );
-        }
-        unset($double);
-    }
-
-    public function storeDecodedBase64String(string $base64, string $path): void
-    {
-        $fh = fopen($path, 'w');
-        stream_filter_append($fh, 'convert.base64-decode', STREAM_FILTER_WRITE);
-        if (!fwrite($fh, $base64)) {
-            throw new Exception(
-                new Message('Unable to store decoded base64 string'),
-                1200
-            );
-        }
-        fclose($fh);
+        assertBase64($source);
+        storeDecodedBase64($source, $path);
     }
 }
