@@ -11,23 +11,24 @@
 
 declare(strict_types=1);
 
-namespace Chevereto\Controllers\Api\V2\Video;
+namespace Chevereto\Controllers\Api\V2\Image;
 
 use Chevere\Interfaces\Parameter\StringParameterInterface;
-use Chevereto\Controllers\Api\V2\File\Traits\AssertStoreBase64SourceTrait;
+use Chevereto\Controllers\Api\V2\File\Traits\AssertStoreBinarySourceTrait;
+use Chevereto\Controllers\Api\V2\Video\VideoPostController;
 
-final class VideoPostBase64Controller extends VideoPostController
+final class VideoPostBinaryController extends VideoPostController
 {
-    use AssertStoreBase64SourceTrait;
+    use AssertStoreBinarySourceTrait;
 
     public function getDescription(): string
     {
-        return 'Uploads a base64 encoded video resource.';
+        return 'Uploads a binary image resource.';
     }
 
     public function getSourceParameter(): StringParameterInterface
     {
-        return $this->getBase64StringParameter('source')
-            ->withDescription('A base64 encoded video string.');
+        return $this->getBinaryStringParameter('source')
+            ->withDescription('A binary image.');
     }
 }

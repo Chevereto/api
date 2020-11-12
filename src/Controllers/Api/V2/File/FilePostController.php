@@ -11,13 +11,15 @@
 
 declare(strict_types=1);
 
-namespace Chevereto\Controllers\Api\V2\File\Traits;
+namespace Chevereto\Controllers\Api\V2\File;
 
+use Chevere\Components\Controller\Controller;
 use Chevere\Components\Parameter\Parameters;
 use Chevere\Components\Service\ServiceProviders;
 use Chevere\Components\Workflow\Task;
 use Chevere\Interfaces\Parameter\ParametersInterface;
 use Chevere\Interfaces\Parameter\StringParameterInterface;
+use Chevere\Interfaces\Service\ServiceableInterface;
 use Chevere\Interfaces\Service\ServiceProvidersInterface;
 use Chevere\Interfaces\Workflow\TaskInterface;
 use Chevere\Interfaces\Workflow\WorkflowInterface;
@@ -26,15 +28,13 @@ use Chevereto\Actions\File\ValidateAction;
 use Chevereto\Actions\Storage\FailoverAction;
 use Chevereto\Components\Settings;
 
-trait FilePostTrait
+abstract class FilePostController extends Controller implements ServiceableInterface
 {
     private Settings $settings;
 
     private WorkflowInterface $workflow;
 
     abstract public function getSettingsKeys(): array;
-
-    abstract public function getDescription(): string;
 
     abstract public function assertStoreSource(string $source, string $uploadFile): void;
 
@@ -43,17 +43,6 @@ trait FilePostTrait
     abstract public function getValidateTask(): TaskInterface;
 
     abstract public function getWorkflow(): WorkflowInterface;
-
-    public function getServiceProviders(): ServiceProvidersInterface
-    {
-        return (new ServiceProviders($this))
-            ->withAdded('withSettings');
-    }
-
-    public function settings(): Settings
-    {
-        return $this->settings;
-    }
 
     public function getParameters(): ParametersInterface
     {
@@ -91,5 +80,39 @@ trait FilePostTrait
             ->withArguments([
                 'storageId' => 0
             ]);
+    }
+
+    /**
+     * @codeCoverageIgnore
+     */
+    public function withWorkflow(WorkflowInterface $workflow): self
+    {
+        $new = clone $this;
+        $new->workflow = $workflow;
+
+        return $new;
+    }
+
+    public function getServiceProviders(): ServiceProvidersInterface
+    {
+        return (new ServiceProviders($this))
+            ->withAdded('withSettings');
+    }
+
+    /**
+     * @throws OutOfBoundsException
+     */
+    public function withSettings(Settings $settings): self
+    {
+        $settings->assertHasKey(...$this->getSettingsKeys());
+        $new = clone $this;
+        $new->settings = $settings;
+
+        return $new;
+    }
+
+    public function settings(): Settings
+    {
+        return $this->settings;
     }
 }
