@@ -20,7 +20,8 @@
                                     "name": "source",
                                     "regex": "\/^.*$\/",
                                     "description": "A base64 image string OR an image URL. It also takes image multipart\/form-data.",
-                                    "isRequired": true
+                                    "isRequired": true,
+                                    "attributes": "tryFiles"
                                 },
                                 "key": {
                                     "name": "key",
@@ -99,7 +100,8 @@
                                     "name": "source",
                                     "regex": "\/^.*$\/",
                                     "description": "A binary image.",
-                                    "isRequired": true
+                                    "isRequired": true,
+                                    "attributes": "tryFiles"
                                 }
                             }
                         }

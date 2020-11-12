@@ -57,7 +57,8 @@
                             "name": "source",
                             "regex": "\/^.*$\/",
                             "description": "A binary image.",
-                            "isRequired": true
+                            "isRequired": true,
+                            "attributes": "tryFiles"
                         }
                     }
                 }
