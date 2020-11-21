@@ -34,6 +34,12 @@ class InsertAction extends Action
         return (new Parameters)
             ->withAddedOptional(
                 (new StringParameter('expires'))
+            )
+            ->withAddedOptional(
+                (new StringParameter('userId'))
+            )
+            ->withAddedOptional(
+                (new StringParameter('albumId'))
             );
     }
 

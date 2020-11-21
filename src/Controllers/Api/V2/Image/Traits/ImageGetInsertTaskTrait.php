@@ -23,7 +23,7 @@ trait ImageGetInsertTaskTrait
     {
         return (new Task(InsertAction::class))
             ->withArguments([
-                // 'albumId' => '${albumId}',
+                'albumId' => '${albumId}',
                 // 'exif' => '${fetch-meta:exif}',
                 'expires' => '${expires}',
                 // 'image' => '${validate:image}',
@@ -31,7 +31,7 @@ trait ImageGetInsertTaskTrait
                 // 'md5' => '${validate:md5}',
                 // 'perceptual' => '${validate:perceptual}',
                 // 'storageId' => '${storage-failover:storageId}',
-                // 'userId' => '${userId}',
+                'userId' => '${userId}',
                 // 'xmp' => '${fetch-meta:xmp}',
             ]);
     }

@@ -52,7 +52,7 @@ final class Settings implements ToArrayInterface
         }
         if ($missing !== []) {
             throw new OutOfBoundsException(
-                (new Message('Missing key(s): %keys%'))
+                (new Message('Missing key(s) %keys%'))
                     ->code('%keys%', implode(', ', $missing))
             );
         }

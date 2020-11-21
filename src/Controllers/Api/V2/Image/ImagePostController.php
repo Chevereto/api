@@ -59,15 +59,16 @@ abstract class ImagePostController extends FilePostController
         $uploadFile = tempnam(sys_get_temp_dir(), 'chv.temp');
         $this->assertStoreSource($source, $uploadFile);
         $settings = $this->settings
-            ->withPut('filename', $uploadFile)
-            ->withPut('albumId', '');
-        $run = new WorkflowRun($this->workflow, $settings->toArray());
-        $message = new WorkflowMessage($run);
-        $response = new ResponseProvisional([
-            'delay' => $message->delay(),
-            'expiration' => $message->expiration(),
-        ]);
-        ($this->enqueue)($message, $response);
+            ->withPut('filename', $uploadFile);
+        $workflowMessage = new WorkflowMessage(
+            new WorkflowRun($this->workflow, $settings->toArray())
+        );
+        $data = [
+            'delay' => $workflowMessage->delay(),
+            'expiration' => $workflowMessage->expiration(),
+        ];
+        $response = new ResponseProvisional($data);
+        ($this->enqueue)($workflowMessage, $response);
 
         return $response;
     }

@@ -18,8 +18,9 @@ use Chevere\Interfaces\Workflow\WorkflowMessageInterface;
 
 final class Enqueue
 {
-    public function __invoke(WorkflowMessageInterface $message, ResponseInterface $response)
+    public function __invoke(WorkflowMessageInterface $workflowMessage, ResponseInterface $response)
     {
-        xdd('esooooo');
+        // xdd($workflowMessage);
+        // xdd(['Redis + RabbitMQ: (serialized)']);
     }
 }
