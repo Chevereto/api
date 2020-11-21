@@ -56,8 +56,8 @@ abstract class FilePostController extends QueueController
             ->withArguments([
                 'md5' => '${validate:md5}',
                 'perceptual' => '${validate:perceptual}',
-                'ipv4' => '${ipv4}',
-                'ipv6' => '${ipv6}',
+                'ip' => '${ip}',
+                'ipVersion' => '${ipVersion}',
             ]);
     }
 
@@ -65,7 +65,7 @@ abstract class FilePostController extends QueueController
     {
         return (new Task(FailoverAction::class))
             ->withArguments([
-                'storageId' => 0
+                'storageId' => '${storageId}'
             ]);
     }
 }

@@ -150,8 +150,8 @@ final class UploadPostController extends Controller implements ServiceableInterf
             ->withArguments([
                 'md5' => '${validate:md5}',
                 'perceptual' => '${validate:perceptual}',
-                'ipv4' => '${ipv4}',
-                'ipv6' => '${ipv6}',
+                'ip' => '${ip}',
+                'ipVersion' => '${ipVersion}',
             ]);
     }
 
@@ -197,7 +197,7 @@ final class UploadPostController extends Controller implements ServiceableInterf
     {
         return (new Task(InsertAction::class))
             ->withArguments([
-                // 'albumId' => '${albumId}',
+                'albumId' => '${albumId}',
                 // 'exif' => '${fetch-meta:exif}',
                 'expires' => '${expires}',
                 // 'image' => '${validate:image}',
@@ -205,7 +205,7 @@ final class UploadPostController extends Controller implements ServiceableInterf
                 // 'md5' => '${validate:md5}',
                 // 'perceptual' => '${validate:perceptual}',
                 // 'storageId' => '${storage-failover:storageId}',
-                // 'userId' => '${userId}',
+                'userId' => '${userId}',
                 // 'xmp' => '${fetch-meta:xmp}',
             ]);
     }

@@ -28,6 +28,8 @@ final class DetectDuplicateActionTest extends TestCase
             [
                 'md5' => 'ad9ad3a94cff902a07058f5be9b2aea0',
                 'perceptual' => '63686576657265746f',
+                'ip' => '1.1.1.1',
+                'ipVersion' => '4',
             ]
         );
     }
