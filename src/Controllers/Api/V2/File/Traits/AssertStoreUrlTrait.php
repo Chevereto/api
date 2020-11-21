@@ -23,6 +23,9 @@ use Throwable;
 
 trait AssertStoreUrlTrait
 {
+    /**
+     * @throws InvalidArgumentException
+     */
     public function assertStoreSource(string $source, string $path): void
     {
         try {

@@ -13,102 +13,27 @@ declare(strict_types=1);
 
 namespace Chevereto\Controllers\Api\V2\Image;
 
-use Chevere\Components\Response\ResponseSuccess;
-use Chevere\Components\Workflow\Task;
+use Chevere\Components\Response\ResponseProvisional;
 use Chevere\Components\Workflow\Workflow;
+use Chevere\Components\Workflow\WorkflowMessage;
 use Chevere\Components\Workflow\WorkflowRun;
 use Chevere\Interfaces\Parameter\ArgumentsInterface;
 use Chevere\Interfaces\Response\ResponseInterface;
-use Chevere\Interfaces\Workflow\TaskInterface;
 use Chevere\Interfaces\Workflow\WorkflowInterface;
-use Chevereto\Actions\Image\FetchMetaAction;
-use Chevereto\Actions\Image\FixOrientationAction;
-use Chevereto\Actions\Image\InsertAction;
-use Chevereto\Actions\Image\StripMetaAction;
-use Chevereto\Actions\Image\UploadAction;
-use Chevereto\Actions\Image\ValidateAction;
 use Chevereto\Controllers\Api\V2\File\FilePostController;
-use function Chevere\Components\Workflow\workflowRunner;
+use Chevereto\Controllers\Api\V2\Image\Traits\ImageGetFetchMetaTaskTrait;
+use Chevereto\Controllers\Api\V2\Image\Traits\ImageGetFixOrientationTaskTrait;
+use Chevereto\Controllers\Api\V2\Image\Traits\ImageGetInsertTaskTrait;
+use Chevereto\Controllers\Api\V2\Image\Traits\ImageGetSettingsKeysTrait;
+use Chevereto\Controllers\Api\V2\Image\Traits\ImageGetStripMetaTaskTrait;
+use Chevereto\Controllers\Api\V2\Image\Traits\ImageGetUploadTaskTrait;
+use Chevereto\Controllers\Api\V2\Image\Traits\ImageGetValidateTaskTrait;
 
 abstract class ImagePostController extends FilePostController
 {
-    public function getSettingsKeys(): array
-    {
-        return [
-            'extensions',
-            'maxBytes',
-            'maxHeight',
-            'maxWidth',
-            'minBytes',
-            'minHeight',
-            'minWidth',
-            'naming',
-            'storageId',
-            'uploadPath',
-            'userId'
-        ];
-    }
+    use ImageGetSettingsKeysTrait, ImageGetValidateTaskTrait, ImageGetFixOrientationTaskTrait, ImageGetFetchMetaTaskTrait, ImageGetStripMetaTaskTrait, ImageGetUploadTaskTrait, ImageGetInsertTaskTrait;
 
-    public function getValidateTask(): TaskInterface
-    {
-        return (new Task(ValidateAction::class))
-            ->withArguments([
-                'filename' => '${filename}',
-                'maxHeight' => '${maxHeight}',
-                'maxWidth' => '${maxWidth}',
-                'minHeight' => '${minHeight}',
-                'minWidth' => '${minWidth}',
-            ]);
-    }
-
-    public function getFixOrientationTask(): TaskInterface
-    {
-        return (new Task(FixOrientationAction::class))
-            ->withArguments(['image' => '${validate:image}']);
-    }
-
-    public function getFetchMetaTask(): TaskInterface
-    {
-        return (new Task(FetchMetaAction::class))
-            ->withArguments(['image' => '${validate:image}']);
-    }
-
-    public function getStripMetaTask(): TaskInterface
-    {
-        return (new Task(StripMetaAction::class))
-            ->withArguments(['image' => '${validate:image}']);
-    }
-
-    public function getUploadTask(): TaskInterface
-    {
-        return (new Task(UploadAction::class))
-            ->withArguments([
-                'image' => '${validate:image}',
-                'naming' => '${naming}',
-                'originalName' => '${originalName}',
-                'storageId' => '${storage-failover:storageId}',
-                'uploadPath' => '${uploadPath}',
-            ]);
-    }
-
-    public function getInsertTask(): TaskInterface
-    {
-        return (new Task(InsertAction::class))
-            ->withArguments([
-                // 'albumId' => '${albumId}',
-                // 'exif' => '${fetch-meta:exif}',
-                'expires' => '${expires}',
-                // 'image' => '${validate:image}',
-                // 'iptc' => '${fetch-meta:iptc}',
-                // 'md5' => '${validate:md5}',
-                // 'perceptual' => '${validate:perceptual}',
-                // 'storageId' => '${storage-failover:storageId}',
-                // 'userId' => '${userId}',
-                // 'xmp' => '${fetch-meta:xmp}',
-            ]);
-    }
-
-    public function getWorkflow(): WorkflowInterface
+    final public function getWorkflow(): WorkflowInterface
     {
         return (new Workflow('upload-api-v1'))
             ->withAdded('validate-file', $this->getValidateFileTask())
@@ -128,28 +53,22 @@ abstract class ImagePostController extends FilePostController
             ->withAdded('insert', $this->getInsertTask());
     }
 
-    public function run(ArgumentsInterface $arguments): ResponseInterface
+    final public function run(ArgumentsInterface $arguments): ResponseInterface
     {
         $source = $arguments->get('source');
-
         $uploadFile = tempnam(sys_get_temp_dir(), 'chv.temp');
         $this->assertStoreSource($source, $uploadFile);
         $settings = $this->settings
             ->withPut('filename', $uploadFile)
             ->withPut('albumId', '');
-        $settings = $settings->toArray();
-        unset($settings['apiV1Key']);
-        $workflowRun = workflowRunner(
-            new WorkflowRun(
-                $this->workflow,
-                $settings
-            )
-        );
-        $data = $workflowRun->get('upload')->data();
-        $raw = json_encode($data, JSON_PRETTY_PRINT);
-
-        return new ResponseSuccess([
-            'raw' => $raw
+        $run = new WorkflowRun($this->workflow, $settings->toArray());
+        $message = new WorkflowMessage($run);
+        $response = new ResponseProvisional([
+            'delay' => $message->delay(),
+            'expiration' => $message->expiration(),
         ]);
+        ($this->enqueue)($message, $response);
+
+        return $response;
     }
 }

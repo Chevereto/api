@@ -157,33 +157,4 @@ abstract class VideoPostController extends FilePostController
             'raw' => $raw
         ]);
     }
-
-    /**
-     * @codeCoverageIgnore
-     */
-    public function withWorkflow(WorkflowInterface $workflow): self
-    {
-        $new = clone $this;
-        $new->workflow = $workflow;
-
-        return $new;
-    }
-
-    public function getServiceProviders(): ServiceProvidersInterface
-    {
-        return (new ServiceProviders($this))
-            ->withAdded('withSettings');
-    }
-
-    /**
-     * @throws OutOfBoundsException
-     */
-    public function withSettings(Settings $settings): self
-    {
-        $settings->assertHasKey(...$this->getSettingsKeys());
-        $new = clone $this;
-        $new->settings = $settings;
-
-        return $new;
-    }
 }

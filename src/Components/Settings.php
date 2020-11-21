@@ -17,11 +17,10 @@ use Chevere\Components\DataStructures\Traits\MapTrait;
 use Chevere\Components\Description\Traits\DescriptorTrait;
 use Chevere\Components\Message\Message;
 use Chevere\Exceptions\Core\OutOfBoundsException;
-use Chevere\Interfaces\Service\ServiceInterface;
 use Chevere\Interfaces\To\ToArrayInterface;
 use Ds\Map;
 
-final class Settings implements ServiceInterface, ToArrayInterface
+final class Settings implements ToArrayInterface
 {
     use DescriptorTrait;
     use MapTrait;
