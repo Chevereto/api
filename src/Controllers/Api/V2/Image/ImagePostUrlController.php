@@ -14,11 +14,11 @@ declare(strict_types=1);
 namespace Chevereto\Controllers\Api\V2\Image;
 
 use Chevere\Interfaces\Parameter\StringParameterInterface;
-use Chevereto\Controllers\Api\V2\File\Traits\AssertStoreUrlTrait;
+use Chevereto\Controllers\Api\V2\File\Traits\FileStoreUrlTrait;
 
 final class ImagePostUrlController extends ImagePostController
 {
-    use AssertStoreUrlTrait;
+    use FileStoreUrlTrait;
 
     public function getDescription(): string
     {

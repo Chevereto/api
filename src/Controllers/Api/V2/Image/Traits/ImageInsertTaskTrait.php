@@ -17,7 +17,7 @@ use Chevere\Components\Workflow\Task;
 use Chevere\Interfaces\Workflow\TaskInterface;
 use Chevereto\Actions\Image\InsertAction;
 
-trait ImageGetInsertTaskTrait
+trait ImageInsertTaskTrait
 {
     public function getInsertTask(): TaskInterface
     {

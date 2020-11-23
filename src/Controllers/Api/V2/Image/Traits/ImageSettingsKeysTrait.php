@@ -13,7 +13,7 @@ declare(strict_types=1);
 
 namespace Chevereto\Controllers\Api\V2\Image\Traits;
 
-trait ImageGetSettingsKeysTrait
+trait ImageSettingsKeysTrait
 {
     public function getSettingsKeys(): array
     {

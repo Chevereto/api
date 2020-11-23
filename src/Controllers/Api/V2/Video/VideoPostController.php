@@ -52,7 +52,7 @@ abstract class VideoPostController extends FilePostController
         ];
     }
 
-    public function getValidateTask(): TaskInterface
+    public function getValidateMediaTask(): TaskInterface
     {
         return (new Task(ValidateAction::class))
             ->withArguments([
@@ -117,7 +117,7 @@ abstract class VideoPostController extends FilePostController
     {
         return (new Workflow('upload-api-v1'))
             ->withAdded('validate-file', $this->getValidateFileTask())
-            ->withAdded('validate', $this->getValidateTask())
+            ->withAdded('validate', $this->getValidateMediaTask())
             // Plug step
             ->withAdded('detect-duplication', $this->getDetectDuplicateTask())
             // ->withAdded('fix-orientation', $this->getFixOrientationTask())

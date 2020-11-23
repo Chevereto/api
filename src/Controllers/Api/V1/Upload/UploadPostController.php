@@ -23,7 +23,6 @@ use Chevere\Components\Serialize\Unserialize;
 use Chevere\Components\Service\ServiceProviders;
 use Chevere\Components\Str\StrBool;
 use Chevere\Components\Workflow\Task;
-use Chevere\Components\Workflow\Workflow;
 use Chevere\Components\Workflow\WorkflowRun;
 use Chevere\Exceptions\Core\Exception;
 use Chevere\Exceptions\Core\InvalidArgumentException;
@@ -33,7 +32,6 @@ use Chevere\Interfaces\Parameter\ParametersInterface;
 use Chevere\Interfaces\Response\ResponseInterface;
 use Chevere\Interfaces\Service\ServiceableInterface;
 use Chevere\Interfaces\Service\ServiceProvidersInterface;
-use Chevere\Interfaces\Workflow\TaskInterface;
 use Chevere\Interfaces\Workflow\WorkflowInterface;
 use Chevereto\Actions\File\DetectDuplicateAction;
 use Chevereto\Actions\File\ValidateAction as ValidateFileAction;
@@ -121,113 +119,69 @@ final class UploadPostController extends Controller implements ServiceableInterf
             );
     }
 
-    private function getValidateFileTask(): TaskInterface
+    public function getTasks(): array
     {
-        return (new Task(ValidateFileAction::class))
-            ->withArguments([
-                'extensions' => '${extensions}',
-                'filename' => '${filename}',
-                'maxBytes' => '${maxBytes}',
-                'minBytes' => '${minBytes}',
-            ]);
-    }
-
-    private function getValidateTask(): TaskInterface
-    {
-        return (new Task(ValidateAction::class))
-            ->withArguments([
-                'filename' => '${filename}',
-                'maxHeight' => '${maxHeight}',
-                'maxWidth' => '${maxWidth}',
-                'minHeight' => '${minHeight}',
-                'minWidth' => '${minWidth}',
-            ]);
-    }
-
-    private function getDetectDuplicateTask(): TaskInterface
-    {
-        return (new Task(DetectDuplicateAction::class))
-            ->withArguments([
-                'md5' => '${validate:md5}',
-                'perceptual' => '${validate:perceptual}',
-                'ip' => '${ip}',
-                'ipVersion' => '${ipVersion}',
-            ]);
-    }
-
-    private function getFixOrientationTask(): TaskInterface
-    {
-        return (new Task(FixOrientationAction::class))
-            ->withArguments(['image' => '${validate:image}']);
-    }
-
-    private function getFetchMetaTask(): TaskInterface
-    {
-        return (new Task(FetchMetaAction::class))
-            ->withArguments(['image' => '${validate:image}']);
-    }
-
-    private function getStripMetaTask(): TaskInterface
-    {
-        return (new Task(StripMetaAction::class))
-            ->withArguments(['image' => '${validate:image}']);
-    }
-
-    private function getUploadTask(): TaskInterface
-    {
-        return (new Task(UploadAction::class))
-            ->withArguments([
-                'image' => '${validate:image}',
-                'naming' => '${naming}',
-                'originalName' => '${originalName}',
-                'storageId' => '${storage-failover:storageId}',
-                'uploadPath' => '${uploadPath}',
-            ]);
-    }
-
-    private function getStorageFailoverTask(): TaskInterface
-    {
-        return (new Task(FailoverAction::class))
-            ->withArguments([
-                'storageId' => 0
-            ]);
-    }
-
-    private function getInsertTask(): TaskInterface
-    {
-        return (new Task(InsertAction::class))
-            ->withArguments([
-                'albumId' => '${albumId}',
-                // 'exif' => '${fetch-meta:exif}',
-                'expires' => '${expires}',
-                // 'image' => '${validate:image}',
-                // 'iptc' => '${fetch-meta:iptc}',
-                // 'md5' => '${validate:md5}',
-                // 'perceptual' => '${validate:perceptual}',
-                // 'storageId' => '${storage-failover:storageId}',
-                'userId' => '${userId}',
-                // 'xmp' => '${fetch-meta:xmp}',
-            ]);
-    }
-
-    public function getWorkflow(): WorkflowInterface
-    {
-        return (new Workflow('upload-api-v1'))
-            ->withAdded('validate-file', $this->getValidateFileTask())
-            ->withAdded('validate', $this->getValidateTask())
-            // Plug step
-            ->withAdded('detect-duplication', $this->getDetectDuplicateTask())
-            ->withAdded('fix-orientation', $this->getFixOrientationTask())
-            ->withAdded('fetch-meta', $this->getFetchMetaTask())
-            // Plug step
-            ->withAdded('strip-meta', $this->getStripMetaTask())
-            // ->withAdded(
-            //     'user-quota-check',
-            //     (new Task())
-            // )
-            ->withAdded('storage-failover', $this->getStorageFailoverTask())
-            ->withAdded('upload', $this->getUploadTask())
-            ->withAdded('insert', $this->getInsertTask());
+        return [
+            'validate-file' => (new Task(ValidateFileAction::class))
+                ->withArguments([
+                    'extensions' => '${extensions}',
+                    'filename' => '${filename}',
+                    'maxBytes' => '${maxBytes}',
+                    'minBytes' => '${minBytes}',
+                ]),
+            'validate' => (new Task(ValidateAction::class))
+                ->withArguments([
+                    'filename' => '${filename}',
+                    'maxHeight' => '${maxHeight}',
+                    'maxWidth' => '${maxWidth}',
+                    'minHeight' => '${minHeight}',
+                    'minWidth' => '${minWidth}',
+                ]),
+            'detect-duplication' => (new Task(DetectDuplicateAction::class))
+                ->withArguments([
+                    'md5' => '${validate:md5}',
+                    'perceptual' => '${validate:perceptual}',
+                    'ip' => '${ip}',
+                    'ipVersion' => '${ipVersion}',
+                ]),
+            'fix-orientation' => (new Task(FixOrientationAction::class))
+                ->withArguments([
+                    'image' => '${validate:image}'
+                ]),
+            'fetch-meta' => (new Task(FetchMetaAction::class))
+                ->withArguments([
+                    'image' => '${validate:image}'
+                ]),
+            'strip-meta' => (new Task(StripMetaAction::class))
+                ->withArguments([
+                    'image' => '${validate:image}'
+                ]),
+            'storage-failover' => (new Task(FailoverAction::class))
+                ->withArguments([
+                    'storageId' => 0
+                ]),
+            'upload' => (new Task(UploadAction::class))
+                ->withArguments([
+                    'image' => '${validate:image}',
+                    'naming' => '${naming}',
+                    'originalName' => '${originalName}',
+                    'storageId' => '${storage-failover:storageId}',
+                    'uploadPath' => '${uploadPath}',
+                ]),
+            'insert' => (new Task(InsertAction::class))
+                ->withArguments([
+                    'albumId' => '${albumId}',
+                    // 'exif' => '${fetch-meta:exif}',
+                    'expires' => '${expires}',
+                    // 'image' => '${validate:image}',
+                    // 'iptc' => '${fetch-meta:iptc}',
+                    // 'md5' => '${validate:md5}',
+                    // 'perceptual' => '${validate:perceptual}',
+                    // 'storageId' => '${storage-failover:storageId}',
+                    'userId' => '${userId}',
+                    // 'xmp' => '${fetch-meta:xmp}',
+                ])
+        ];
     }
 
     public function withWorkflow(WorkflowInterface $workflow): self

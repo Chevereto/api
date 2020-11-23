@@ -14,12 +14,12 @@ declare(strict_types=1);
 namespace Chevereto\Controllers\Api\V2\Image;
 
 use Chevere\Interfaces\Parameter\StringParameterInterface;
-use Chevereto\Controllers\Api\V2\File\Traits\AssertStoreBinarySourceTrait;
+use Chevereto\Controllers\Api\V2\File\Traits\FileStoreBinarySourceTrait;
 use Chevereto\Controllers\Api\V2\Video\VideoPostController;
 
 final class VideoPostBinaryController extends VideoPostController
 {
-    use AssertStoreBinarySourceTrait;
+    use FileStoreBinarySourceTrait;
 
     public function getDescription(): string
     {

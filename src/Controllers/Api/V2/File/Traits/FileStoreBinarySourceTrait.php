@@ -15,36 +15,38 @@ namespace Chevereto\Controllers\Api\V2\File\Traits;
 
 use Chevere\Components\Message\Message;
 use Chevere\Components\Parameter\StringParameter;
-use Chevere\Components\Regex\Regex;
+use Chevere\Components\Serialize\Unserialize;
 use Chevere\Exceptions\Core\InvalidArgumentException;
 use Chevere\Interfaces\Parameter\StringParameterInterface;
-use GuzzleHttp\Client;
 use Throwable;
+use function Chevereto\Encoding\getBase64Regex;
+use function Safe\copy;
 
-trait AssertStoreUrlTrait
+trait FileStoreBinarySourceTrait
 {
     /**
+     * @param string $source A serialized PHP `$_FILES['source']` variable
+     *
      * @throws InvalidArgumentException
+     * @throws FilesystemException
      */
     public function assertStoreSource(string $source, string $path): void
     {
         try {
-            $client = new Client([
-                'base_uri' => $source,
-                'timeout' => 2,
-            ]);
-            $response = $client->request('GET');
+            $unserialize = new Unserialize($source);
+            $filename = $unserialize->var()['tmp_name'];
         } catch (Throwable $e) {
             throw new InvalidArgumentException(
-                (new Message($e->getMessage()))
+                new Message('Invalid binary file'),
             );
         }
-        file_put_contents($path, $response->getBody());
+        copy($filename, $path);
     }
 
-    private function getUrlStringParameter(string $name): StringParameterInterface
+    private function getBinaryStringParameter(string $name): StringParameterInterface
     {
         return (new StringParameter($name))
-            ->withRegex(new Regex('/^(https?|ftp)+\:\/\/.+$/'));
+            ->withRegex(getBase64Regex())
+            ->withAddedAttribute('tryFiles');
     }
 }

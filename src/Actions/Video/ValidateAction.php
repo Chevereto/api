@@ -32,7 +32,7 @@ use function Safe\md5_file;
  * Validates a video against the video processing and file dimensions.
  *
  * Provides a run method returning a `ResponseSuccess` with
- * data `['video' => <Video>, 'perceptual' => <string>, 'md5' => <string>]`.
+ * data `['video' => <Video>, 'md5' => <string>]`.
  */
 class ValidateAction extends Action
 {

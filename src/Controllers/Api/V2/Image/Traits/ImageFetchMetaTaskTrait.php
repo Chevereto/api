@@ -17,7 +17,7 @@ use Chevere\Components\Workflow\Task;
 use Chevere\Interfaces\Workflow\TaskInterface;
 use Chevereto\Actions\Image\FetchMetaAction;
 
-trait ImageGetFetchMetaTaskTrait
+trait ImageFetchMetaTaskTrait
 {
     public function getFetchMetaTask(): TaskInterface
     {

@@ -15,13 +15,13 @@ namespace Chevereto\Controllers\Api\V2\Image\Traits;
 
 use Chevere\Components\Workflow\Task;
 use Chevere\Interfaces\Workflow\TaskInterface;
-use Chevereto\Actions\Image\StripMetaAction;
+use Chevereto\Actions\Image\FixOrientationAction;
 
-trait ImageGetStripMetaTaskTrait
+trait ImageFixOrientationTaskTrait
 {
-    public function getStripMetaTask(): TaskInterface
+    public function getFixOrientationTask(): TaskInterface
     {
-        return (new Task(StripMetaAction::class))
+        return (new Task(FixOrientationAction::class))
             ->withArguments(['image' => '${validate:image}']);
     }
 }

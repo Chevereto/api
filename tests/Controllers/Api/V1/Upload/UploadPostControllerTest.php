@@ -13,6 +13,7 @@ declare(strict_types=1);
 
 namespace Tests\Controllers\Api\V1\Upload;
 
+use Chevere\Components\Workflow\Workflow;
 use Chevere\Exceptions\Core\OutOfBoundsException;
 use Chevere\Interfaces\Workflow\WorkflowInterface;
 use Chevereto\Components\Settings;
@@ -52,9 +53,14 @@ final class UploadPostControllerTest extends TestCase
 
     public function testWorkflow(): void
     {
+        $tasks = (new UploadPostController)->getTasks();
+        $workflow = new Workflow('api-v1-upload');
+        foreach ($tasks as $step => $task) {
+            $workflow = $workflow->withAdded($step, $task);
+        }
         $this->assertInstanceOf(
             WorkflowInterface::class,
-            (new UploadPostController)->getWorkflow()
+            $workflow
         );
     }
 

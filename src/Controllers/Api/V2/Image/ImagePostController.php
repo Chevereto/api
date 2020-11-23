@@ -21,23 +21,24 @@ use Chevere\Interfaces\Parameter\ArgumentsInterface;
 use Chevere\Interfaces\Response\ResponseInterface;
 use Chevere\Interfaces\Workflow\WorkflowInterface;
 use Chevereto\Controllers\Api\V2\File\FilePostController;
-use Chevereto\Controllers\Api\V2\Image\Traits\ImageGetFetchMetaTaskTrait;
-use Chevereto\Controllers\Api\V2\Image\Traits\ImageGetFixOrientationTaskTrait;
-use Chevereto\Controllers\Api\V2\Image\Traits\ImageGetInsertTaskTrait;
-use Chevereto\Controllers\Api\V2\Image\Traits\ImageGetSettingsKeysTrait;
-use Chevereto\Controllers\Api\V2\Image\Traits\ImageGetStripMetaTaskTrait;
-use Chevereto\Controllers\Api\V2\Image\Traits\ImageGetUploadTaskTrait;
-use Chevereto\Controllers\Api\V2\Image\Traits\ImageGetValidateTaskTrait;
+use Chevereto\Controllers\Api\V2\Image\Traits\ImageDetectDuplicateTaskTrait;
+use Chevereto\Controllers\Api\V2\Image\Traits\ImageFetchMetaTaskTrait;
+use Chevereto\Controllers\Api\V2\Image\Traits\ImageFixOrientationTaskTrait;
+use Chevereto\Controllers\Api\V2\Image\Traits\ImageInsertTaskTrait;
+use Chevereto\Controllers\Api\V2\Image\Traits\ImageSettingsKeysTrait;
+use Chevereto\Controllers\Api\V2\Image\Traits\ImageStripMetaTaskTrait;
+use Chevereto\Controllers\Api\V2\Image\Traits\ImageUploadTaskTrait;
+use Chevereto\Controllers\Api\V2\Image\Traits\ImageValidateMediaTaskTrait;
 
 abstract class ImagePostController extends FilePostController
 {
-    use ImageGetSettingsKeysTrait, ImageGetValidateTaskTrait, ImageGetFixOrientationTaskTrait, ImageGetFetchMetaTaskTrait, ImageGetStripMetaTaskTrait, ImageGetUploadTaskTrait, ImageGetInsertTaskTrait;
+    use ImageDetectDuplicateTaskTrait, ImageSettingsKeysTrait, ImageValidateMediaTaskTrait, ImageFixOrientationTaskTrait, ImageFetchMetaTaskTrait, ImageStripMetaTaskTrait, ImageUploadTaskTrait, ImageInsertTaskTrait;
 
     final public function getWorkflow(): WorkflowInterface
     {
         return (new Workflow('upload-api-v1'))
             ->withAdded('validate-file', $this->getValidateFileTask())
-            ->withAdded('validate', $this->getValidateTask())
+            ->withAdded('validate', $this->getValidateMediaTask())
             // Plug step
             ->withAdded('detect-duplication', $this->getDetectDuplicateTask())
             ->withAdded('fix-orientation', $this->getFixOrientationTask())

@@ -14,11 +14,11 @@ declare(strict_types=1);
 namespace Chevereto\Controllers\Api\V2\Image;
 
 use Chevere\Interfaces\Parameter\StringParameterInterface;
-use Chevereto\Controllers\Api\V2\File\Traits\AssertStoreBase64SourceTrait;
+use Chevereto\Controllers\Api\V2\File\Traits\FileStoreBase64SourceTrait;
 
 final class ImagePostBase64Controller extends ImagePostController
 {
-    use AssertStoreBase64SourceTrait;
+    use FileStoreBase64SourceTrait;
 
     public function getDescription(): string
     {

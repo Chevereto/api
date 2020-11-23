@@ -15,19 +15,19 @@ namespace Chevereto\Controllers\Api\V2\Image\Traits;
 
 use Chevere\Components\Workflow\Task;
 use Chevere\Interfaces\Workflow\TaskInterface;
-use Chevereto\Actions\Image\UploadAction;
+use Chevereto\Actions\Image\ValidateAction;
 
-trait ImageGetUploadTaskTrait
+trait ImageValidateMediaTaskTrait
 {
-    public function getUploadTask(): TaskInterface
+    public function getValidateMediaTask(): TaskInterface
     {
-        return (new Task(UploadAction::class))
+        return (new Task(ValidateAction::class))
             ->withArguments([
-                'image' => '${validate:image}',
-                'naming' => '${naming}',
-                'originalName' => '${originalName}',
-                'storageId' => '${storage-failover:storageId}',
-                'uploadPath' => '${uploadPath}',
+                'filename' => '${filename}',
+                'maxHeight' => '${maxHeight}',
+                'maxWidth' => '${maxWidth}',
+                'minHeight' => '${minHeight}',
+                'minWidth' => '${minWidth}',
             ]);
     }
 }

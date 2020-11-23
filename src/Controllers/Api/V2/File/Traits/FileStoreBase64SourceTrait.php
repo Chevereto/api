@@ -19,7 +19,7 @@ use function Chevereto\Encoding\assertBase64;
 use function Chevereto\Encoding\getBase64Regex;
 use function Chevereto\Encoding\storeDecodedBase64;
 
-trait AssertStoreBase64SourceTrait
+trait FileStoreBase64SourceTrait
 {
     /**
      * @param string $source A base64 encoded file
