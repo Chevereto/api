@@ -189,14 +189,6 @@ final class UploadPostController extends Controller implements ServiceableInterf
         ];
     }
 
-    public function withWorkflow(WorkflowInterface $workflow): self
-    {
-        $new = clone $this;
-        $new->workflow = $workflow;
-
-        return $new;
-    }
-
     public function run(ArgumentsInterface $arguments): ResponseInterface
     {
         if ($arguments->get('key') !== $this->settings->get('apiV1Key')) {
