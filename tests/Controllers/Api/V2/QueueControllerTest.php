@@ -14,6 +14,7 @@ declare(strict_types=1);
 namespace Chevereto\Tests\Controllers\Api\V2;
 
 use Chevere\Components\Response\ResponseSuccess;
+use Chevere\Components\Workflow\Task;
 use Chevere\Components\Workflow\Workflow;
 use Chevere\Exceptions\Core\LogicException;
 use Chevere\Exceptions\Core\OutOfBoundsException;
@@ -21,6 +22,7 @@ use Chevere\Exceptions\Service\ServiceException;
 use Chevere\Interfaces\Parameter\ArgumentsInterface;
 use Chevere\Interfaces\Response\ResponseInterface;
 use Chevere\Interfaces\Workflow\WorkflowInterface;
+use Chevereto\Actions\File\ValidateAction;
 use Chevereto\Components\Enqueue;
 use Chevereto\Components\Settings;
 use Chevereto\Controllers\Api\V2\QueueController;
@@ -56,13 +58,13 @@ final class QueueControllerTest extends TestCase
         $controller->workflow();
     }
 
-    public function testWithWorkflow(): void
-    {
-        $controller = new TestQueueControllerTest;
-        $workflow = $controller->getWorkflow();
-        $controller = $controller->withWorkflow($workflow);
-        $this->assertSame($workflow, $controller->workflow());
-    }
+    // public function testWithWorkflow(): void
+    // {
+    //     $controller = new TestQueueControllerTest;
+    //     $workflow = $controller->getWorkflow();
+    //     $controller = $controller->withWorkflow($workflow);
+    //     $this->assertSame($workflow, $controller->workflow());
+    // }
 
     public function testWithoutSettings(): void
     {
@@ -89,9 +91,9 @@ final class TestQueueControllerTest extends QueueController
         return ['test'];
     }
 
-    public function getWorkflow(): WorkflowInterface
+    public function getTasks(): array
     {
-        return new Workflow('test');
+        return ['step' => new Task(ValidateAction::class)];
     }
 
     public function run(ArgumentsInterface $arguments): ResponseInterface

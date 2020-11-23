@@ -16,20 +16,13 @@ namespace Chevereto\Controllers\Api\V2\File;
 use Chevere\Components\Parameter\Parameters;
 use Chevere\Interfaces\Parameter\ParametersInterface;
 use Chevere\Interfaces\Parameter\StringParameterInterface;
-use Chevere\Interfaces\Workflow\TaskInterface;
-use Chevereto\Controllers\Api\V2\File\Traits\FileStorageFailoverTaskTrait;
-use Chevereto\Controllers\Api\V2\File\Traits\FileValidateFileTaskTrait;
 use Chevereto\Controllers\Api\V2\QueueController;
 
 abstract class FilePostController extends QueueController
 {
-    use FileValidateFileTaskTrait, FileStorageFailoverTaskTrait;
-
     abstract public function assertStoreSource(string $source, string $uploadFile): void;
 
     abstract public function getSourceParameter(): StringParameterInterface;
-
-    abstract public function getValidateMediaTask(): TaskInterface;
 
     public function getParameters(): ParametersInterface
     {

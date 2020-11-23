@@ -47,13 +47,13 @@ final class ImagePostBase64ControllerTest extends TestCase
     //     $this->assertSame($settings, $controller->settings());
     // }
 
-    public function testWorkflow(): void
-    {
-        $this->assertInstanceOf(
-            WorkflowInterface::class,
-            (new ImagePostBase64Controller)->getWorkflow()
-        );
-    }
+    // public function testWorkflow(): void
+    // {
+    //     $this->assertInstanceOf(
+    //         WorkflowInterface::class,
+    //         (new ImagePostBase64Controller)->getWorkflow()
+    //     );
+    // }
 
     public function testAssertStoreSource(): void
     {

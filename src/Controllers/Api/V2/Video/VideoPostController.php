@@ -13,22 +13,16 @@ declare(strict_types=1);
 
 namespace Chevereto\Controllers\Api\V2\Video;
 
-use Chevere\Components\Controller\Controller;
 use Chevere\Components\Response\ResponseSuccess;
-use Chevere\Components\Service\ServiceProviders;
 use Chevere\Components\Workflow\Task;
 use Chevere\Components\Workflow\Workflow;
 use Chevere\Components\Workflow\WorkflowRun;
 use Chevere\Interfaces\Parameter\ArgumentsInterface;
 use Chevere\Interfaces\Response\ResponseInterface;
-use Chevere\Interfaces\Service\ServiceableInterface;
-use Chevere\Interfaces\Service\ServiceProvidersInterface;
 use Chevere\Interfaces\Workflow\TaskInterface;
 use Chevere\Interfaces\Workflow\WorkflowInterface;
 use Chevereto\Actions\Video\ValidateAction;
-use Chevereto\Components\Settings;
 use Chevereto\Controllers\Api\V2\File\FilePostController;
-use Chevereto\Controllers\Api\V2\Video\Traits\VideoPostTrait;
 use function Chevere\Components\Workflow\workflowRunner;
 
 abstract class VideoPostController extends FilePostController
@@ -52,19 +46,24 @@ abstract class VideoPostController extends FilePostController
         ];
     }
 
-    public function getValidateMediaTask(): TaskInterface
+    public function getTasks(): array
     {
-        return (new Task(ValidateAction::class))
-            ->withArguments([
-                'filename' => '${filename}',
-                'maxHeight' => '${maxHeight}',
-                'maxWidth' => '${maxWidth}',
-                'minHeight' => '${minHeight}',
-                'minWidth' => '${minWidth}',
-                'maxLength' => '${maxLength}',
-                'minLength' => '${minLength}',
-            ]);
+        return [];
     }
+
+    // public function getValidateMediaTask(): TaskInterface
+    // {
+    //     return (new Task(ValidateAction::class))
+    //         ->withArguments([
+    //             'filename' => '${filename}',
+    //             'maxHeight' => '${maxHeight}',
+    //             'maxWidth' => '${maxWidth}',
+    //             'minHeight' => '${minHeight}',
+    //             'minWidth' => '${minWidth}',
+    //             'maxLength' => '${maxLength}',
+    //             'minLength' => '${minLength}',
+    //         ]);
+    // }
 
     // public function getFixOrientationTask(): TaskInterface
     // {

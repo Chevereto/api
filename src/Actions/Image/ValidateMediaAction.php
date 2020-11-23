@@ -34,7 +34,7 @@ use function Safe\md5_file;
  * Provides a run method returning a `ResponseSuccess` with
  * data `['image' => <\Intervention\Image\Image>, 'perceptual' => <string>, 'md5' => <string>]`.
  */
-class ValidateAction extends Action
+class ValidateMediaAction extends Action
 {
     private int $maxWidth;
 

@@ -14,44 +14,78 @@ declare(strict_types=1);
 namespace Chevereto\Controllers\Api\V2\Image;
 
 use Chevere\Components\Response\ResponseProvisional;
-use Chevere\Components\Workflow\Workflow;
+use Chevere\Components\Workflow\Task;
 use Chevere\Components\Workflow\WorkflowMessage;
 use Chevere\Components\Workflow\WorkflowRun;
 use Chevere\Interfaces\Parameter\ArgumentsInterface;
 use Chevere\Interfaces\Response\ResponseInterface;
-use Chevere\Interfaces\Workflow\WorkflowInterface;
+use Chevereto\Actions\Image\ValidateMediaAction;
+use Chevereto\Actions\Video\ValidateAction;
 use Chevereto\Controllers\Api\V2\File\FilePostController;
-use Chevereto\Controllers\Api\V2\Image\Traits\ImageDetectDuplicateTaskTrait;
-use Chevereto\Controllers\Api\V2\Image\Traits\ImageFetchMetaTaskTrait;
-use Chevereto\Controllers\Api\V2\Image\Traits\ImageFixOrientationTaskTrait;
-use Chevereto\Controllers\Api\V2\Image\Traits\ImageInsertTaskTrait;
 use Chevereto\Controllers\Api\V2\Image\Traits\ImageSettingsKeysTrait;
-use Chevereto\Controllers\Api\V2\Image\Traits\ImageStripMetaTaskTrait;
-use Chevereto\Controllers\Api\V2\Image\Traits\ImageUploadTaskTrait;
-use Chevereto\Controllers\Api\V2\Image\Traits\ImageValidateMediaTaskTrait;
 
 abstract class ImagePostController extends FilePostController
 {
-    use ImageDetectDuplicateTaskTrait, ImageSettingsKeysTrait, ImageValidateMediaTaskTrait, ImageFixOrientationTaskTrait, ImageFetchMetaTaskTrait, ImageStripMetaTaskTrait, ImageUploadTaskTrait, ImageInsertTaskTrait;
+    use ImageSettingsKeysTrait;
 
-    final public function getWorkflow(): WorkflowInterface
+    public function getTasks(): array
     {
-        return (new Workflow('upload-api-v1'))
-            ->withAdded('validate-file', $this->getValidateFileTask())
-            ->withAdded('validate', $this->getValidateMediaTask())
-            // Plug step
-            ->withAdded('detect-duplication', $this->getDetectDuplicateTask())
-            ->withAdded('fix-orientation', $this->getFixOrientationTask())
-            ->withAdded('fetch-meta', $this->getFetchMetaTask())
-            // Plug step
-            ->withAdded('strip-meta', $this->getStripMetaTask())
-            // ->withAdded(
-            //     'user-quota-check',
-            //     (new Task())
-            // )
-            ->withAdded('storage-failover', $this->getStorageFailoverTask())
-            ->withAdded('upload', $this->getUploadTask())
-            ->withAdded('insert', $this->getInsertTask());
+        return [
+            'validate-file' => (new Task(ValidateAction::class))
+                ->withArguments([
+                    'extensions' => '${extensions}',
+                    'filename' => '${filename}',
+                    'maxBytes' => '${maxBytes}',
+                    'minBytes' => '${minBytes}',
+                ]),
+            'validate-media' => (new Task(ValidateMediaAction::class))
+                ->withArguments([
+                    'filename' => '${filename}',
+                    'maxHeight' => '${maxHeight}',
+                    'maxWidth' => '${maxWidth}',
+                    'minHeight' => '${minHeight}',
+                    'minWidth' => '${minWidth}',
+                ]),
+            'detect-duplication' => (new Task(DetectDuplicateAction::class))
+                ->withArguments([
+                    'md5' => '${validate-media:md5}',
+                    'perceptual' => '${validate-media:perceptual}',
+                    'ip' => '${ip}',
+                    'ipVersion' => '${ipVersion}',
+                ]),
+            'fix-orientation' => (new Task(FixOrientationAction::class))
+                ->withArguments(['image' => '${validate-media:image}']),
+            'fetch-meta' => (new Task(FetchMetaAction::class))
+                ->withArguments(['image' => '${validate-media:image}']),
+            'strip-meta' => (new Task(StripMetaAction::class))
+                ->withArguments(['image' => '${validate-media:image}']),
+            'storage-failover' => (new Task(FailoverAction::class))
+                ->withArguments([
+                    'storageId' => '${storageId}',
+                    // 'required' => '${validate-media:bytes}'
+                ]),
+            'upload' => (new Task(UploadAction::class))
+                ->withArguments([
+                    'image' => '${validate-media:image}',
+                    'naming' => '${naming}',
+                    'originalName' => '${originalName}',
+                    'storageId' => '${storage-failover:storageId}',
+                    'uploadPath' => '${uploadPath}',
+                ]),
+            'insert' => (new Task(InsertAction::class))
+                ->withArguments([
+                    'albumId' => '${albumId}',
+                    // 'exif' => '${fetch-meta:exif}',
+                    'expires' => '${expires}',
+                    // 'image' => '${validate:image}',
+                    // 'iptc' => '${fetch-meta:iptc}',
+                    // 'md5' => '${validate:md5}',
+                    // 'perceptual' => '${validate:perceptual}',
+                    // 'storageId' => '${storage-failover:storageId}',
+                    'userId' => '${userId}',
+                    // 'xmp' => '${fetch-meta:xmp}',
+                ]),
+        ];
     }
 
     final public function run(ArgumentsInterface $arguments): ResponseInterface
@@ -61,16 +95,17 @@ abstract class ImagePostController extends FilePostController
         $this->assertStoreSource($source, $uploadFile);
         $settings = $this->settings
             ->withPut('filename', $uploadFile);
-        $workflowMessage = new WorkflowMessage(
-            new WorkflowRun($this->workflow, $settings->toArray())
-        );
-        $data = [
-            'delay' => $workflowMessage->delay(),
-            'expiration' => $workflowMessage->expiration(),
-        ];
-        $response = new ResponseProvisional($data);
-        ($this->enqueue)($workflowMessage, $response);
+        // $workflowMessage = new WorkflowMessage(
+        //     new WorkflowRun($this->workflow, $settings->toArray())
+        // );
+        // $data = [
+        //     'delay' => $workflowMessage->delay(),
+        //     'expiration' => $workflowMessage->expiration(),
+        // ];
+        // $response = new ResponseProvisional($data);
+        // ($this->enqueue)($workflowMessage, $response);
 
-        return $response;
+        // return $response;
+        return new ResponseProvisional([]);
     }
 }

@@ -21,7 +21,6 @@ use Chevere\Components\Regex\Regex;
 use Chevere\Components\Response\ResponseSuccess;
 use Chevere\Components\Serialize\Unserialize;
 use Chevere\Components\Service\ServiceProviders;
-use Chevere\Components\Str\StrBool;
 use Chevere\Components\Workflow\Task;
 use Chevere\Components\Workflow\WorkflowRun;
 use Chevere\Exceptions\Core\Exception;
@@ -40,9 +39,10 @@ use Chevereto\Actions\Image\FixOrientationAction;
 use Chevereto\Actions\Image\InsertAction;
 use Chevereto\Actions\Image\StripMetaAction;
 use Chevereto\Actions\Image\UploadAction;
-use Chevereto\Actions\Image\ValidateAction;
+use Chevereto\Actions\Image\ValidateMediaAction;
 use Chevereto\Actions\Storage\FailoverAction;
 use Chevereto\Components\Settings;
+use Chevereto\Controllers\Api\V2\File\Traits\FileStoreBase64SourceTrait;
 use Laminas\Uri\UriFactory;
 use function Chevere\Components\Workflow\workflowRunner;
 use function Safe\fclose;
@@ -53,6 +53,8 @@ use function Safe\tempnam;
 
 final class UploadPostController extends Controller implements ServiceableInterface
 {
+    use FileStoreBase64SourceTrait;
+
     private Settings $settings;
 
     private WorkflowInterface $workflow;
@@ -119,6 +121,9 @@ final class UploadPostController extends Controller implements ServiceableInterf
             );
     }
 
+    /**
+     * @return Array<string, Task>
+     */
     public function getTasks(): array
     {
         return [
@@ -129,7 +134,7 @@ final class UploadPostController extends Controller implements ServiceableInterf
                     'maxBytes' => '${maxBytes}',
                     'minBytes' => '${minBytes}',
                 ]),
-            'validate' => (new Task(ValidateAction::class))
+            'validate' => (new Task(ValidateMediaAction::class))
                 ->withArguments([
                     'filename' => '${filename}',
                     'maxHeight' => '${maxHeight}',
@@ -211,15 +216,7 @@ final class UploadPostController extends Controller implements ServiceableInterf
             if ($uri->isValid()) {
                 // G\fetch_url($source, $uploadFile);
             } else {
-                try {
-                    $this->assertBase64String($source);
-                    $this->storeDecodedBase64String($source, $uploadFile);
-                } catch (Exception $e) {
-                    throw new InvalidArgumentException(
-                        new Message('Invalid base64 string'),
-                        $e->getCode()
-                    );
-                }
+                $this->assertStoreSource($source, $uploadFile);
             }
         }
         $settings = $this->settings
@@ -243,18 +240,6 @@ final class UploadPostController extends Controller implements ServiceableInterf
         return new ResponseSuccess([
             'raw' => $raw
         ]);
-    }
-
-    public function assertBase64String(string $string): void
-    {
-        $double = base64_encode(base64_decode($string));
-        if (!(new StrBool($string))->same($double)) {
-            throw new Exception(
-                new Message('Invalid base64 formatting'),
-                1100
-            );
-        }
-        unset($double);
     }
 
     public function storeDecodedBase64String(string $base64, string $path): void

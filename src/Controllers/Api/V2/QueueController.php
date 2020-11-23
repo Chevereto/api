@@ -26,6 +26,7 @@ use Chevere\Exceptions\Core\UnexpectedValueException;
 use Chevere\Exceptions\Service\ServiceException;
 use Chevere\Interfaces\Service\ServiceableInterface;
 use Chevere\Interfaces\Service\ServiceProvidersInterface;
+use Chevere\Interfaces\Workflow\TaskInterface;
 use Chevere\Interfaces\Workflow\WorkflowInterface;
 use Chevereto\Components\Enqueue;
 use Chevereto\Components\Settings;
@@ -43,7 +44,10 @@ abstract class QueueController extends Controller implements ServiceableInterfac
 
     abstract public function getSettingsKeys(): array;
 
-    abstract public function getWorkflow(): WorkflowInterface;
+    /**
+     * @return Array<string, TaskInterface>
+     */
+    abstract public function getTasks(): array;
 
     final public function withEnqueue(Enqueue $enqueue): self
     {
