@@ -34,7 +34,7 @@ use function Safe\md5_file;
  * Provides a run method returning a `ResponseSuccess` with
  * data `['video' => <Video>, 'md5' => <string>]`.
  */
-class ValidateAction extends Action
+class ValidateMediaAction extends Action
 {
     private int $maxWidth;
 

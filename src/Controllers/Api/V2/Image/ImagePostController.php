@@ -15,12 +15,17 @@ namespace Chevereto\Controllers\Api\V2\Image;
 
 use Chevere\Components\Response\ResponseProvisional;
 use Chevere\Components\Workflow\Task;
-use Chevere\Components\Workflow\WorkflowMessage;
-use Chevere\Components\Workflow\WorkflowRun;
 use Chevere\Interfaces\Parameter\ArgumentsInterface;
 use Chevere\Interfaces\Response\ResponseInterface;
+use Chevereto\Actions\File\DetectDuplicateAction;
+use Chevereto\Actions\File\ValidateAction;
+use Chevereto\Actions\Image\FetchMetaAction;
+use Chevereto\Actions\Image\FixOrientationAction;
+use Chevereto\Actions\Image\InsertAction;
+use Chevereto\Actions\Image\StripMetaAction;
+use Chevereto\Actions\Image\UploadAction;
 use Chevereto\Actions\Image\ValidateMediaAction;
-use Chevereto\Actions\Video\ValidateAction;
+use Chevereto\Actions\Storage\FailoverAction;
 use Chevereto\Controllers\Api\V2\File\FilePostController;
 use Chevereto\Controllers\Api\V2\Image\Traits\ImageSettingsKeysTrait;
 
@@ -28,7 +33,7 @@ abstract class ImagePostController extends FilePostController
 {
     use ImageSettingsKeysTrait;
 
-    public function getTasks(): array
+    public function getSteps(): array
     {
         return [
             'validate-file' => (new Task(ValidateAction::class))
@@ -46,7 +51,7 @@ abstract class ImagePostController extends FilePostController
                     'minHeight' => '${minHeight}',
                     'minWidth' => '${minWidth}',
                 ]),
-            'detect-duplication' => (new Task(DetectDuplicateAction::class))
+            'detect-duplicate' => (new Task(DetectDuplicateAction::class))
                 ->withArguments([
                     'md5' => '${validate-media:md5}',
                     'perceptual' => '${validate-media:perceptual}',
@@ -88,7 +93,7 @@ abstract class ImagePostController extends FilePostController
         ];
     }
 
-    final public function run(ArgumentsInterface $arguments): ResponseInterface
+    public function run(ArgumentsInterface $arguments): ResponseInterface
     {
         $source = $arguments->get('source');
         $uploadFile = tempnam(sys_get_temp_dir(), 'chv.temp');

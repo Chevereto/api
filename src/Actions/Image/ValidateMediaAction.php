@@ -29,7 +29,7 @@ use function Chevereto\Image\imageManager;
 use function Safe\md5_file;
 
 /**
- * Validates an image against the image processing and file dimensions.
+ * Validates an image against the image processing and image dimensions.
  *
  * Provides a run method returning a `ResponseSuccess` with
  * data `['image' => <\Intervention\Image\Image>, 'perceptual' => <string>, 'md5' => <string>]`.

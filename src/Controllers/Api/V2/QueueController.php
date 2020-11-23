@@ -47,7 +47,7 @@ abstract class QueueController extends Controller implements ServiceableInterfac
     /**
      * @return Array<string, TaskInterface>
      */
-    abstract public function getTasks(): array;
+    abstract public function getSteps(): array;
 
     final public function withEnqueue(Enqueue $enqueue): self
     {

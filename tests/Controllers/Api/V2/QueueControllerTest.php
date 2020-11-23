@@ -91,7 +91,7 @@ final class TestQueueControllerTest extends QueueController
         return ['test'];
     }
 
-    public function getTasks(): array
+    public function getSteps(): array
     {
         return ['step' => new Task(ValidateAction::class)];
     }
