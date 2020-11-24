@@ -14,6 +14,7 @@ declare(strict_types=1);
 namespace Chevereto\Actions\Image;
 
 use Chevere\Components\Action\Action;
+use Chevere\Components\Parameter\ArrayParameter;
 use Chevere\Components\Parameter\Parameter;
 use Chevere\Components\Parameter\Parameters;
 use Chevere\Components\Response\ResponseSuccess;
@@ -23,13 +24,9 @@ use Chevere\Interfaces\Parameter\ParametersInterface;
 use Chevere\Interfaces\Response\ResponseInterface;
 use Intervention\Image\Image;
 use JeroenDesloovere\XmpMetadataExtractor\XmpMetadataExtractor;
-use Throwable;
 
 /**
  * Fetch image metadata.
- *
- * Provides a run method returning a `ResponseSuccess` with
- * data `['exif' => <array>, 'iptc' => <array>, 'xmp' => <array>]`.
  */
 class FetchMetaAction extends Action
 {
@@ -41,18 +38,26 @@ class FetchMetaAction extends Action
             );
     }
 
+    public function getResponseDataParameters(): ParametersInterface
+    {
+        return (new Parameters)
+            ->withAddedRequired(new ArrayParameter('exif'))
+            ->withAddedRequired(new ArrayParameter('iptc'))
+            ->withAddedRequired(new ArrayParameter('xmp'));
+    }
+
     public function run(ArgumentsInterface $arguments): ResponseInterface
     {
         /**
          * @var Image $image
          */
         $image = $arguments->get('image');
-        $keys = ['exif', 'iptc', 'xmp'];
-        $data = array_fill_keys($keys, []);
+        $data = array_fill_keys(['exif', 'iptc', 'xmp'], []);
         $data['exif'] = $image->exif() ?? [];
         $data['iptc'] = $image->iptc() ?? [];
         $xmpDataExtractor = new XmpMetadataExtractor();
         $data['xmp'] = $xmpDataExtractor->extractFromFile($image->basePath());
+        $this->assertResponseDataParameters($data);
 
         return new ResponseSuccess($data);
     }

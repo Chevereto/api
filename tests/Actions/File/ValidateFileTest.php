@@ -49,14 +49,14 @@ final class ValidateFileTest extends TestCase
         $parameters = [
             'filename' => __FILE__,
             'extensions' => 'php,txt',
-            'maxBytes' => '20000000'
+            'maxBytes' => 20000000
         ];
         $arguments = new Arguments($action->parameters(), $parameters);
         $responseSuccess = $action->run($arguments);
         $this->assertInstanceOf(ResponseSuccess::class, $responseSuccess);
         $badArguments = new Arguments(
             $action->parameters(),
-            array_merge($parameters, ['maxBytes' => '1'])
+            array_merge($parameters, ['maxBytes' => 1])
         );
         $this->expectInvalidArgumentException(1100);
         $action->run($badArguments);
@@ -70,7 +70,7 @@ final class ValidateFileTest extends TestCase
             [
                 'filename' => __FILE__,
                 'extensions' => 'php',
-                'minBytes' => '20000000'
+                'minBytes' => 20000000
             ]
         );
         $this->expectInvalidArgumentException(1101);

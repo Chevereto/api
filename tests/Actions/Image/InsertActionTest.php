@@ -26,9 +26,9 @@ final class InsertActionTest extends TestCase
         $arguments = new Arguments(
             $action->getParameters(),
             [
-                'expires' => '',
-                'userId' => '',
-                'albumId' => '',
+                'expires' => 0,
+                'userId' => 0,
+                'albumId' => 0,
             ]
         );
         $this->expectException(LogicException::class);

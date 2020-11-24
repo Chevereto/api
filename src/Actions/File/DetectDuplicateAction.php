@@ -24,9 +24,6 @@ use Chevere\Interfaces\Response\ResponseInterface;
 
 /**
  * Detects file duplication based in both perceptual and file hashing, against the uploading frequency.
- *
- * Provides a run method returning a `ResponseSuccess` with
- * data `[]`.
  */
 class DetectDuplicateAction extends Action
 {
@@ -53,7 +50,7 @@ class DetectDuplicateAction extends Action
 
     public function run(ArgumentsInterface $arguments): ResponseInterface
     {
-        // xdd($arguments->toArray());
+        // TODO: Use DB check
 
         return new ResponseSuccess([]);
     }

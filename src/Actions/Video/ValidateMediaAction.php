@@ -15,24 +15,21 @@ namespace Chevereto\Actions\Video;
 
 use Chevere\Components\Action\Action;
 use Chevere\Components\Message\Message;
+use Chevere\Components\Parameter\IntegerParameter;
+use Chevere\Components\Parameter\Parameter;
 use Chevere\Components\Parameter\Parameters;
 use Chevere\Components\Parameter\StringParameter;
-use Chevere\Components\Regex\Regex;
 use Chevere\Components\Response\ResponseSuccess;
 use Chevere\Exceptions\Core\InvalidArgumentException;
 use Chevere\Interfaces\Message\MessageInterface;
 use Chevere\Interfaces\Parameter\ArgumentsInterface;
 use Chevere\Interfaces\Parameter\ParametersInterface;
 use Chevere\Interfaces\Response\ResponseInterface;
-use function Chevereto\Image\imageHash;
 use function Chevereto\Image\imageManager;
 use function Safe\md5_file;
 
 /**
  * Validates a video against the video processing and file dimensions.
- *
- * Provides a run method returning a `ResponseSuccess` with
- * data `['video' => <Video>, 'md5' => <string>]`.
  */
 class ValidateMediaAction extends Action
 {
@@ -52,45 +49,58 @@ class ValidateMediaAction extends Action
     {
         return (new Parameters)
             ->withAddedRequired(
-                (new StringParameter('filename'))
-                    ->withRegex(new Regex('/^.+$/'))
+                new StringParameter('filename')
             )
             ->withAddedRequired(
-                (new StringParameter('maxHeight'))
-                    ->withRegex(new Regex('/^\d+$/'))
+                new IntegerParameter('maxHeight')
             )
             ->withAddedRequired(
-                (new StringParameter('maxWidth'))
-                    ->withRegex(new Regex('/^\d+$/'))
+                new IntegerParameter('maxWidth')
             )
             ->withAddedRequired(
-                (new StringParameter('minHeight'))
-                    ->withRegex(new Regex('/^\d+$/'))
-                    ->withDefault('16')
+                (new IntegerParameter('maxLength'))
+                    ->withDefault(3600)
             )
             ->withAddedRequired(
-                (new StringParameter('minWidth'))
-                    ->withRegex(new Regex('/^\d+$/'))
-                    ->withDefault('16')
+                (new IntegerParameter('minHeight'))
+                    ->withDefault(16)
+            )
+            ->withAddedRequired(
+                (new IntegerParameter('minWidth'))
+                    ->withDefault(16)
+            )
+            ->withAddedRequired(
+                (new IntegerParameter('minLength'))
+                    ->withDefault(5)
             );
+    }
+
+    public function getResponseDataParameters(): ParametersInterface
+    {
+        return (new Parameters)
+            ->withAddedRequired(new Parameter('video', VIDEO::class))
+            ->withAddedRequired(new StringParameter('md5'));
     }
 
     public function run(ArgumentsInterface $arguments): ResponseInterface
     {
         $filename = $arguments->get('filename');
-        $image = imageManager()->make($filename);
+        $video = imageManager()->make($filename);
         $this->maxWidth = (int) $arguments->get('maxWidth');
         $this->maxHeight = (int) $arguments->get('maxHeight');
+        $this->maxLength = (int) $arguments->get('maxLength');
         $this->minWidth = (int) $arguments->get('minWidth');
         $this->minHeight = (int) $arguments->get('minHeight');
-        $this->assertMaxWidth($image->width());
-        $this->assertMaxHeight($image->height());
-        $this->assertMinWidth($image->width());
-        $this->assertMinHeight($image->height());
+        $this->minLength = (int) $arguments->get('minLength');
+        $this->assertMaxWidth($video->width());
+        $this->assertMaxHeight($video->height());
+        $this->assertMaxLength($video->length());
+        $this->assertMinWidth($video->width());
+        $this->assertMinHeight($video->height());
+        $this->assertMinLength($video->length());
 
         return new ResponseSuccess([
-            'image' => $image,
-            'perceptual' => imageHash()->hash($filename)->toHex(),
+            'video' => $video,
             'md5' => md5_file($filename)
         ]);
     }
@@ -99,7 +109,7 @@ class ValidateMediaAction extends Action
     {
         if ($width > $this->maxWidth) {
             throw new InvalidArgumentException(
-                $this->getMaxExceptionMessage('width', $width),
+                $this->getMaxDimensionExceptionMessage('width', $width),
                 1100
             );
         }
@@ -109,21 +119,39 @@ class ValidateMediaAction extends Action
     {
         if ($height > $this->maxHeight) {
             throw new InvalidArgumentException(
-                $this->getMaxExceptionMessage('height', $height),
+                $this->getMaxDimensionExceptionMessage('height', $height),
                 1101
             );
         }
     }
 
-    private function getMaxExceptionMessage(string $dimension, int $provided): MessageInterface
+    private function assertMaxLength(int $length): void
     {
-        return (new Message('Image %dimension% %provided% exceeds the maximum allowed (%allowed%)'))
-            ->code('%dimension%', $dimension)
-            ->code('%provided%', (string) $provided)
-            ->code('%allowed%', $this->getMaxAllowed());
+        if ($length > $this->maxLength) {
+            throw new InvalidArgumentException(
+                $this->getMaxLengthExceptionMessage('length', $length),
+                1101
+            );
+        }
     }
 
-    private function getMaxAllowed(): string
+    private function getMaxDimensionExceptionMessage(string $dimension, int $provided): MessageInterface
+    {
+        return (new Message('Video %dimension% %provided% exceeds the maximum allowed (%allowed%)'))
+            ->code('%dimension%', $dimension)
+            ->code('%provided%', (string) $provided)
+            ->code('%allowed%', $this->getMaxDimensionAllowed());
+    }
+
+    private function getMaxLengthExceptionMessage(string $dimension, int $provided): MessageInterface
+    {
+        return (new Message('Video %dimension% %provided% exceeds the maximum allowed of %allowed%'))
+            ->code('%dimension%', $dimension)
+            ->code('%provided%', (string) $provided)
+            ->code('%allowed%', (string) $this->maxLength . ' seconds');
+    }
+
+    private function getMaxDimensionAllowed(): string
     {
         return (string) $this->maxWidth . 'x' . (string) $this->maxHeight;
     }
@@ -132,7 +160,7 @@ class ValidateMediaAction extends Action
     {
         if ($width < $this->minWidth) {
             throw new InvalidArgumentException(
-                $this->getMinExceptionMessage('width', $width),
+                $this->getMinDimensionExceptionMessage('width', $width),
                 1102
             );
         }
@@ -142,21 +170,39 @@ class ValidateMediaAction extends Action
     {
         if ($height < $this->minHeight) {
             throw new InvalidArgumentException(
-                $this->getMinExceptionMessage('height', $height),
+                $this->getMinDimensionExceptionMessage('length', $height),
                 1103
             );
         }
     }
 
-    private function getMinExceptionMessage(string $dimension, int $provided): MessageInterface
+    private function assertMinLength(int $length): void
     {
-        return (new Message("Image %dimension% %provided% doesn't meet the the minimum required (%required%)"))
-            ->code('%dimension%', $dimension)
-            ->code('%provided%', (string) $provided)
-            ->code('%required%', $this->getMinRequired());
+        if ($length < $this->minLength) {
+            throw new InvalidArgumentException(
+                $this->getMinLengthExceptionMessage('length', $length),
+                1104
+            );
+        }
     }
 
-    private function getMinRequired(): string
+    private function getMinDimensionExceptionMessage(string $dimension, int $provided): MessageInterface
+    {
+        return (new Message("Video %dimension% %provided% doesn't meet the the minimum required (%required%)"))
+            ->code('%dimension%', $dimension)
+            ->code('%provided%', (string) $provided)
+            ->code('%required%', $this->getMinDimensionRequired());
+    }
+
+    private function getMinLengthExceptionMessage(string $dimension, int $provided): MessageInterface
+    {
+        return (new Message("Video %dimension% %provided% doesn't meet the the minimum required of %required%"))
+            ->code('%dimension%', $dimension)
+            ->code('%provided%', (string) $provided)
+            ->code('%required%', (string) $this->minLength . ' seconds');
+    }
+
+    private function getMinDimensionRequired(): string
     {
         return (string) $this->minWidth . 'x' . (string) $this->minHeight;
     }

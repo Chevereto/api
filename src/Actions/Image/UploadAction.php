@@ -19,22 +19,16 @@ use Chevere\Components\Parameter\Parameters;
 use Chevere\Components\Parameter\StringParameter;
 use Chevere\Components\Regex\Regex;
 use Chevere\Components\Response\ResponseSuccess;
-use Chevere\Components\Service\ServiceProviders;
 use Chevere\Components\Type\Type;
 use Chevere\Interfaces\Parameter\ArgumentsInterface;
 use Chevere\Interfaces\Parameter\ParametersInterface;
 use Chevere\Interfaces\Response\ResponseInterface;
-use Chevere\Interfaces\Service\ServiceableInterface;
-use Chevere\Interfaces\Service\ServiceProvidersInterface;
 use Intervention\Image\Image;
 
 /**
  * Upload the image to the target destination.
- *
- * Provides a run method returning a `ResponseSuccess` with
- * data `[]`.
  */
-class UploadAction extends Action implements ServiceableInterface
+class UploadAction extends Action
 {
     public function getParameters(): ParametersInterface
     {
@@ -53,12 +47,6 @@ class UploadAction extends Action implements ServiceableInterface
                 new Parameter('storageId', new Type(Type::INTEGER))
             )
             ->withAddedRequired(new StringParameter('uploadPath'));
-    }
-
-    public function getServiceProviders(): ServiceProvidersInterface
-    {
-        return (new ServiceProviders($this))
-            ->withAdded('withLogger');
     }
 
     public function run(ArgumentsInterface $arguments): ResponseInterface

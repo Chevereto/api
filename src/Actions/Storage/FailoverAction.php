@@ -14,6 +14,7 @@ declare(strict_types=1);
 namespace Chevereto\Actions\Storage;
 
 use Chevere\Components\Action\Action;
+use Chevere\Components\Parameter\IntegerParameter;
 use Chevere\Components\Parameter\Parameter;
 use Chevere\Components\Parameter\Parameters;
 use Chevere\Components\Response\ResponseSuccess;
@@ -30,6 +31,12 @@ class FailoverAction extends Action
             ->withAddedRequired(
                 new Parameter('storageId', new Type(Type::INTEGER))
             );
+    }
+
+    public function getResponseDataParameters(): ParametersInterface
+    {
+        return (new Parameters)
+            ->withAddedRequired(new IntegerParameter('storageId'));
     }
 
     public function run(ArgumentsInterface $arguments): ResponseInterface

@@ -15,24 +15,19 @@ namespace Chevereto\Actions\Image;
 
 use Chevere\Components\Action\Action;
 use Chevere\Components\ClassMap\ClassMap;
-use Chevere\Components\Message\Message;
+use Chevere\Components\Parameter\IntegerParameter;
 use Chevere\Components\Parameter\Parameters;
-use Chevere\Components\Parameter\StringParameter;
 use Chevere\Components\Response\ResponseSuccess;
 use Chevere\Components\Service\Traits\AssertDependenciesTrait;
-use Chevere\Exceptions\Core\LogicException;
+use Chevere\Interfaces\ClassMap\ClassMapInterface;
 use Chevere\Interfaces\Parameter\ArgumentsInterface;
 use Chevere\Interfaces\Parameter\ParametersInterface;
 use Chevere\Interfaces\Response\ResponseInterface;
 use Chevere\Interfaces\Service\ServiceDependantInterface;
 use DateTime;
-use PDO;
 
 /**
  * Insert the image in the database.
- *
- * Provides a run method returning a `ResponseSuccess` with
- * data `[]`.
  */
 class InsertAction extends Action implements ServiceDependantInterface
 {
@@ -48,7 +43,7 @@ class InsertAction extends Action implements ServiceDependantInterface
         return $new;
     }
 
-    public function getDependencies(): ClassMap
+    public function getDependencies(): ClassMapInterface
     {
         return (new ClassMap)
             ->withPut(DateTime::class, 'dateTime');
@@ -58,20 +53,20 @@ class InsertAction extends Action implements ServiceDependantInterface
     {
         return (new Parameters)
             ->withAddedOptional(
-                (new StringParameter('expires'))
+                new IntegerParameter('expires')
             )
             ->withAddedOptional(
-                (new StringParameter('userId'))
+                new IntegerParameter('userId')
             )
             ->withAddedOptional(
-                (new StringParameter('albumId'))
+                new IntegerParameter('albumId')
             );
     }
 
     public function run(ArgumentsInterface $arguments): ResponseInterface
     {
         $this->assertDependencies();
-        // determine db image insert values
+        // TODO: DB inserting
         return new ResponseSuccess([]);
     }
 }

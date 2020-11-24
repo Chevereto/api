@@ -26,9 +26,6 @@ use Intervention\Image\Image;
 
 /**
  * Strip image metadata.
- *
- * Provides a run method returning a `ResponseSuccess` with
- * data `[]`.
  */
 class StripMetaAction extends Action
 {

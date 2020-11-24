@@ -14,28 +14,24 @@ declare(strict_types=1);
 namespace Chevereto\Actions\File;
 
 use Chevere\Components\Action\Action;
-use Chevere\Components\ClassMap\ClassMap;
 use Chevere\Components\Message\Message;
+use Chevere\Components\Parameter\Parameter;
 use Chevere\Components\Parameter\Parameters;
 use Chevere\Components\Parameter\StringParameter;
 use Chevere\Components\Regex\Regex;
 use Chevere\Components\Response\ResponseSuccess;
-use Chevere\Components\Type\Type;
 use Chevere\Exceptions\Core\InvalidArgumentException;
-use Chevere\Interfaces\ClassMap\ClassMapInterface;
 use Chevere\Interfaces\Parameter\ArgumentsInterface;
 use Chevere\Interfaces\Parameter\ParametersInterface;
 use Chevere\Interfaces\Response\ResponseInterface;
-use Chevere\Interfaces\Service\ServiceDependantInterface;
 use Mimey\MimeTypes;
+use function Chevere\Components\Type\typeInteger;
+use function Chevere\Components\Type\typeString;
 use function Safe\filesize;
 use function Safe\mime_content_type;
 
 /**
  * Validate file type and its size.
- *
- * Provides a run method returning a `ResponseSuccess` with
- * data `['bytes' => <int>, 'mime' => <string>]`.
  */
 class ValidateAction extends Action
 {
@@ -43,7 +39,7 @@ class ValidateAction extends Action
 
     private int $maxBytes;
 
-    private int $minBytes;
+    private int $minBytes = 0;
 
     private ArgumentsInterface $arguments;
 
@@ -56,33 +52,30 @@ class ValidateAction extends Action
                 ->withDescription('Comma-separated list of allowed file extensions')
         )
             ->withAddedRequired(
-                (new StringParameter('filename'))
-                    ->withRegex(new Regex('/^.+$/'))
+                new StringParameter('filename')
             )
             ->withAddedOptional(
-                (new StringParameter('maxBytes'))
-                    ->withRegex(new Regex('/^\d+$/'))
+                new Parameter('maxBytes', typeInteger())
             )
             ->withAddedOptional(
-                (new StringParameter('minBytes'))
-                    ->withRegex(new Regex('/^\d+$/'))
-                    ->withDefault('0')
+                new Parameter('minBytes', typeInteger())
             );
     }
 
-    public function getReturnTypes(): array
+    public function getResponseDataParameters(): ParametersInterface
     {
-        return [
-            'bytes' => new Type(Type::INTEGER),
-            'mime' => new Type(Type::STRING),
-        ];
+        return (new Parameters)
+            ->withAddedRequired(new Parameter('bytes', typeInteger()))
+            ->withAddedRequired(new Parameter('mime', typeString()));
     }
 
     public function run(ArgumentsInterface $arguments): ResponseInterface
     {
         $this->arguments = $arguments;
         $this->extensions = explode(',', $this->arguments->get('extensions')) ?: [];
-        $this->minBytes = (int) $this->arguments->get('minBytes');
+        if ($this->arguments->has('minBytes')) {
+            $this->minBytes = (int) $this->arguments->get('minBytes');
+        }
         $filename = $this->arguments->get('filename');
         $bytes = filesize($filename);
         if ($this->arguments->has('maxBytes')) {
@@ -94,11 +87,13 @@ class ValidateAction extends Action
         $mimes = new MimeTypes;
         $extensions = $mimes->getAllExtensions($mime);
         $this->assertExtension($extensions);
-
-        return new ResponseSuccess([
+        $data = [
             'bytes' => $bytes,
             'mime' => $mime,
-        ]);
+        ];
+        $this->assertResponseDataParameters($data);
+
+        return new ResponseSuccess($data);
     }
 
     private function assertMaxBytes(int $bytes): void

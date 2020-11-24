@@ -26,13 +26,6 @@ use PHPUnit\Framework\TestCase;
 
 final class QueueControllerTest extends TestCase
 {
-    public function testConstruct(): void
-    {
-        $controller = new TestQueueControllerTest;
-        $serviceProviders = $controller->getServiceProviders();
-        $this->assertSame(['withSettings'], $serviceProviders->keys());
-    }
-
     public function testWithoutSettings(): void
     {
         $controller = new TestQueueControllerTest;

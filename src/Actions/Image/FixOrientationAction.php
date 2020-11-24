@@ -25,9 +25,6 @@ use Intervention\Image\Image;
 
 /**
  * Fix the image orientation based on Exif Orientation (if any, if needed).
- *
- * Provides a run method returning a `ResponseSuccess` with
- * data `[]`.
  */
 class FixOrientationAction extends Action
 {

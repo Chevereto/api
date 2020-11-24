@@ -27,10 +27,10 @@ final class ValidateTest extends TestCase
     {
         return array_replace([
             'filename' => __DIR__ . '/assets/favicon.png',
-            'maxWidth' => '1000',
-            'maxHeight' => '1000',
-            'minWidth' => '100',
-            'minHeight' => '100',
+            'maxWidth' => 1000,
+            'maxHeight' => 1000,
+            'minWidth' => 100,
+            'minHeight' => 100,
         ], $arguments);
     }
 
@@ -51,7 +51,7 @@ final class ValidateTest extends TestCase
         $arguments = new Arguments(
             $action->parameters(),
             $this->getTestArguments([
-                'maxWidth' => '299',
+                'maxWidth' => 299,
             ])
         );
         $this->expectInvalidArgumentException(1100);
@@ -64,7 +64,7 @@ final class ValidateTest extends TestCase
         $arguments = new Arguments(
             $action->parameters(),
             $this->getTestArguments([
-                'maxHeight' => '299',
+                'maxHeight' => 299,
             ])
         );
         $this->expectInvalidArgumentException(1101);
@@ -77,7 +77,7 @@ final class ValidateTest extends TestCase
         $arguments = new Arguments(
             $action->parameters(),
             $this->getTestArguments([
-                'minWidth' => '301',
+                'minWidth' => 301,
             ])
         );
         $this->expectInvalidArgumentException(1102);
@@ -90,7 +90,7 @@ final class ValidateTest extends TestCase
         $arguments = new Arguments(
             $action->parameters(),
             $this->getTestArguments([
-                'minHeight' => '301',
+                'minHeight' => 301,
             ])
         );
         $this->expectInvalidArgumentException(1103);

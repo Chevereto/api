@@ -15,31 +15,16 @@ namespace Chevereto\Controllers\Api\V2;
 
 use Chevere\Components\Controller\Controller;
 use Chevere\Components\Message\Message;
-use Chevere\Components\Service\ServiceProviders;
-use Chevere\Components\Service\Traits\ServiceableTrait;
 use Chevere\Components\Workflow\Workflow;
-use Chevere\Components\Workflow\WorkflowMessage;
-use Chevere\Components\Workflow\WorkflowRun;
-use Chevere\Exceptions\Core\ArgumentCountException;
-use Chevere\Exceptions\Core\InvalidArgumentException;
-use Chevere\Exceptions\Core\LogicException;
 use Chevere\Exceptions\Core\OutOfBoundsException;
-use Chevere\Exceptions\Core\OverflowException;
-use Chevere\Exceptions\Core\UnexpectedValueException;
 use Chevere\Exceptions\Service\ServiceException;
-use Chevere\Interfaces\Service\ServiceableInterface;
-use Chevere\Interfaces\Service\ServiceProvidersInterface;
 use Chevere\Interfaces\Workflow\TaskInterface;
 use Chevere\Interfaces\Workflow\WorkflowInterface;
-use Chevere\Interfaces\Workflow\WorkflowMessageInterface;
-use Chevereto\Components\Enqueue;
 use Chevereto\Components\Settings;
 use Throwable;
 
-abstract class QueueController extends Controller implements ServiceableInterface
+abstract class QueueController extends Controller
 {
-    use ServiceableTrait;
-
     protected Settings $settings;
 
     abstract public function getSettingsKeys(): array;
@@ -86,18 +71,5 @@ abstract class QueueController extends Controller implements ServiceableInterfac
                     ->code('%service%', Settings::class)
             );
         }
-    }
-
-    /**
-     * @throws InvalidArgumentException
-     * @throws LogicException
-     * @throws ArgumentCountException
-     * @throws UnexpectedValueException
-     * @throws OverflowException
-     */
-    final public function getServiceProviders(): ServiceProvidersInterface
-    {
-        return (new ServiceProviders($this))
-            ->withAdded('withSettings');
     }
 }

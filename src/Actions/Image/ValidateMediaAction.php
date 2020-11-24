@@ -15,24 +15,24 @@ namespace Chevereto\Actions\Image;
 
 use Chevere\Components\Action\Action;
 use Chevere\Components\Message\Message;
+use Chevere\Components\Parameter\IntegerParameter;
+use Chevere\Components\Parameter\Parameter;
 use Chevere\Components\Parameter\Parameters;
 use Chevere\Components\Parameter\StringParameter;
-use Chevere\Components\Regex\Regex;
 use Chevere\Components\Response\ResponseSuccess;
+use Chevere\Components\Type\Type;
 use Chevere\Exceptions\Core\InvalidArgumentException;
 use Chevere\Interfaces\Message\MessageInterface;
 use Chevere\Interfaces\Parameter\ArgumentsInterface;
 use Chevere\Interfaces\Parameter\ParametersInterface;
 use Chevere\Interfaces\Response\ResponseInterface;
+use Intervention\Image\Image;
 use function Chevereto\Image\imageHash;
 use function Chevereto\Image\imageManager;
 use function Safe\md5_file;
 
 /**
  * Validates an image against the image processing and image dimensions.
- *
- * Provides a run method returning a `ResponseSuccess` with
- * data `['image' => <\Intervention\Image\Image>, 'perceptual' => <string>, 'md5' => <string>]`.
  */
 class ValidateMediaAction extends Action
 {
@@ -48,27 +48,28 @@ class ValidateMediaAction extends Action
     {
         return (new Parameters)
             ->withAddedRequired(
-                (new StringParameter('filename'))
-                    ->withRegex(new Regex('/^.+$/'))
+                new StringParameter('filename')
             )
             ->withAddedRequired(
-                (new StringParameter('maxHeight'))
-                    ->withRegex(new Regex('/^\d+$/'))
+                new IntegerParameter('maxHeight')
             )
             ->withAddedRequired(
-                (new StringParameter('maxWidth'))
-                    ->withRegex(new Regex('/^\d+$/'))
+                new IntegerParameter('maxWidth')
             )
             ->withAddedRequired(
-                (new StringParameter('minHeight'))
-                    ->withRegex(new Regex('/^\d+$/'))
-                    ->withDefault('16')
+                new IntegerParameter('minHeight')
             )
             ->withAddedRequired(
-                (new StringParameter('minWidth'))
-                    ->withRegex(new Regex('/^\d+$/'))
-                    ->withDefault('16')
+                new IntegerParameter('minWidth')
             );
+    }
+
+    public function getResponseDataParameters(): ParametersInterface
+    {
+        return (new Parameters)
+            ->withAddedRequired(new Parameter('image', new Type(Image::class)))
+            ->withAddedRequired(new StringParameter('perceptual'))
+            ->withAddedRequired(new StringParameter('md5'));
     }
 
     public function run(ArgumentsInterface $arguments): ResponseInterface
@@ -83,12 +84,14 @@ class ValidateMediaAction extends Action
         $this->assertMaxHeight($image->height());
         $this->assertMinWidth($image->width());
         $this->assertMinHeight($image->height());
-
-        return new ResponseSuccess([
+        $data = [
             'image' => $image,
             'perceptual' => imageHash()->hash($filename)->toHex(),
             'md5' => md5_file($filename)
-        ]);
+        ];
+        $this->assertResponseDataParameters($data);
+
+        return new ResponseSuccess($data);
     }
 
     private function assertMaxWidth(int $width): void
