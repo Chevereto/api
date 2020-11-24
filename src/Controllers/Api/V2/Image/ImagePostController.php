@@ -28,6 +28,7 @@ use Chevereto\Actions\Image\ValidateMediaAction;
 use Chevereto\Actions\Storage\FailoverAction;
 use Chevereto\Controllers\Api\V2\File\FilePostController;
 use Chevereto\Controllers\Api\V2\Image\Traits\ImageSettingsKeysTrait;
+use function Chevere\Components\Workflow\getWorkflowMessage;
 
 abstract class ImagePostController extends FilePostController
 {
@@ -98,19 +99,12 @@ abstract class ImagePostController extends FilePostController
         $source = $arguments->get('source');
         $uploadFile = tempnam(sys_get_temp_dir(), 'chv.temp');
         $this->assertStoreSource($source, $uploadFile);
-        $settings = $this->settings
-            ->withPut('filename', $uploadFile);
-        // $workflowMessage = new WorkflowMessage(
-        //     new WorkflowRun($this->workflow, $settings->toArray())
-        // );
-        // $data = [
-        //     'delay' => $workflowMessage->delay(),
-        //     'expiration' => $workflowMessage->expiration(),
-        // ];
-        // $response = new ResponseProvisional($data);
-        // ($this->enqueue)($workflowMessage, $response);
+        $settings = $this->settings->withPut('filename', $uploadFile);
+        $workflow = $this->getWorkflow('api-v2-image-post');
 
-        // return $response;
-        return new ResponseProvisional([]);
+        return (new ResponseProvisional([]))
+            ->withWorkflowMessage(
+                getWorkflowMessage($workflow, $settings->toArray())
+            );
     }
 }

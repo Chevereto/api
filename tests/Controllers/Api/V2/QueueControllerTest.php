@@ -34,37 +34,8 @@ final class QueueControllerTest extends TestCase
     {
         $controller = new TestQueueControllerTest;
         $serviceProviders = $controller->getServiceProviders();
-        $this->assertSame(['withEnqueue', 'withWorkflow', 'withSettings'], $serviceProviders->keys());
+        $this->assertSame(['withSettings'], $serviceProviders->keys());
     }
-
-    public function testWithoutEnqueue(): void
-    {
-        $controller = new TestQueueControllerTest;
-        $this->expectException(ServiceException::class);
-        $controller->enqueue();
-    }
-
-    public function testWithEnqueue(): void
-    {
-        $enqueue = new Enqueue;
-        $controller = (new TestQueueControllerTest)->withEnqueue($enqueue);
-        $this->assertSame($enqueue, $controller->enqueue());
-    }
-
-    public function testWithoutWorkflow(): void
-    {
-        $controller = new TestQueueControllerTest;
-        $this->expectException(ServiceException::class);
-        $controller->workflow();
-    }
-
-    // public function testWithWorkflow(): void
-    // {
-    //     $controller = new TestQueueControllerTest;
-    //     $workflow = $controller->getWorkflow();
-    //     $controller = $controller->withWorkflow($workflow);
-    //     $this->assertSame($workflow, $controller->workflow());
-    // }
 
     public function testWithoutSettings(): void
     {

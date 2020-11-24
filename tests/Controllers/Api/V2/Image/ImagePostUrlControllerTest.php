@@ -48,8 +48,6 @@ final class ImagePostUrlControllerTest extends TestCase
     {
         $controller = new ImagePostUrlController;
         $controller = $controller
-            ->withEnqueue(new Enqueue)
-            // ->withWorkflow($controller->getWorkflow())
             ->withSettings(new Settings([
                 'extensions' => 'jpg,png',
                 'maxBytes' => '200000',

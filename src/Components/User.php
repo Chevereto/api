@@ -13,12 +13,12 @@ declare(strict_types=1);
 
 namespace Chevereto\Components;
 
-use Chevere\Components\Description\Traits\DescriptorTrait;
+use Chevere\Components\Description\Traits\DescriptionTrait;
 use Chevere\Interfaces\Service\ServiceInterface;
 
 final class User implements ServiceInterface
 {
-    use DescriptorTrait;
+    use DescriptionTrait;
 
     private int $id = 0;
 

@@ -17,6 +17,9 @@ use Chevere\Components\Controller\Controller;
 use Chevere\Components\Message\Message;
 use Chevere\Components\Service\ServiceProviders;
 use Chevere\Components\Service\Traits\ServiceableTrait;
+use Chevere\Components\Workflow\Workflow;
+use Chevere\Components\Workflow\WorkflowMessage;
+use Chevere\Components\Workflow\WorkflowRun;
 use Chevere\Exceptions\Core\ArgumentCountException;
 use Chevere\Exceptions\Core\InvalidArgumentException;
 use Chevere\Exceptions\Core\LogicException;
@@ -28,6 +31,7 @@ use Chevere\Interfaces\Service\ServiceableInterface;
 use Chevere\Interfaces\Service\ServiceProvidersInterface;
 use Chevere\Interfaces\Workflow\TaskInterface;
 use Chevere\Interfaces\Workflow\WorkflowInterface;
+use Chevere\Interfaces\Workflow\WorkflowMessageInterface;
 use Chevereto\Components\Enqueue;
 use Chevereto\Components\Settings;
 use Throwable;
@@ -35,10 +39,6 @@ use Throwable;
 abstract class QueueController extends Controller implements ServiceableInterface
 {
     use ServiceableTrait;
-
-    protected Enqueue $enqueue;
-
-    protected WorkflowInterface $workflow;
 
     protected Settings $settings;
 
@@ -49,48 +49,14 @@ abstract class QueueController extends Controller implements ServiceableInterfac
      */
     abstract public function getSteps(): array;
 
-    final public function withEnqueue(Enqueue $enqueue): self
+    final public function getWorkflow(string $name): WorkflowInterface
     {
-        $new = clone $this;
-        $new->enqueue = $enqueue;
-
-        return $new;
-    }
-
-    /**
-     * @throws ServiceException If called before `withEnqueue`.
-     */
-    final public function enqueue(): Enqueue
-    {
-        try {
-            return $this->enqueue;
-        } catch (Throwable $e) {
-            throw new ServiceException(
-                $this->getMissingServiceMessage(Enqueue::class)
-            );
+        $workflow = new Workflow($name);
+        foreach ($this->getSteps() as $k => $v) {
+            $workflow = $workflow->withAdded($k, $v);
         }
-    }
 
-    final public function withWorkflow(WorkflowInterface $workflow): self
-    {
-        $new = clone $this;
-        $new->workflow = $workflow;
-
-        return $new;
-    }
-
-    /**
-     * @throws ServiceException If called before `withWorkflow`.
-     */
-    final public function workflow(): WorkflowInterface
-    {
-        try {
-            return $this->workflow;
-        } catch (Throwable $e) {
-            throw new ServiceException(
-                $this->getMissingServiceMessage(WorkflowInterface::class)
-            );
-        }
+        return $workflow;
     }
 
     /**
@@ -130,8 +96,6 @@ abstract class QueueController extends Controller implements ServiceableInterfac
     final public function getServiceProviders(): ServiceProvidersInterface
     {
         return (new ServiceProviders($this))
-            ->withAdded('withEnqueue')
-            ->withAdded('withWorkflow')
             ->withAdded('withSettings');
     }
 }
