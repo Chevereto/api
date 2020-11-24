@@ -96,15 +96,13 @@ abstract class ImagePostController extends FilePostController
 
     public function run(ArgumentsInterface $arguments): ResponseInterface
     {
-        $source = $arguments->get('source');
         $uploadFile = tempnam(sys_get_temp_dir(), 'chv.temp');
-        $this->assertStoreSource($source, $uploadFile);
+        $this->assertStoreSource($arguments->get('source'), $uploadFile);
         $settings = $this->settings->withPut('filename', $uploadFile);
-        $workflow = $this->getWorkflow('api-v2-image-post');
 
         return (new ResponseProvisional([]))
             ->withWorkflowMessage(
-                getWorkflowMessage($workflow, $settings->toArray())
+                getWorkflowMessage($this->getWorkflow(), $settings->toArray())
             );
     }
 }

@@ -49,8 +49,10 @@ abstract class QueueController extends Controller implements ServiceableInterfac
      */
     abstract public function getSteps(): array;
 
-    final public function getWorkflow(string $name): WorkflowInterface
+    final public function getWorkflow(): WorkflowInterface
     {
+        $class = get_class($this);
+        $name = str_replace('\\', '-', $class);
         $workflow = new Workflow($name);
         foreach ($this->getSteps() as $k => $v) {
             $workflow = $workflow->withAdded($k, $v);

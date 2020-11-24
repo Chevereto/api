@@ -14,15 +14,19 @@ declare(strict_types=1);
 namespace Chevereto\Actions\File;
 
 use Chevere\Components\Action\Action;
+use Chevere\Components\ClassMap\ClassMap;
 use Chevere\Components\Message\Message;
 use Chevere\Components\Parameter\Parameters;
 use Chevere\Components\Parameter\StringParameter;
 use Chevere\Components\Regex\Regex;
 use Chevere\Components\Response\ResponseSuccess;
+use Chevere\Components\Type\Type;
 use Chevere\Exceptions\Core\InvalidArgumentException;
+use Chevere\Interfaces\ClassMap\ClassMapInterface;
 use Chevere\Interfaces\Parameter\ArgumentsInterface;
 use Chevere\Interfaces\Parameter\ParametersInterface;
 use Chevere\Interfaces\Response\ResponseInterface;
+use Chevere\Interfaces\Service\ServiceDependantInterface;
 use Mimey\MimeTypes;
 use function Safe\filesize;
 use function Safe\mime_content_type;
@@ -64,6 +68,14 @@ class ValidateAction extends Action
                     ->withRegex(new Regex('/^\d+$/'))
                     ->withDefault('0')
             );
+    }
+
+    public function getReturnTypes(): array
+    {
+        return [
+            'bytes' => new Type(Type::INTEGER),
+            'mime' => new Type(Type::STRING),
+        ];
     }
 
     public function run(ArgumentsInterface $arguments): ResponseInterface
