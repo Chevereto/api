@@ -33,12 +33,12 @@ use Chevere\Interfaces\Service\ServiceableInterface;
 use Chevere\Interfaces\Service\ServiceProvidersInterface;
 use Chevere\Interfaces\Workflow\WorkflowInterface;
 use Chevereto\Actions\File\DetectDuplicateAction;
+use Chevereto\Actions\File\UploadAction;
 use Chevereto\Actions\File\ValidateAction as ValidateFileAction;
 use Chevereto\Actions\Image\FetchMetaAction;
 use Chevereto\Actions\Image\FixOrientationAction;
 use Chevereto\Actions\Image\InsertAction;
 use Chevereto\Actions\Image\StripMetaAction;
-use Chevereto\Actions\Image\UploadAction;
 use Chevereto\Actions\Image\ValidateMediaAction;
 use Chevereto\Actions\Storage\FailoverAction;
 use Chevereto\Components\Settings;
@@ -167,7 +167,7 @@ final class UploadPostController extends Controller implements ServiceableInterf
                 ]),
             'upload' => (new Task(UploadAction::class))
                 ->withArguments([
-                    'image' => '${validate:image}',
+                    'filename' => '${filename}',
                     'naming' => '${naming}',
                     'originalName' => '${originalName}',
                     'storageId' => '${storage-failover:storageId}',

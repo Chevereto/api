@@ -87,10 +87,8 @@ class ValidateMediaAction extends Action
         $this->maxHeight = $arguments->getInteger('maxHeight');
         $this->minWidth = $arguments->getInteger('minWidth');
         $this->minHeight = $arguments->getInteger('minHeight');
-        $this->assertMaxWidth($image->width());
-        $this->assertMaxHeight($image->height());
-        $this->assertMinWidth($image->width());
-        $this->assertMinHeight($image->height());
+        $this->assertHeight($image->height());
+        $this->assertWidth($image->width());
         $data = [
             'image' => $image,
             'perceptual' => imageHash()->hash($filename)->toHex(),
@@ -114,18 +112,14 @@ class ValidateMediaAction extends Action
         }
     }
 
-    private function assertMaxWidth(int $width): void
+    private function assertHeight(int $height): void
     {
-        if ($width > $this->maxWidth) {
+        if ($height < $this->minHeight) {
             throw new InvalidArgumentException(
-                $this->getMaxExceptionMessage('width', $width),
+                $this->getMinExceptionMessage('height', $height),
                 1001
             );
         }
-    }
-
-    private function assertMaxHeight(int $height): void
-    {
         if ($height > $this->maxHeight) {
             throw new InvalidArgumentException(
                 $this->getMaxExceptionMessage('height', $height),
@@ -134,7 +128,7 @@ class ValidateMediaAction extends Action
         }
     }
 
-    private function assertMinWidth(int $width): void
+    private function assertWidth(int $width): void
     {
         if ($width < $this->minWidth) {
             throw new InvalidArgumentException(
@@ -142,13 +136,9 @@ class ValidateMediaAction extends Action
                 1003
             );
         }
-    }
-
-    private function assertMinHeight(int $height): void
-    {
-        if ($height < $this->minHeight) {
+        if ($width > $this->maxWidth) {
             throw new InvalidArgumentException(
-                $this->getMinExceptionMessage('height', $height),
+                $this->getMaxExceptionMessage('width', $width),
                 1004
             );
         }

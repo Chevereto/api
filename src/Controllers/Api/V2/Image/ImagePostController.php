@@ -18,12 +18,12 @@ use Chevere\Components\Workflow\Task;
 use Chevere\Interfaces\Parameter\ArgumentsInterface;
 use Chevere\Interfaces\Response\ResponseInterface;
 use Chevereto\Actions\File\DetectDuplicateAction;
+use Chevereto\Actions\File\UploadAction;
 use Chevereto\Actions\File\ValidateAction;
 use Chevereto\Actions\Image\FetchMetaAction;
 use Chevereto\Actions\Image\FixOrientationAction;
 use Chevereto\Actions\Image\InsertAction;
 use Chevereto\Actions\Image\StripMetaAction;
-use Chevereto\Actions\Image\UploadAction;
 use Chevereto\Actions\Image\ValidateMediaAction;
 use Chevereto\Actions\Storage\FailoverAction;
 use Chevereto\Controllers\Api\V2\File\FilePostController;
@@ -72,7 +72,7 @@ abstract class ImagePostController extends FilePostController
                 ]),
             'upload' => (new Task(UploadAction::class))
                 ->withArguments([
-                    'image' => '${validate-media:image}',
+                    'filename' => '${filename}',
                     'naming' => '${naming}',
                     'originalName' => '${originalName}',
                     'storageId' => '${storage-failover:storageId}',

@@ -85,30 +85,6 @@ final class ValidateMediaActionTest extends TestCase
         $action->run($arguments);
     }
 
-    public function testMinWidth(): void
-    {
-        $action = new ValidateMediaAction;
-
-        $arguments = $this->getTestArguments(
-            $action,
-            ['minWidth' => 561]
-        );
-        $this->expectInvalidArgumentException(1001);
-        $action->run($arguments);
-    }
-
-    public function testMaxWidth(): void
-    {
-        $action = new ValidateMediaAction;
-
-        $arguments = $this->getTestArguments(
-            $action,
-            ['maxWidth' => 559]
-        );
-        $this->expectInvalidArgumentException(1002);
-        $action->run($arguments);
-    }
-
     public function testMinHeight(): void
     {
         $action = new ValidateMediaAction;
@@ -117,7 +93,7 @@ final class ValidateMediaActionTest extends TestCase
             $action,
             ['minHeight' => 321]
         );
-        $this->expectInvalidArgumentException(1003);
+        $this->expectInvalidArgumentException(1001);
         $action->run($arguments);
     }
 
@@ -129,7 +105,7 @@ final class ValidateMediaActionTest extends TestCase
             $action,
             ['maxHeight' => 319]
         );
-        $this->expectInvalidArgumentException(1004);
+        $this->expectInvalidArgumentException(1002);
         $action->run($arguments);
     }
 
@@ -141,7 +117,7 @@ final class ValidateMediaActionTest extends TestCase
             $action,
             ['minLength' => 6]
         );
-        $this->expectInvalidArgumentException(1005);
+        $this->expectInvalidArgumentException(1003);
         $action->run($arguments);
     }
 
@@ -152,6 +128,30 @@ final class ValidateMediaActionTest extends TestCase
         $arguments = $this->getTestArguments(
             $action,
             ['maxLength' => 2]
+        );
+        $this->expectInvalidArgumentException(1004);
+        $action->run($arguments);
+    }
+
+    public function testMinWidth(): void
+    {
+        $action = new ValidateMediaAction;
+
+        $arguments = $this->getTestArguments(
+            $action,
+            ['minWidth' => 561]
+        );
+        $this->expectInvalidArgumentException(1005);
+        $action->run($arguments);
+    }
+
+    public function testMaxWidth(): void
+    {
+        $action = new ValidateMediaAction;
+
+        $arguments = $this->getTestArguments(
+            $action,
+            ['maxWidth' => 559]
         );
         $this->expectInvalidArgumentException(1006);
         $action->run($arguments);

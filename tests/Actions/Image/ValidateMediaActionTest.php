@@ -58,13 +58,13 @@ final class ValidateMediaActionTest extends TestCase
         $action->run($arguments);
     }
 
-    public function testMaxWidth(): void
+    public function testMinHeight(): void
     {
         $action = new ValidateMediaAction;
         $arguments = new Arguments(
             $action->parameters(),
             $this->getTestArguments([
-                'maxWidth' => 299,
+                'minHeight' => 301,
             ])
         );
         $this->expectInvalidArgumentException(1001);
@@ -97,13 +97,13 @@ final class ValidateMediaActionTest extends TestCase
         $action->run($arguments);
     }
 
-    public function testMinHeight(): void
+    public function testMaxWidth(): void
     {
         $action = new ValidateMediaAction;
         $arguments = new Arguments(
             $action->parameters(),
             $this->getTestArguments([
-                'minHeight' => 301,
+                'maxWidth' => 299,
             ])
         );
         $this->expectInvalidArgumentException(1004);

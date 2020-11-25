@@ -99,9 +99,9 @@ class ValidateMediaAction extends Action
         $this->minHeight = $arguments->getInteger('minHeight');
         $this->minLength = $arguments->getInteger('minLength');
         $this->minWidth = $arguments->getInteger('minWidth');
-        $this->assertWidth($stream->get('width'));
-        $this->assertLength((float) $format->get('duration'));
         $this->assertHeight($stream->get('height'));
+        $this->assertLength((float) $format->get('duration'));
+        $this->assertWidth($stream->get('width'));
         $data = [
             'stream' => $stream,
             'format' => $format,
@@ -161,34 +161,18 @@ class ValidateMediaAction extends Action
         // @codeCoverageIgnoreEnd
     }
 
-    private function assertWidth(int $width): void
-    {
-        if ($width < $this->minWidth) {
-            throw new InvalidArgumentException(
-                $this->getMinDimensionExceptionMessage('width', $width),
-                1001
-            );
-        }
-        if ($width > $this->maxWidth) {
-            throw new InvalidArgumentException(
-                $this->getMaxDimensionExceptionMessage('width', $width),
-                1002
-            );
-        }
-    }
-
     private function assertHeight(int $height): void
     {
         if ($height < $this->minHeight) {
             throw new InvalidArgumentException(
                 $this->getMinDimensionExceptionMessage('length', $height),
-                1003
+                1001
             );
         }
         if ($height > $this->maxHeight) {
             throw new InvalidArgumentException(
                 $this->getMaxDimensionExceptionMessage('height', $height),
-                1004
+                1002
             );
         }
     }
@@ -200,7 +184,7 @@ class ValidateMediaAction extends Action
                 (new Message("Video length %provided% doesn't meet the the minimum required of %required%"))
                     ->code('%provided%', (string) $length)
                     ->code('%required%', (string) $this->minLength . ' seconds'),
-                1005
+                1003
             );
         }
         if ($length > $this->maxLength) {
@@ -208,6 +192,22 @@ class ValidateMediaAction extends Action
                 (new Message('Video length %provided% exceeds the maximum allowed of %allowed%'))
                     ->code('%provided%', (string) $length)
                     ->code('%allowed%', (string) $this->maxLength . ' seconds'),
+                1004
+            );
+        }
+    }
+
+    private function assertWidth(int $width): void
+    {
+        if ($width < $this->minWidth) {
+            throw new InvalidArgumentException(
+                $this->getMinDimensionExceptionMessage('width', $width),
+                1005
+            );
+        }
+        if ($width > $this->maxWidth) {
+            throw new InvalidArgumentException(
+                $this->getMaxDimensionExceptionMessage('width', $width),
                 1006
             );
         }

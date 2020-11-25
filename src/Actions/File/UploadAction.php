@@ -11,29 +11,29 @@
 
 declare(strict_types=1);
 
-namespace Chevereto\Actions\Image;
+namespace Chevereto\Actions\File;
 
 use Chevere\Components\Action\Action;
-use Chevere\Components\Parameter\Parameter;
+use Chevere\Components\Parameter\IntegerParameter;
 use Chevere\Components\Parameter\Parameters;
 use Chevere\Components\Parameter\StringParameter;
 use Chevere\Components\Regex\Regex;
 use Chevere\Components\Response\ResponseSuccess;
-use Chevere\Components\Type\Type;
 use Chevere\Interfaces\Parameter\ArgumentsInterface;
 use Chevere\Interfaces\Parameter\ParametersInterface;
 use Chevere\Interfaces\Response\ResponseInterface;
-use Intervention\Image\Image;
 
 /**
- * Upload the image to the target destination.
+ * Upload the filename to the target destination.
  */
 class UploadAction extends Action
 {
     public function getParameters(): ParametersInterface
     {
         return (new Parameters)
-            ->withAddedRequired(new Parameter('image', new Type(Image::class)))
+            ->withAddedRequired(
+                new StringParameter('filename')
+            )
             ->withAddedRequired(
                 (new StringParameter('naming'))
                     ->withRegex(new Regex('/^(original|random|mixed|id)$/'))
@@ -44,23 +44,16 @@ class UploadAction extends Action
                     ->withRegex(new Regex('/^.+\.[a-zA-Z]{3}$/'))
             )
             ->withAddedRequired(
-                new Parameter('storageId', new Type(Type::INTEGER))
+                new IntegerParameter('storageId')
             )
-            ->withAddedRequired(new StringParameter('uploadPath'));
+            ->withAddedRequired(
+                new StringParameter('uploadPath')
+            );
     }
 
     public function run(ArgumentsInterface $arguments): ResponseInterface
     {
-        //? dummy row for 'id" filenaming (name the actual file just like the ID)
-        // validate storage capacity, failover to *any if needed
-        // upload to external storage -> to any* storage
-        // inject db values (from exif and so on)
-        // bind to album
-        // bind to user
-
-        /** Upload **/
-        // handle flood -> not here
-        // upload to storage (local, remote, whatever)
+        // uplodad filename to storage id
 
         return new ResponseSuccess(['id' => '123']);
     }
