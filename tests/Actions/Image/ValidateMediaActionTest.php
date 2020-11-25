@@ -19,7 +19,7 @@ use Intervention\Image\Image;
 use PHPUnit\Framework\TestCase;
 use Tests\Actions\Traits\ExpectInvalidArgumentExceptionCodeTrait;
 
-final class ValidateTest extends TestCase
+final class ValidateMediaActionTest extends TestCase
 {
     use ExpectInvalidArgumentExceptionCodeTrait;
 
@@ -45,6 +45,19 @@ final class ValidateTest extends TestCase
         $this->assertInstanceOf(Image::class, $response->data()['image']);
     }
 
+    public function testInvalidImage(): void
+    {
+        $action = new ValidateMediaAction;
+        $arguments = new Arguments(
+            $action->parameters(),
+            $this->getTestArguments([
+                'filename' => __FILE__
+            ])
+        );
+        $this->expectInvalidArgumentException(1000);
+        $action->run($arguments);
+    }
+
     public function testMaxWidth(): void
     {
         $action = new ValidateMediaAction;
@@ -54,7 +67,7 @@ final class ValidateTest extends TestCase
                 'maxWidth' => 299,
             ])
         );
-        $this->expectInvalidArgumentException(1100);
+        $this->expectInvalidArgumentException(1001);
         $action->run($arguments);
     }
 
@@ -67,7 +80,7 @@ final class ValidateTest extends TestCase
                 'maxHeight' => 299,
             ])
         );
-        $this->expectInvalidArgumentException(1101);
+        $this->expectInvalidArgumentException(1002);
         $action->run($arguments);
     }
 
@@ -80,7 +93,7 @@ final class ValidateTest extends TestCase
                 'minWidth' => 301,
             ])
         );
-        $this->expectInvalidArgumentException(1102);
+        $this->expectInvalidArgumentException(1003);
         $action->run($arguments);
     }
 
@@ -93,7 +106,7 @@ final class ValidateTest extends TestCase
                 'minHeight' => 301,
             ])
         );
-        $this->expectInvalidArgumentException(1103);
+        $this->expectInvalidArgumentException(1004);
         $action->run($arguments);
     }
 }

@@ -22,14 +22,17 @@ use Chevere\Components\Parameter\StringParameter;
 use Chevere\Components\Response\ResponseSuccess;
 use Chevere\Components\Type\Type;
 use Chevere\Exceptions\Core\InvalidArgumentException;
+use Chevere\Exceptions\Core\OutOfBoundsException;
+use Chevere\Exceptions\Core\TypeException;
 use Chevere\Interfaces\Message\MessageInterface;
 use Chevere\Interfaces\Parameter\ArgumentsInterface;
 use Chevere\Interfaces\Parameter\ParametersInterface;
 use Chevere\Interfaces\Response\ResponseInterface;
 use Intervention\Image\Image;
+use Intervention\Image\ImageManager;
+use Throwable;
 use function Chevereto\Image\imageHash;
 use function Chevereto\Image\imageManager;
-use function Safe\md5_file;
 
 /**
  * Validates an image against the image processing and image dimensions.
@@ -71,10 +74,15 @@ class ValidateMediaAction extends Action
             ->withAddedRequired(new StringParameter('perceptual'));
     }
 
+    /**
+     * @throws InvalidArgumentException
+     * @throws OutOfBoundsException
+     * @throws TypeException
+     */
     public function run(ArgumentsInterface $arguments): ResponseInterface
     {
         $filename = $arguments->getString('filename');
-        $image = imageManager()->make($filename);
+        $image = $this->assertGetImage($filename);
         $this->maxWidth = $arguments->getInteger('maxWidth');
         $this->maxHeight = $arguments->getInteger('maxHeight');
         $this->minWidth = $arguments->getInteger('minWidth');
@@ -92,12 +100,26 @@ class ValidateMediaAction extends Action
         return new ResponseSuccess($data);
     }
 
+    private function assertGetImage(string $filename): Image
+    {
+        try {
+            return imageManager()->make($filename);
+        } catch (Throwable $e) {
+            throw new InvalidArgumentException(
+                (new Message("Filename provided can't be handled by %manager%: %message%"))
+                    ->code('%manager%', ImageManager::class)
+                    ->strtr('%message%', $e->getMessage()),
+                1000
+            );
+        }
+    }
+
     private function assertMaxWidth(int $width): void
     {
         if ($width > $this->maxWidth) {
             throw new InvalidArgumentException(
                 $this->getMaxExceptionMessage('width', $width),
-                1100
+                1001
             );
         }
     }
@@ -107,22 +129,9 @@ class ValidateMediaAction extends Action
         if ($height > $this->maxHeight) {
             throw new InvalidArgumentException(
                 $this->getMaxExceptionMessage('height', $height),
-                1101
+                1002
             );
         }
-    }
-
-    private function getMaxExceptionMessage(string $dimension, int $provided): MessageInterface
-    {
-        return (new Message('Image %dimension% %provided% exceeds the maximum allowed (%allowed%)'))
-            ->code('%dimension%', $dimension)
-            ->code('%provided%', (string) $provided)
-            ->code('%allowed%', $this->getMaxAllowed());
-    }
-
-    private function getMaxAllowed(): string
-    {
-        return (string) $this->maxWidth . 'x' . (string) $this->maxHeight;
     }
 
     private function assertMinWidth(int $width): void
@@ -130,7 +139,7 @@ class ValidateMediaAction extends Action
         if ($width < $this->minWidth) {
             throw new InvalidArgumentException(
                 $this->getMinExceptionMessage('width', $width),
-                1102
+                1003
             );
         }
     }
@@ -140,7 +149,7 @@ class ValidateMediaAction extends Action
         if ($height < $this->minHeight) {
             throw new InvalidArgumentException(
                 $this->getMinExceptionMessage('height', $height),
-                1103
+                1004
             );
         }
     }
@@ -156,5 +165,18 @@ class ValidateMediaAction extends Action
     private function getMinRequired(): string
     {
         return (string) $this->minWidth . 'x' . (string) $this->minHeight;
+    }
+
+    private function getMaxExceptionMessage(string $dimension, int $provided): MessageInterface
+    {
+        return (new Message('Image %dimension% %provided% exceeds the maximum allowed (%allowed%)'))
+            ->code('%dimension%', $dimension)
+            ->code('%provided%', (string) $provided)
+            ->code('%allowed%', $this->getMaxAllowed());
+    }
+
+    private function getMaxAllowed(): string
+    {
+        return (string) $this->maxWidth . 'x' . (string) $this->maxHeight;
     }
 }

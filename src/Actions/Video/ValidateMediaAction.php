@@ -20,30 +20,33 @@ use Chevere\Components\Parameter\Parameter;
 use Chevere\Components\Parameter\Parameters;
 use Chevere\Components\Parameter\StringParameter;
 use Chevere\Components\Response\ResponseSuccess;
+use Chevere\Components\Type\Type;
 use Chevere\Exceptions\Core\InvalidArgumentException;
 use Chevere\Interfaces\Message\MessageInterface;
 use Chevere\Interfaces\Parameter\ArgumentsInterface;
 use Chevere\Interfaces\Parameter\ParametersInterface;
 use Chevere\Interfaces\Response\ResponseInterface;
-use function Chevereto\Image\imageManager;
-use function Safe\md5_file;
+use Exception;
+use FFMpeg\FFProbe;
+use FFMpeg\FFProbe\DataMapping\Stream;
+use Throwable;
 
 /**
  * Validates a video against the video processing and file dimensions.
  */
 class ValidateMediaAction extends Action
 {
-    private int $maxWidth;
-
     private int $maxHeight;
 
-    private int $minWidth;
+    private int $maxLength;
+
+    private int $maxWidth;
 
     private int $minHeight;
 
     private int $minLength;
 
-    private int $maxLength;
+    private int $minWidth;
 
     public function getParameters(): ParametersInterface
     {
@@ -78,59 +81,99 @@ class ValidateMediaAction extends Action
     public function getResponseDataParameters(): ParametersInterface
     {
         return (new Parameters)
-            ->withAddedRequired(new Parameter('video', VIDEO::class))
-            ->withAddedRequired(new StringParameter('md5'));
+            ->withAddedRequired(new Parameter('video', new Type(Stream::class)));
     }
 
     public function run(ArgumentsInterface $arguments): ResponseInterface
     {
-        $filename = $arguments->get('filename');
-        $video = imageManager()->make($filename);
-        $this->maxWidth = (int) $arguments->get('maxWidth');
-        $this->maxHeight = (int) $arguments->get('maxHeight');
-        $this->maxLength = (int) $arguments->get('maxLength');
-        $this->minWidth = (int) $arguments->get('minWidth');
-        $this->minHeight = (int) $arguments->get('minHeight');
-        $this->minLength = (int) $arguments->get('minLength');
-        $this->assertMaxWidth($video->width());
-        $this->assertMaxHeight($video->height());
-        $this->assertMaxLength($video->length());
-        $this->assertMinWidth($video->width());
-        $this->assertMinHeight($video->height());
-        $this->assertMinLength($video->length());
+        $filename = $arguments->getString('filename');
+        $stream = $this->assertGetStream($filename);
+        $this->maxHeight = $arguments->getInteger('maxHeight');
+        $this->maxLength = $arguments->getInteger('maxLength');
+        $this->maxWidth = $arguments->getInteger('maxWidth');
+        $this->minHeight = $arguments->getInteger('minHeight');
+        $this->minLength = $arguments->getInteger('minLength');
+        $this->minWidth = $arguments->getInteger('minWidth');
+        $this->assertWidth($stream->get('width'));
+        $this->assertLength((float) $stream->get('duration'));
+        $this->assertHeight($stream->get('height'));
+        $data = [
+            'video' => $stream,
+        ];
+        $this->assertResponseDataParameters($data);
 
-        return new ResponseSuccess([
-            'video' => $video,
-            'md5' => md5_file($filename)
-        ]);
+        return new ResponseSuccess($data);
     }
 
-    private function assertMaxWidth(int $width): void
+    private function assertGetStream(string $filename): Stream
     {
-        if ($width > $this->maxWidth) {
+        $ffprobe = FFProbe::create();
+        try {
+            $format = $ffprobe->format($filename);
+            $stream = $ffprobe->streams($filename)->videos()->first();
+            if ($format->get('format_name') === 'image2' || !$stream->isVideo()) {
+                throw new Exception;
+            }
+        } catch (Throwable $e) {
             throw new InvalidArgumentException(
-                $this->getMaxDimensionExceptionMessage('width', $width),
+                (new Message("Filename provided %filename% doesn't validate according to %manager%"))
+                    ->code('%filename%', $filename)
+                    ->code('%manager%', FFProbe::class),
+                1000
+            );
+        }
+
+        return $stream;
+    }
+
+    private function assertWidth(int $width): void
+    {
+        if ($width < $this->minWidth) {
+            throw new InvalidArgumentException(
+                $this->getMinDimensionExceptionMessage('width', $width),
                 1100
             );
         }
-    }
-
-    private function assertMaxHeight(int $height): void
-    {
-        if ($height > $this->maxHeight) {
+        if ($width > $this->maxWidth) {
             throw new InvalidArgumentException(
-                $this->getMaxDimensionExceptionMessage('height', $height),
+                $this->getMaxDimensionExceptionMessage('width', $width),
                 1101
             );
         }
     }
 
-    private function assertMaxLength(int $length): void
+    private function assertHeight(int $height): void
     {
+        if ($height < $this->minHeight) {
+            throw new InvalidArgumentException(
+                $this->getMinDimensionExceptionMessage('length', $height),
+                1102
+            );
+        }
+        if ($height > $this->maxHeight) {
+            throw new InvalidArgumentException(
+                $this->getMaxDimensionExceptionMessage('height', $height),
+                1103
+            );
+        }
+    }
+
+    private function assertLength(float $length): void
+    {
+        if ($length < $this->minLength) {
+            throw new InvalidArgumentException(
+                (new Message("Video length %provided% doesn't meet the the minimum required of %required%"))
+                    ->code('%provided%', (string) $length)
+                    ->code('%required%', (string) $this->minLength . ' seconds'),
+                1104
+            );
+        }
         if ($length > $this->maxLength) {
             throw new InvalidArgumentException(
-                $this->getMaxLengthExceptionMessage('length', $length),
-                1101
+                (new Message('Video length %provided% exceeds the maximum allowed of %allowed%'))
+                    ->code('%provided%', (string) $length)
+                    ->code('%allowed%', (string) $this->maxLength . ' seconds'),
+                1105
             );
         }
     }
@@ -140,50 +183,7 @@ class ValidateMediaAction extends Action
         return (new Message('Video %dimension% %provided% exceeds the maximum allowed (%allowed%)'))
             ->code('%dimension%', $dimension)
             ->code('%provided%', (string) $provided)
-            ->code('%allowed%', $this->getMaxDimensionAllowed());
-    }
-
-    private function getMaxLengthExceptionMessage(string $dimension, int $provided): MessageInterface
-    {
-        return (new Message('Video %dimension% %provided% exceeds the maximum allowed of %allowed%'))
-            ->code('%dimension%', $dimension)
-            ->code('%provided%', (string) $provided)
-            ->code('%allowed%', (string) $this->maxLength . ' seconds');
-    }
-
-    private function getMaxDimensionAllowed(): string
-    {
-        return (string) $this->maxWidth . 'x' . (string) $this->maxHeight;
-    }
-
-    private function assertMinWidth(int $width): void
-    {
-        if ($width < $this->minWidth) {
-            throw new InvalidArgumentException(
-                $this->getMinDimensionExceptionMessage('width', $width),
-                1102
-            );
-        }
-    }
-
-    private function assertMinHeight(int $height): void
-    {
-        if ($height < $this->minHeight) {
-            throw new InvalidArgumentException(
-                $this->getMinDimensionExceptionMessage('length', $height),
-                1103
-            );
-        }
-    }
-
-    private function assertMinLength(int $length): void
-    {
-        if ($length < $this->minLength) {
-            throw new InvalidArgumentException(
-                $this->getMinLengthExceptionMessage('length', $length),
-                1104
-            );
-        }
+            ->code('%allowed%', (string) $this->maxWidth . 'x' . (string) $this->maxHeight);
     }
 
     private function getMinDimensionExceptionMessage(string $dimension, int $provided): MessageInterface
@@ -191,19 +191,6 @@ class ValidateMediaAction extends Action
         return (new Message("Video %dimension% %provided% doesn't meet the the minimum required (%required%)"))
             ->code('%dimension%', $dimension)
             ->code('%provided%', (string) $provided)
-            ->code('%required%', $this->getMinDimensionRequired());
-    }
-
-    private function getMinLengthExceptionMessage(string $dimension, int $provided): MessageInterface
-    {
-        return (new Message("Video %dimension% %provided% doesn't meet the the minimum required of %required%"))
-            ->code('%dimension%', $dimension)
-            ->code('%provided%', (string) $provided)
-            ->code('%required%', (string) $this->minLength . ' seconds');
-    }
-
-    private function getMinDimensionRequired(): string
-    {
-        return (string) $this->minWidth . 'x' . (string) $this->minHeight;
+            ->code('%required%', (string) $this->minWidth . 'x' . (string) $this->minHeight);
     }
 }
