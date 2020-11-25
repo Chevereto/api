@@ -97,7 +97,7 @@ abstract class ImagePostController extends FilePostController
     public function run(ArgumentsInterface $arguments): ResponseInterface
     {
         $uploadFile = tempnam(sys_get_temp_dir(), 'chv.temp');
-        $this->assertStoreSource($arguments->get('source'), $uploadFile);
+        $this->assertStoreSource($arguments->getString('source'), $uploadFile);
         $settings = $this->settings->withPut('filename', $uploadFile);
 
         return (new ResponseProvisional([]))

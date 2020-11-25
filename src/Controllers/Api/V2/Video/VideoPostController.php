@@ -48,7 +48,7 @@ abstract class VideoPostController extends FilePostController
 
     public function run(ArgumentsInterface $arguments): ResponseInterface
     {
-        $source = $arguments->get('source');
+        $source = $arguments->getString('source');
 
         $uploadFile = tempnam(sys_get_temp_dir(), 'chv.temp');
         $this->assertStoreSource($source, $uploadFile);

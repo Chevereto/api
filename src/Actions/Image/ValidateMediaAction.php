@@ -73,12 +73,12 @@ class ValidateMediaAction extends Action
 
     public function run(ArgumentsInterface $arguments): ResponseInterface
     {
-        $filename = $arguments->get('filename');
+        $filename = $arguments->getString('filename');
         $image = imageManager()->make($filename);
-        $this->maxWidth = (int) $arguments->get('maxWidth');
-        $this->maxHeight = (int) $arguments->get('maxHeight');
-        $this->minWidth = (int) $arguments->get('minWidth');
-        $this->minHeight = (int) $arguments->get('minHeight');
+        $this->maxWidth = $arguments->getInteger('maxWidth');
+        $this->maxHeight = $arguments->getInteger('maxHeight');
+        $this->minWidth = $arguments->getInteger('minWidth');
+        $this->minHeight = $arguments->getInteger('minHeight');
         $this->assertMaxWidth($image->width());
         $this->assertMaxHeight($image->height());
         $this->assertMinWidth($image->width());

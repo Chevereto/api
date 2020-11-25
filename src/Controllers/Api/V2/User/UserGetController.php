@@ -41,7 +41,7 @@ final class UserGetController extends Controller
 
     public function run(ArgumentsInterface $arguments): ResponseInterface
     {
-        $id = $arguments->get('id');
+        $id = $arguments->getString('id');
 
         return new ResponseSuccess(['id' => $id, ]);
     }

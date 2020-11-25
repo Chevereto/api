@@ -57,10 +57,10 @@ class ValidateAction extends Action
                 new StringParameter('filename')
             )
             ->withAddedOptional(
-                new Parameter('maxBytes', typeInteger())
+                new IntegerParameter('maxBytes')
             )
             ->withAddedOptional(
-                new Parameter('minBytes', typeInteger())
+                new IntegerParameter('minBytes')
             );
     }
 
@@ -75,14 +75,14 @@ class ValidateAction extends Action
     public function run(ArgumentsInterface $arguments): ResponseInterface
     {
         $this->arguments = $arguments;
-        $this->extensions = explode(',', $this->arguments->get('extensions')) ?: [];
+        $this->extensions = explode(',', $this->arguments->getString('extensions')) ?: [];
         if ($this->arguments->has('minBytes')) {
-            $this->minBytes = (int) $this->arguments->get('minBytes');
+            $this->minBytes = $this->arguments->getInteger('minBytes');
         }
         $filename = $this->arguments->get('filename');
         $bytes = filesize($filename);
         if ($this->arguments->has('maxBytes')) {
-            $this->maxBytes = (int) $this->arguments->get('maxBytes');
+            $this->maxBytes = $this->arguments->getInteger('maxBytes');
             $this->assertMaxBytes($bytes);
         }
         $this->assertMinBytes($bytes);

@@ -191,14 +191,14 @@ final class UploadPostController extends Controller implements ServiceableInterf
 
     public function run(ArgumentsInterface $arguments): ResponseInterface
     {
-        if ($arguments->get('key') !== $this->settings->get('apiV1Key')) {
+        if ($arguments->getString('key') !== $this->settings->get('apiV1Key')) {
             throw new InvalidArgumentException(
                 new Message('Invalid API V1 key provided'),
                 100
             );
         }
         // $source will be a serialized PHP array if _FILES (+tryFiles attribute)
-        $source = $arguments->get('source');
+        $source = $arguments->getString('source');
         try {
             $unserialize = new Unserialize($source);
             $uploadFile = $unserialize->var()['tmp_name'];
@@ -223,7 +223,7 @@ final class UploadPostController extends Controller implements ServiceableInterf
             )
         );
         $data = $workflowRun->get('upload')->data();
-        if ($arguments->get('format') === 'txt') {
+        if ($arguments->getString('format') === 'txt') {
             $raw = $data['url_viewer'];
         } else {
             $raw = json_encode($data, JSON_PRETTY_PRINT);
