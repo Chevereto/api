@@ -68,8 +68,7 @@ class ValidateMediaAction extends Action
     {
         return (new Parameters)
             ->withAddedRequired(new Parameter('image', new Type(Image::class)))
-            ->withAddedRequired(new StringParameter('perceptual'))
-            ->withAddedRequired(new StringParameter('md5'));
+            ->withAddedRequired(new StringParameter('perceptual'));
     }
 
     public function run(ArgumentsInterface $arguments): ResponseInterface
@@ -87,7 +86,6 @@ class ValidateMediaAction extends Action
         $data = [
             'image' => $image,
             'perceptual' => imageHash()->hash($filename)->toHex(),
-            'md5' => md5_file($filename)
         ];
         $this->assertResponseDataParameters($data);
 

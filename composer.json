@@ -18,7 +18,8 @@
         "jeroendesloovere/xmp-metadata-extractor": "^2.0",
         "ext-imagick": "^3.4",
         "jenssegers/imagehash": "^0.7.0",
-        "guzzlehttp/guzzle": "^7.2"
+        "guzzlehttp/guzzle": "^7.2",
+        "php-ffmpeg/php-ffmpeg": "^0.16.0"
     },
     "autoload": {
         "files": [

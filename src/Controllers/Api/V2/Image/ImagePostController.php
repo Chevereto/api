@@ -54,7 +54,7 @@ abstract class ImagePostController extends FilePostController
                 ]),
             'detect-duplicate' => (new Task(DetectDuplicateAction::class))
                 ->withArguments([
-                    'md5' => '${validate-media:md5}',
+                    'md5' => '${validate-file:md5}',
                     'perceptual' => '${validate-media:perceptual}',
                     'ip' => '${ip}',
                     'ipVersion' => '${ipVersion}',

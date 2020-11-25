@@ -15,6 +15,7 @@ namespace Chevereto\Actions\File;
 
 use Chevere\Components\Action\Action;
 use Chevere\Components\Message\Message;
+use Chevere\Components\Parameter\IntegerParameter;
 use Chevere\Components\Parameter\Parameter;
 use Chevere\Components\Parameter\Parameters;
 use Chevere\Components\Parameter\StringParameter;
@@ -28,6 +29,7 @@ use Mimey\MimeTypes;
 use function Chevere\Components\Type\typeInteger;
 use function Chevere\Components\Type\typeString;
 use function Safe\filesize;
+use function Safe\md5_file;
 use function Safe\mime_content_type;
 
 /**
@@ -65,8 +67,9 @@ class ValidateAction extends Action
     public function getResponseDataParameters(): ParametersInterface
     {
         return (new Parameters)
-            ->withAddedRequired(new Parameter('bytes', typeInteger()))
-            ->withAddedRequired(new Parameter('mime', typeString()));
+            ->withAddedRequired(new IntegerParameter('bytes'))
+            ->withAddedRequired(new StringParameter('mime'))
+            ->withAddedRequired(new StringParameter('md5'));
     }
 
     public function run(ArgumentsInterface $arguments): ResponseInterface
@@ -90,6 +93,7 @@ class ValidateAction extends Action
         $data = [
             'bytes' => $bytes,
             'mime' => $mime,
+            'md5' => md5_file($filename)
         ];
         $this->assertResponseDataParameters($data);
 

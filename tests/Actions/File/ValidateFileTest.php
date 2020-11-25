@@ -18,6 +18,7 @@ use Chevere\Components\Response\ResponseSuccess;
 use Chevereto\Actions\File\ValidateAction;
 use PHPUnit\Framework\TestCase;
 use Tests\Actions\Traits\ExpectInvalidArgumentExceptionCodeTrait;
+use function Safe\md5_file;
 
 final class ValidateFileTest extends TestCase
 {
@@ -38,6 +39,7 @@ final class ValidateFileTest extends TestCase
             [
                 'bytes' => filesize(__FILE__),
                 'mime' => 'text/x-php',
+                'md5' => md5_file(__FILE__),
             ],
             $response->data()
         );
