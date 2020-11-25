@@ -26,8 +26,8 @@ use Chevere\Interfaces\Message\MessageInterface;
 use Chevere\Interfaces\Parameter\ArgumentsInterface;
 use Chevere\Interfaces\Parameter\ParametersInterface;
 use Chevere\Interfaces\Response\ResponseInterface;
-use Exception;
 use FFMpeg\FFProbe;
+use FFMpeg\FFProbe\DataMapping\Format;
 use FFMpeg\FFProbe\DataMapping\Stream;
 use Throwable;
 
@@ -81,13 +81,18 @@ class ValidateMediaAction extends Action
     public function getResponseDataParameters(): ParametersInterface
     {
         return (new Parameters)
-            ->withAddedRequired(new Parameter('video', new Type(Stream::class)));
+            ->withAddedRequired(new Parameter('format', new Type(Format::class)))
+            ->withAddedRequired(new Parameter('stream', new Type(Stream::class)));
     }
 
     public function run(ArgumentsInterface $arguments): ResponseInterface
     {
         $filename = $arguments->getString('filename');
-        $stream = $this->assertGetStream($filename);
+        $probe = FFProbe::create();
+        $this->assertValidMedia($probe, $filename);
+        $format = $this->assertGetFormat($probe, $filename);
+        $stream = $this->assertGetStream($probe, $filename);
+        $this->assertValidVideo($stream, $filename);
         $this->maxHeight = $arguments->getInteger('maxHeight');
         $this->maxLength = $arguments->getInteger('maxLength');
         $this->maxWidth = $arguments->getInteger('maxWidth');
@@ -95,35 +100,65 @@ class ValidateMediaAction extends Action
         $this->minLength = $arguments->getInteger('minLength');
         $this->minWidth = $arguments->getInteger('minWidth');
         $this->assertWidth($stream->get('width'));
-        $this->assertLength((float) $stream->get('duration'));
+        $this->assertLength((float) $format->get('duration'));
         $this->assertHeight($stream->get('height'));
         $data = [
-            'video' => $stream,
+            'stream' => $stream,
+            'format' => $format,
         ];
         $this->assertResponseDataParameters($data);
 
         return new ResponseSuccess($data);
     }
 
-    private function assertGetStream(string $filename): Stream
+    private function assertValidMedia(FFProbe $probe, $filename): void
     {
-        $ffprobe = FFProbe::create();
-        try {
-            $format = $ffprobe->format($filename);
-            $stream = $ffprobe->streams($filename)->videos()->first();
-            if ($format->get('format_name') === 'image2' || !$stream->isVideo()) {
-                throw new Exception;
-            }
-        } catch (Throwable $e) {
+        if (!$probe->isValid($filename)) {
             throw new InvalidArgumentException(
-                (new Message("Filename provided %filename% doesn't validate according to %manager%"))
-                    ->code('%filename%', $filename)
-                    ->code('%manager%', FFProbe::class),
+                $this->getManagerExceptionMessage($filename),
                 1000
             );
         }
+    }
 
-        return $stream;
+    private function assertValidVideo(Stream $stream, $filename): void
+    {
+        if (!$stream->isVideo()) {
+            throw new InvalidArgumentException(
+                $this->getManagerExceptionMessage($filename),
+                1000
+            );
+        }
+    }
+
+    private function assertGetFormat(FFProbe $probe, string $filename): Format
+    {
+        try {
+            return $probe->format($filename);
+        }
+        // @codeCoverageIgnoreStart
+        catch (Throwable $e) {
+            throw new InvalidArgumentException(
+                $this->getManagerExceptionMessage($filename),
+                100
+            );
+        }
+        // @codeCoverageIgnoreEnd
+    }
+
+    private function assertGetStream(FFProbe $probe, string $filename): Stream
+    {
+        try {
+            return $probe->streams($filename)->first();
+        }
+        // @codeCoverageIgnoreStart
+        catch (Throwable $e) {
+            throw new InvalidArgumentException(
+                $this->getManagerExceptionMessage($filename),
+                101
+            );
+        }
+        // @codeCoverageIgnoreEnd
     }
 
     private function assertWidth(int $width): void
@@ -131,13 +166,13 @@ class ValidateMediaAction extends Action
         if ($width < $this->minWidth) {
             throw new InvalidArgumentException(
                 $this->getMinDimensionExceptionMessage('width', $width),
-                1100
+                1001
             );
         }
         if ($width > $this->maxWidth) {
             throw new InvalidArgumentException(
                 $this->getMaxDimensionExceptionMessage('width', $width),
-                1101
+                1002
             );
         }
     }
@@ -147,13 +182,13 @@ class ValidateMediaAction extends Action
         if ($height < $this->minHeight) {
             throw new InvalidArgumentException(
                 $this->getMinDimensionExceptionMessage('length', $height),
-                1102
+                1003
             );
         }
         if ($height > $this->maxHeight) {
             throw new InvalidArgumentException(
                 $this->getMaxDimensionExceptionMessage('height', $height),
-                1103
+                1004
             );
         }
     }
@@ -165,7 +200,7 @@ class ValidateMediaAction extends Action
                 (new Message("Video length %provided% doesn't meet the the minimum required of %required%"))
                     ->code('%provided%', (string) $length)
                     ->code('%required%', (string) $this->minLength . ' seconds'),
-                1104
+                1005
             );
         }
         if ($length > $this->maxLength) {
@@ -173,9 +208,16 @@ class ValidateMediaAction extends Action
                 (new Message('Video length %provided% exceeds the maximum allowed of %allowed%'))
                     ->code('%provided%', (string) $length)
                     ->code('%allowed%', (string) $this->maxLength . ' seconds'),
-                1105
+                1006
             );
         }
+    }
+
+    private function getManagerExceptionMessage(string $filename): MessageInterface
+    {
+        return (new Message("Filename provided %filename% doesn't validate according to %manager%"))
+            ->code('%filename%', $filename)
+            ->code('%manager%', FFProbe::class);
     }
 
     private function getMaxDimensionExceptionMessage(string $dimension, int $provided): MessageInterface
