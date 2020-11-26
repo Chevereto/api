@@ -27,13 +27,10 @@ final class ValidateFileTest extends TestCase
     public function testConstruct(): void
     {
         $action = new ValidateAction;
-        $arguments = new Arguments(
-            $action->parameters(),
-            [
-                'filename' => __FILE__,
-                'extensions' => 'php',
-            ]
-        );
+        $arguments = [
+            'filename' => __FILE__,
+            'extensions' => 'php',
+        ];
         $response = $action->run($arguments);
         $this->assertSame(
             [
@@ -45,51 +42,41 @@ final class ValidateFileTest extends TestCase
         );
     }
 
+    public function testMinBytes(): void
+    {
+        $action = new ValidateAction;
+        $arguments = [
+            'filename' => __FILE__,
+            'extensions' => 'php',
+            'minBytes' => 20000000
+        ];
+        $this->expectInvalidArgumentException(1001);
+        $action->run($arguments);
+    }
+
     public function testMaxBytes(): void
     {
         $action = new ValidateAction;
-        $parameters = [
+        $arguments = [
             'filename' => __FILE__,
             'extensions' => 'php,txt',
             'maxBytes' => 20000000
         ];
-        $arguments = new Arguments($action->parameters(), $parameters);
         $responseSuccess = $action->run($arguments);
         $this->assertInstanceOf(ResponseSuccess::class, $responseSuccess);
-        $badArguments = new Arguments(
-            $action->parameters(),
-            array_merge($parameters, ['maxBytes' => 1])
-        );
-        $this->expectInvalidArgumentException(1100);
+        $badArguments = array_merge($arguments, ['maxBytes' => 1]);
+        $this->expectInvalidArgumentException(1002);
         $action->run($badArguments);
-    }
-
-    public function testMinBytes(): void
-    {
-        $action = new ValidateAction;
-        $arguments = new Arguments(
-            $action->parameters(),
-            [
-                'filename' => __FILE__,
-                'extensions' => 'php',
-                'minBytes' => 20000000
-            ]
-        );
-        $this->expectInvalidArgumentException(1101);
-        $action->run($arguments);
     }
 
     public function testExtension(): void
     {
         $action = new ValidateAction;
-        $arguments = new Arguments(
-            $action->parameters(),
-            [
-                'filename' => __FILE__,
-                'extensions' => 'txt',
-            ]
-        );
-        $this->expectInvalidArgumentException(1103);
+        $arguments = [
+            'filename' => __FILE__,
+            'extensions' => 'txt',
+        ];
+        $this->expectInvalidArgumentException(1004);
         $action->run($arguments);
     }
 }

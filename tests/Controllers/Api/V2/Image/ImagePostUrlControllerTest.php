@@ -13,10 +13,8 @@ declare(strict_types=1);
 
 namespace Chevereto\Tests\Controllers\Api\V2\Image;
 
-use Chevere\Components\Parameter\Arguments;
 use Chevere\Exceptions\Core\InvalidArgumentException;
-use Chevere\Interfaces\Response\ResponseProvisionalInterface;
-use Chevereto\Components\Enqueue;
+use Chevere\Interfaces\Response\ResponseSuccessInterface;
 use Chevereto\Components\Settings;
 use Chevereto\Controllers\Api\V2\Image\ImagePostUrlController;
 use PHPUnit\Framework\TestCase;
@@ -50,26 +48,23 @@ final class ImagePostUrlControllerTest extends TestCase
         $controller = $controller
             ->withSettings(new Settings([
                 'extensions' => 'jpg,png',
-                'maxBytes' => '200000',
-                'maxHeight' => '100',
-                'maxWidth' => '100',
-                'minBytes' => '1',
-                'minHeight' => '1',
-                'minWidth' => '1',
-                'naming' => 'datefolder',
-                'storageId' => '0',
+                'maxBytes' => 200000,
+                'maxHeight' => 100,
+                'maxWidth' => 100,
+                'minBytes' => 1,
+                'minHeight' => 1,
+                'minWidth' => 1,
+                'naming' => 'original',
                 'uploadPath' => 'eeee',
-                'userId' => '1',
+                'userId' => 1,
                 'ip' => '127.0.0.1',
                 'ipVersion' => '4',
                 'originalName' => 'laFotito.jpg',
-                'expires' => '',
-                'albumId' => ''
+                'expires' => 0,
+                'albumId' => 0
             ]));
-        $arguments = new Arguments($controller->getParameters(), [
-            'source' => 'https://1.1.1.1/'
-        ]);
+        $arguments = ['source' => 'https://1.1.1.1/'];
         $response = $controller->run($arguments);
-        $this->assertInstanceOf(ResponseProvisionalInterface::class, $response);
+        $this->assertInstanceOf(ResponseSuccessInterface::class, $response);
     }
 }

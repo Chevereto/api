@@ -36,16 +36,16 @@ final class UploadPostControllerTest extends TestCase
         $settings = new Settings([
             'apiV1Key' => 'api-key-value',
             'extensions' => 'php',
-            'maxBytes' => '20000000',
-            'maxHeight' => '20000',
-            'maxWidth' => '20000',
-            'minBytes' => '0',
-            'minHeight' => '20',
-            'minWidth' => '20',
+            'maxBytes' => 20000000,
+            'maxHeight' => 20000,
+            'maxWidth' => 20000,
+            'minBytes' => 0,
+            'minHeight' => 20,
+            'minWidth' => 20,
             'naming' => 'original',
-            'storageId' => '123',
+            'storageId' => 123,
             'uploadPath' => '2020/10/23',
-            'userId' => '123',
+            'userId' => 123,
         ]);
         $controller = (new UploadPostController)->withSettings($settings);
         $this->assertSame($settings, $controller->settings());

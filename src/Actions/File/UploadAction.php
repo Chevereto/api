@@ -18,10 +18,8 @@ use Chevere\Components\Parameter\IntegerParameter;
 use Chevere\Components\Parameter\Parameters;
 use Chevere\Components\Parameter\StringParameter;
 use Chevere\Components\Regex\Regex;
-use Chevere\Components\Response\ResponseSuccess;
-use Chevere\Interfaces\Parameter\ArgumentsInterface;
 use Chevere\Interfaces\Parameter\ParametersInterface;
-use Chevere\Interfaces\Response\ResponseInterface;
+use Chevere\Interfaces\Response\ResponseSuccessInterface;
 
 /**
  * Upload the filename to the target destination.
@@ -51,10 +49,10 @@ class UploadAction extends Action
             );
     }
 
-    public function run(ArgumentsInterface $arguments): ResponseInterface
+    public function run(array $arguments): ResponseSuccessInterface
     {
-        // uplodad filename to storage id
+        // TODO: Upload to target storage
 
-        return new ResponseSuccess(['id' => '123']);
+        return $this->getResponseSuccess(['id' => '123']);
     }
 }

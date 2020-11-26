@@ -19,15 +19,13 @@ use Chevere\Components\Parameter\IntegerParameter;
 use Chevere\Components\Parameter\Parameter;
 use Chevere\Components\Parameter\Parameters;
 use Chevere\Components\Parameter\StringParameter;
-use Chevere\Components\Response\ResponseSuccess;
 use Chevere\Components\Type\Type;
 use Chevere\Exceptions\Core\InvalidArgumentException;
 use Chevere\Exceptions\Core\OutOfBoundsException;
 use Chevere\Exceptions\Core\TypeException;
 use Chevere\Interfaces\Message\MessageInterface;
-use Chevere\Interfaces\Parameter\ArgumentsInterface;
 use Chevere\Interfaces\Parameter\ParametersInterface;
-use Chevere\Interfaces\Response\ResponseInterface;
+use Chevere\Interfaces\Response\ResponseSuccessInterface;
 use Intervention\Image\Image;
 use Intervention\Image\ImageManager;
 use Throwable;
@@ -79,8 +77,9 @@ class ValidateMediaAction extends Action
      * @throws OutOfBoundsException
      * @throws TypeException
      */
-    public function run(ArgumentsInterface $arguments): ResponseInterface
+    public function run(array $arguments): ResponseSuccessInterface
     {
+        $arguments = $this->getArguments($arguments);
         $filename = $arguments->getString('filename');
         $image = $this->assertGetImage($filename);
         $this->maxWidth = $arguments->getInteger('maxWidth');
@@ -93,9 +92,8 @@ class ValidateMediaAction extends Action
             'image' => $image,
             'perceptual' => imageHash()->hash($filename)->toHex(),
         ];
-        $this->assertResponseDataParameters($data);
 
-        return new ResponseSuccess($data);
+        return $this->getResponseSuccess($data);
     }
 
     private function assertGetImage(string $filename): Image

@@ -13,7 +13,6 @@ declare(strict_types=1);
 
 namespace Chevereto\Tests\Actions\Image;
 
-use Chevere\Components\Parameter\Arguments;
 use Chevereto\Actions\Image\StripMetaAction;
 use PHPUnit\Framework\TestCase;
 use function Chevereto\Image\imageManager;
@@ -30,10 +29,7 @@ final class StripMetaActionTest extends TestCase
         $sourceImage = imageManager()->make($source);
         $stripImage = imageManager()->make($strip);
         $action = new StripMetaAction;
-        $arguments = new Arguments(
-            $action->getParameters(),
-            ['image' => $stripImage]
-        );
+        $arguments = ['image' => $stripImage];
         $action->run($arguments);
         $tag = 'GPSAltitude';
         $this->assertIsArray(exif_read_data($source, 'ANY_TAG'));

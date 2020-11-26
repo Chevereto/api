@@ -17,10 +17,8 @@ use Chevere\Components\Action\Action;
 use Chevere\Components\Parameter\Parameters;
 use Chevere\Components\Parameter\StringParameter;
 use Chevere\Components\Regex\Regex;
-use Chevere\Components\Response\ResponseSuccess;
-use Chevere\Interfaces\Parameter\ArgumentsInterface;
 use Chevere\Interfaces\Parameter\ParametersInterface;
-use Chevere\Interfaces\Response\ResponseInterface;
+use Chevere\Interfaces\Response\ResponseSuccessInterface;
 
 /**
  * Detects file duplication based in both perceptual and file hashing, against the uploading frequency.
@@ -48,10 +46,10 @@ class DetectDuplicateAction extends Action
             );
     }
 
-    public function run(ArgumentsInterface $arguments): ResponseInterface
+    public function run(array $arguments): ResponseSuccessInterface
     {
         // TODO: Use DB check
 
-        return new ResponseSuccess([]);
+        return $this->getResponseSuccess([]);
     }
 }

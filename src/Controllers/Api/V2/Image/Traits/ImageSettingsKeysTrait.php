@@ -26,7 +26,6 @@ trait ImageSettingsKeysTrait
             'minHeight',
             'minWidth',
             'naming',
-            'storageId',
             'uploadPath',
             'userId'
         ];

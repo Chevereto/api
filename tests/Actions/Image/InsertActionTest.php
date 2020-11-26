@@ -13,7 +13,6 @@ declare(strict_types=1);
 
 namespace Chevereto\Tests\Actions\Image;
 
-use Chevere\Components\Parameter\Arguments;
 use Chevere\Exceptions\Core\LogicException;
 use Chevereto\Actions\Image\InsertAction;
 use PHPUnit\Framework\TestCase;
@@ -23,14 +22,11 @@ final class InsertActionTest extends TestCase
     public function testConstruct(): void
     {
         $action = new InsertAction;
-        $arguments = new Arguments(
-            $action->getParameters(),
-            [
-                'expires' => 0,
-                'userId' => 0,
-                'albumId' => 0,
-            ]
-        );
+        $arguments = [
+            'expires' => 0,
+            'userId' => 0,
+            'albumId' => 0,
+        ];
         $this->expectException(LogicException::class);
         $action->run($arguments);
     }

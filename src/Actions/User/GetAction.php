@@ -11,37 +11,31 @@
 
 declare(strict_types=1);
 
-namespace Chevereto\Controllers\Api\V2\User;
+namespace Chevereto\Actions\User;
 
-use Chevere\Components\Controller\Controller;
+use Chevere\Components\Action\Action;
+use Chevere\Components\Parameter\IntegerParameter;
 use Chevere\Components\Parameter\Parameters;
-use Chevere\Components\Parameter\StringParameter;
-use Chevere\Components\Regex\Regex;
 use Chevere\Interfaces\Parameter\ParametersInterface;
 use Chevere\Interfaces\Response\ResponseSuccessInterface;
+use Chevereto\Components\User;
 
-final class UserGetController extends Controller
+class GetAction extends Action
 {
-    public function getDescription(): string
-    {
-        return 'Get an user identified by its id.';
-    }
-
     public function getParameters(): ParametersInterface
     {
         return (new Parameters)
             ->withAddedRequired(
-                (new StringParameter('id'))
-                    ->withRegex(new Regex('/\d+/'))
-                    ->withDescription('The user identifier.')
+                new IntegerParameter('userId')
             );
     }
 
     public function run(array $arguments): ResponseSuccessInterface
     {
-        $arguments = $this->getArguments($arguments);
-        $id = $arguments->getString('id');
+        $data = [
+            'user' => new User(1),
+        ];
 
-        return $this->getResponseSuccess(['id' => $id]);
+        return $this->getResponseSuccess([]);
     }
 }

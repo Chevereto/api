@@ -21,6 +21,7 @@ use Chevere\Components\Type\Type;
 use Chevere\Interfaces\Parameter\ArgumentsInterface;
 use Chevere\Interfaces\Parameter\ParametersInterface;
 use Chevere\Interfaces\Response\ResponseInterface;
+use Chevere\Interfaces\Response\ResponseSuccessInterface;
 use Intervention\Image\Image;
 
 /**
@@ -36,14 +37,15 @@ class FixOrientationAction extends Action
             );
     }
 
-    public function run(ArgumentsInterface $arguments): ResponseInterface
+    public function run(array $arguments): ResponseSuccessInterface
     {
+        $arguments = $this->getArguments($arguments);
         /**
          * @var Image $image
          */
         $image = $arguments->get('image');
         $image->orientate()->save();
 
-        return new ResponseSuccess([]);
+        return $this->getResponseSuccess([]);
     }
 }

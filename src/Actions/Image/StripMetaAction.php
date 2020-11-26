@@ -16,11 +16,9 @@ namespace Chevereto\Actions\Image;
 use Chevere\Components\Action\Action;
 use Chevere\Components\Parameter\Parameter;
 use Chevere\Components\Parameter\Parameters;
-use Chevere\Components\Response\ResponseSuccess;
 use Chevere\Components\Type\Type;
-use Chevere\Interfaces\Parameter\ArgumentsInterface;
 use Chevere\Interfaces\Parameter\ParametersInterface;
-use Chevere\Interfaces\Response\ResponseInterface;
+use Chevere\Interfaces\Response\ResponseSuccessInterface;
 use Imagick;
 use Intervention\Image\Image;
 
@@ -37,8 +35,9 @@ class StripMetaAction extends Action
             );
     }
 
-    public function run(ArgumentsInterface $arguments): ResponseInterface
+    public function run(array $arguments): ResponseSuccessInterface
     {
+        $arguments = $this->getArguments($arguments);
         /**
          * @var Image $image
          */
@@ -54,6 +53,6 @@ class StripMetaAction extends Action
         }
         $image->save();
 
-        return new ResponseSuccess([]);
+        return $this->getResponseSuccess([]);
     }
 }

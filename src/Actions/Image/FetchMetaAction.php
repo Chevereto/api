@@ -22,6 +22,7 @@ use Chevere\Components\Type\Type;
 use Chevere\Interfaces\Parameter\ArgumentsInterface;
 use Chevere\Interfaces\Parameter\ParametersInterface;
 use Chevere\Interfaces\Response\ResponseInterface;
+use Chevere\Interfaces\Response\ResponseSuccessInterface;
 use Intervention\Image\Image;
 use JeroenDesloovere\XmpMetadataExtractor\XmpMetadataExtractor;
 
@@ -46,8 +47,9 @@ class FetchMetaAction extends Action
             ->withAddedRequired(new ArrayParameter('xmp'));
     }
 
-    public function run(ArgumentsInterface $arguments): ResponseInterface
+    public function run(array $arguments): ResponseSuccessInterface
     {
+        $arguments = $this->getArguments($arguments);
         /**
          * @var Image $image
          */
@@ -57,8 +59,7 @@ class FetchMetaAction extends Action
         $data['iptc'] = $image->iptc() ?? [];
         $xmpDataExtractor = new XmpMetadataExtractor();
         $data['xmp'] = $xmpDataExtractor->extractFromFile($image->basePath());
-        $this->assertResponseDataParameters($data);
 
-        return new ResponseSuccess($data);
+        return $this->getResponseSuccess($data);
     }
 }

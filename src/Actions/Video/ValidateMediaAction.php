@@ -19,13 +19,11 @@ use Chevere\Components\Parameter\IntegerParameter;
 use Chevere\Components\Parameter\Parameter;
 use Chevere\Components\Parameter\Parameters;
 use Chevere\Components\Parameter\StringParameter;
-use Chevere\Components\Response\ResponseSuccess;
 use Chevere\Components\Type\Type;
 use Chevere\Exceptions\Core\InvalidArgumentException;
 use Chevere\Interfaces\Message\MessageInterface;
-use Chevere\Interfaces\Parameter\ArgumentsInterface;
 use Chevere\Interfaces\Parameter\ParametersInterface;
-use Chevere\Interfaces\Response\ResponseInterface;
+use Chevere\Interfaces\Response\ResponseSuccessInterface;
 use FFMpeg\FFProbe;
 use FFMpeg\FFProbe\DataMapping\Format;
 use FFMpeg\FFProbe\DataMapping\Stream;
@@ -85,8 +83,9 @@ class ValidateMediaAction extends Action
             ->withAddedRequired(new Parameter('stream', new Type(Stream::class)));
     }
 
-    public function run(ArgumentsInterface $arguments): ResponseInterface
+    public function run(array $arguments): ResponseSuccessInterface
     {
+        $arguments = $this->getArguments($arguments);
         $filename = $arguments->getString('filename');
         $probe = FFProbe::create();
         $this->assertValidMedia($probe, $filename);
@@ -106,9 +105,8 @@ class ValidateMediaAction extends Action
             'stream' => $stream,
             'format' => $format,
         ];
-        $this->assertResponseDataParameters($data);
 
-        return new ResponseSuccess($data);
+        return $this->getResponseSuccess($data);
     }
 
     private function assertValidMedia(FFProbe $probe, $filename): void

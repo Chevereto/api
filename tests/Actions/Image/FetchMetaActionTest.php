@@ -13,23 +13,19 @@ declare(strict_types=1);
 
 namespace Chevereto\Tests\Actions\Image;
 
-use Chevere\Components\Parameter\Arguments;
 use Chevereto\Actions\Image\FetchMetaAction;
 use PHPUnit\Framework\TestCase;
 use Tests\Actions\Traits\ExpectInvalidArgumentExceptionCodeTrait;
 use function Chevereto\Image\imageManager;
 
-final class FetchMetaTest extends TestCase
+final class FetchMetaActionTest extends TestCase
 {
     use ExpectInvalidArgumentExceptionCodeTrait;
 
     public function testExif(): void
     {
         $action = new FetchMetaAction;
-        $arguments = new Arguments(
-            $action->parameters(),
-            ['image' => imageManager()->make(__DIR__ . '/assets/exif.jpg')]
-        );
+        $arguments = ['image' => imageManager()->make(__DIR__ . '/assets/exif.jpg')];
         $response = $action->run($arguments);
         $this->assertIsArray($response->data()['exif']);
         $this->assertCount(0, $response->data()['iptc']);
@@ -39,10 +35,7 @@ final class FetchMetaTest extends TestCase
     public function testIptc(): void
     {
         $action = new FetchMetaAction;
-        $arguments = new Arguments(
-            $action->parameters(),
-            ['image' => imageManager()->make(__DIR__ . '/assets/iptc.jpg')]
-        );
+        $arguments = ['image' => imageManager()->make(__DIR__ . '/assets/iptc.jpg')];
         $response = $action->run($arguments);
         $this->assertIsArray($response->data()['exif']);
         $this->assertIsArray($response->data()['iptc']);
@@ -52,10 +45,7 @@ final class FetchMetaTest extends TestCase
     public function testXmp(): void
     {
         $action = new FetchMetaAction;
-        $arguments = new Arguments(
-            $action->parameters(),
-            ['image' => imageManager()->make(__DIR__ . '/assets/all.jpg')]
-        );
+        $arguments = ['image' => imageManager()->make(__DIR__ . '/assets/all.jpg')];
         $response = $action->run($arguments);
         $this->assertIsArray($response->data()['exif']);
         $this->assertIsArray($response->data()['iptc']);

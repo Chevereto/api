@@ -17,12 +17,10 @@ use Chevere\Components\Action\Action;
 use Chevere\Components\ClassMap\ClassMap;
 use Chevere\Components\Parameter\IntegerParameter;
 use Chevere\Components\Parameter\Parameters;
-use Chevere\Components\Response\ResponseSuccess;
 use Chevere\Components\Service\Traits\AssertDependenciesTrait;
 use Chevere\Interfaces\ClassMap\ClassMapInterface;
-use Chevere\Interfaces\Parameter\ArgumentsInterface;
 use Chevere\Interfaces\Parameter\ParametersInterface;
-use Chevere\Interfaces\Response\ResponseInterface;
+use Chevere\Interfaces\Response\ResponseSuccessInterface;
 use Chevere\Interfaces\Service\ServiceDependantInterface;
 use DateTime;
 
@@ -63,10 +61,10 @@ class InsertAction extends Action implements ServiceDependantInterface
             );
     }
 
-    public function run(ArgumentsInterface $arguments): ResponseInterface
+    public function run(array $arguments): ResponseSuccessInterface
     {
         $this->assertDependencies();
         // TODO: DB inserting
-        return new ResponseSuccess([]);
+        return $this->getResponseSuccess([]);
     }
 }

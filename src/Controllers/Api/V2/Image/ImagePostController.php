@@ -13,10 +13,9 @@ declare(strict_types=1);
 
 namespace Chevereto\Controllers\Api\V2\Image;
 
-use Chevere\Components\Response\ResponseProvisional;
+use Chevere\Components\Response\ResponseSuccess;
 use Chevere\Components\Workflow\Task;
-use Chevere\Interfaces\Parameter\ArgumentsInterface;
-use Chevere\Interfaces\Response\ResponseInterface;
+use Chevere\Interfaces\Response\ResponseSuccessInterface;
 use Chevereto\Actions\File\DetectDuplicateAction;
 use Chevereto\Actions\File\UploadAction;
 use Chevereto\Actions\File\ValidateAction;
@@ -67,8 +66,8 @@ abstract class ImagePostController extends FilePostController
                 ->withArguments(['image' => '${validate-media:image}']),
             'storage-failover' => (new Task(FailoverAction::class))
                 ->withArguments([
-                    'storageId' => '${storageId}',
-                    // 'required' => '${validate-media:bytes}'
+                    'userId' => '${userId}',
+                    'bytesRequired' => '${validate-file:bytes}',
                 ]),
             'upload' => (new Task(UploadAction::class))
                 ->withArguments([
@@ -94,13 +93,14 @@ abstract class ImagePostController extends FilePostController
         ];
     }
 
-    public function run(ArgumentsInterface $arguments): ResponseInterface
+    public function run(array $arguments): ResponseSuccessInterface
     {
+        $arguments = $this->getArguments($arguments);
         $uploadFile = tempnam(sys_get_temp_dir(), 'chv.temp');
         $this->assertStoreSource($arguments->getString('source'), $uploadFile);
         $settings = $this->settings->withPut('filename', $uploadFile);
 
-        return (new ResponseProvisional([]))
+        return (new ResponseSuccess($this->getResponseDataParameters(), []))
             ->withWorkflowMessage(
                 getWorkflowMessage($this->getWorkflow(), $settings->toArray())
             );

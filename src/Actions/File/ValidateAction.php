@@ -23,8 +23,9 @@ use Chevere\Components\Response\ResponseSuccess;
 use Chevere\Exceptions\Core\InvalidArgumentException;
 use Chevere\Interfaces\Parameter\ArgumentsInterface;
 use Chevere\Interfaces\Parameter\ParametersInterface;
-use Chevere\Interfaces\Response\ResponseInterface;
+use Chevere\Interfaces\Response\ResponseSuccessInterface;
 use Mimey\MimeTypes;
+use Throwable;
 use function Safe\filesize;
 use function Safe\md5_file;
 use function Safe\mime_content_type;
@@ -38,7 +39,7 @@ class ValidateAction extends Action
 
     private int $maxBytes;
 
-    private int $minBytes = 0;
+    private int $minBytes;
 
     private ArgumentsInterface $arguments;
 
@@ -69,15 +70,15 @@ class ValidateAction extends Action
             ->withAddedRequired(new StringParameter('md5'));
     }
 
-    public function run(ArgumentsInterface $arguments): ResponseInterface
+    public function run(array $arguments): ResponseSuccessInterface
     {
-        $this->arguments = $arguments;
+        $this->arguments = $this->getArguments($arguments);
         $this->extensions = explode(',', $this->arguments->getString('extensions')) ?: [];
-        if ($this->arguments->has('minBytes')) {
-            $this->minBytes = $this->arguments->getInteger('minBytes');
-        }
-        $filename = $this->arguments->get('filename');
-        $bytes = filesize($filename);
+        $this->minBytes = $this->arguments->has('minBytes')
+            ? $this->arguments->getInteger('minBytes')
+            : 0;
+        $filename = $this->arguments->getString('filename');
+        $bytes = $this->assertGetFileBytes($filename);
         if ($this->arguments->has('maxBytes')) {
             $this->maxBytes = $this->arguments->getInteger('maxBytes');
             $this->assertMaxBytes($bytes);
@@ -92,19 +93,21 @@ class ValidateAction extends Action
             'mime' => $mime,
             'md5' => md5_file($filename)
         ];
-        $this->assertResponseDataParameters($data);
 
-        return new ResponseSuccess($data);
+        return $this->getResponseSuccess($data);
     }
 
-    private function assertMaxBytes(int $bytes): void
+    /**
+     * @codeCoverageIgnore
+     */
+    private function assertGetFileBytes(string $filename): int
     {
-        if ($bytes > $this->maxBytes) {
+        try {
+            return filesize($filename);
+        } catch (Throwable $e) {
             throw new InvalidArgumentException(
-                (new Message('Filesize (%fileSize%) exceeds the maximum bytes allowed (%allowed%)'))
-                    ->code('%fileSize%', (string) $bytes . ' B')
-                    ->code('%allowed%', (string) $this->maxBytes . ' B'),
-                1100
+                new Message($e->getMessage()),
+                1000
             );
         }
     }
@@ -116,7 +119,19 @@ class ValidateAction extends Action
                 (new Message("Filesize (%fileSize%) doesn't meet the minimum bytes required (%required%)"))
                     ->code('%fileSize%', (string) $bytes . ' B')
                     ->code('%required%', (string) $this->minBytes . ' B'),
-                1101
+                1001
+            );
+        }
+    }
+
+    private function assertMaxBytes(int $bytes): void
+    {
+        if ($bytes > $this->maxBytes) {
+            throw new InvalidArgumentException(
+                (new Message('Filesize (%fileSize%) exceeds the maximum bytes allowed (%allowed%)'))
+                    ->code('%fileSize%', (string) $bytes . ' B')
+                    ->code('%allowed%', (string) $this->maxBytes . ' B'),
+                1002
             );
         }
     }
@@ -127,7 +142,7 @@ class ValidateAction extends Action
             // @codeCoverageIgnoreStart
             throw new InvalidArgumentException(
                 new Message('Unable to detect file extension'),
-                1102
+                1003
             );
             // @codeCoverageIgnoreEnd
         }
@@ -136,7 +151,7 @@ class ValidateAction extends Action
                 (new Message('File extension %extension% is not allowed (allows %allowed%)'))
                     ->code('%extension%', implode(', ', $extensions))
                     ->code('%allowed%', implode(', ', $this->extensions)),
-                1103
+                1004
             );
         }
     }

@@ -18,7 +18,6 @@ use Chevere\Components\Message\Message;
 use Chevere\Components\Parameter\Parameters;
 use Chevere\Components\Parameter\StringParameter;
 use Chevere\Components\Regex\Regex;
-use Chevere\Components\Response\ResponseSuccess;
 use Chevere\Components\Serialize\Unserialize;
 use Chevere\Components\Service\ServiceProviders;
 use Chevere\Components\Workflow\Task;
@@ -26,9 +25,8 @@ use Chevere\Components\Workflow\WorkflowRun;
 use Chevere\Exceptions\Core\Exception;
 use Chevere\Exceptions\Core\InvalidArgumentException;
 use Chevere\Exceptions\Core\OutOfBoundsException;
-use Chevere\Interfaces\Parameter\ArgumentsInterface;
 use Chevere\Interfaces\Parameter\ParametersInterface;
-use Chevere\Interfaces\Response\ResponseInterface;
+use Chevere\Interfaces\Response\ResponseSuccessInterface;
 use Chevere\Interfaces\Service\ServiceableInterface;
 use Chevere\Interfaces\Service\ServiceProvidersInterface;
 use Chevere\Interfaces\Workflow\WorkflowInterface;
@@ -80,7 +78,6 @@ final class UploadPostController extends Controller implements ServiceableInterf
             'minHeight',
             'minWidth',
             'naming',
-            'storageId',
             'uploadPath',
             'userId',
         );
@@ -163,7 +160,8 @@ final class UploadPostController extends Controller implements ServiceableInterf
                 ]),
             'storage-failover' => (new Task(FailoverAction::class))
                 ->withArguments([
-                    'storageId' => 0
+                    'userId' => '${userId}',
+                    'bytesRequired' => '${validate-file:bytes}',
                 ]),
             'upload' => (new Task(UploadAction::class))
                 ->withArguments([
@@ -189,8 +187,9 @@ final class UploadPostController extends Controller implements ServiceableInterf
         ];
     }
 
-    public function run(ArgumentsInterface $arguments): ResponseInterface
+    public function run(array $arguments): ResponseSuccessInterface
     {
+        $arguments = $this->getArguments($arguments);
         if ($arguments->getString('key') !== $this->settings->get('apiV1Key')) {
             throw new InvalidArgumentException(
                 new Message('Invalid API V1 key provided'),
@@ -229,9 +228,7 @@ final class UploadPostController extends Controller implements ServiceableInterf
             $raw = json_encode($data, JSON_PRETTY_PRINT);
         }
 
-        return new ResponseSuccess([
-            'raw' => $raw
-        ]);
+        return $this->getResponseSuccess(['raw' => $raw]);
     }
 
     public function storeDecodedBase64String(string $base64, string $path): void

@@ -13,10 +13,8 @@ declare(strict_types=1);
 
 namespace Chevereto\Controllers\Api\V2\Video;
 
-use Chevere\Components\Response\ResponseSuccess;
 use Chevere\Components\Workflow\WorkflowRun;
-use Chevere\Interfaces\Parameter\ArgumentsInterface;
-use Chevere\Interfaces\Response\ResponseInterface;
+use Chevere\Interfaces\Response\ResponseSuccessInterface;
 use Chevereto\Controllers\Api\V2\File\FilePostController;
 use function Chevere\Components\Workflow\workflowRunner;
 
@@ -46,8 +44,9 @@ abstract class VideoPostController extends FilePostController
         return [];
     }
 
-    public function run(ArgumentsInterface $arguments): ResponseInterface
+    public function run(array $arguments): ResponseSuccessInterface
     {
+        $arguments = $this->getArguments($arguments);
         $source = $arguments->getString('source');
 
         $uploadFile = tempnam(sys_get_temp_dir(), 'chv.temp');
@@ -66,8 +65,6 @@ abstract class VideoPostController extends FilePostController
         $data = $workflowRun->get('upload')->data();
         $raw = json_encode($data, JSON_PRETTY_PRINT);
 
-        return new ResponseSuccess([
-            'raw' => $raw
-        ]);
+        return $this->getResponseSuccess(['raw' => $raw]);
     }
 }
