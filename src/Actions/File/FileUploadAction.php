@@ -15,16 +15,19 @@ namespace Chevereto\Actions\File;
 
 use Chevere\Components\Action\Action;
 use Chevere\Components\Parameter\IntegerParameter;
+use Chevere\Components\Parameter\Parameter;
 use Chevere\Components\Parameter\Parameters;
 use Chevere\Components\Parameter\StringParameter;
 use Chevere\Components\Regex\Regex;
+use Chevere\Components\Type\Type;
 use Chevere\Interfaces\Parameter\ParametersInterface;
 use Chevere\Interfaces\Response\ResponseSuccessInterface;
+use Chevereto\Components\Storage;
 
 /**
- * Upload the filename to the target destination.
+ * Upload the filename to the target storage.
  */
-class UploadAction extends Action
+class FileUploadAction extends Action
 {
     public function getParameters(): ParametersInterface
     {
@@ -42,17 +45,29 @@ class UploadAction extends Action
                     ->withRegex(new Regex('/^.+\.[a-zA-Z]{3}$/'))
             )
             ->withAddedRequired(
-                new IntegerParameter('storageId')
+                new Parameter('storage', new Type(Storage::class))
             )
             ->withAddedRequired(
                 new StringParameter('uploadPath')
             );
     }
 
+    public function getResponseDataParameters(): ParametersInterface
+    {
+        return (new Parameters);
+    }
+
     public function run(array $arguments): ResponseSuccessInterface
     {
-        // TODO: Upload to target storage
+        $arguments = $this->getArguments($arguments);
+        $filename = $arguments->getString('filename');
+        $naming = $arguments->getString('naming');
+        $originalName = $arguments->getString('originalName');
+        /**
+         * @var Storage $storage
+         */
+        $storage = $arguments->get('storage');
 
-        return $this->getResponseSuccess(['id' => '123']);
+        return $this->getResponseSuccess(['path' => '123']);
     }
 }

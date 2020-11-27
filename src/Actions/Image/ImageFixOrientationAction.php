@@ -19,13 +19,12 @@ use Chevere\Components\Parameter\Parameters;
 use Chevere\Components\Type\Type;
 use Chevere\Interfaces\Parameter\ParametersInterface;
 use Chevere\Interfaces\Response\ResponseSuccessInterface;
-use Imagick;
 use Intervention\Image\Image;
 
 /**
- * Strip image metadata.
+ * Fix the image orientation based on Exif Orientation (if any, if needed).
  */
-class StripMetaAction extends Action
+class ImageFixOrientationAction extends Action
 {
     public function getParameters(): ParametersInterface
     {
@@ -42,16 +41,7 @@ class StripMetaAction extends Action
          * @var Image $image
          */
         $image = $arguments->get('image');
-        /**
-         * @var Imagick $imagick
-         */
-        $imagick = $image->getCore();
-        $profiles = $imagick->getImageProfiles('icc', true);
-        $imagick->stripImage();
-        if (!empty($profiles)) {
-            $imagick->profileImage('icc', $profiles['icc']); //@codeCoverageIgnore
-        }
-        $image->save();
+        $image->orientate()->save();
 
         return $this->getResponseSuccess([]);
     }

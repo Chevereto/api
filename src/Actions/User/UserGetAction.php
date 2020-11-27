@@ -15,12 +15,14 @@ namespace Chevereto\Actions\User;
 
 use Chevere\Components\Action\Action;
 use Chevere\Components\Parameter\IntegerParameter;
+use Chevere\Components\Parameter\Parameter;
 use Chevere\Components\Parameter\Parameters;
+use Chevere\Components\Type\Type;
 use Chevere\Interfaces\Parameter\ParametersInterface;
 use Chevere\Interfaces\Response\ResponseSuccessInterface;
 use Chevereto\Components\User;
 
-class GetAction extends Action
+class UserGetAction extends Action
 {
     public function getParameters(): ParametersInterface
     {
@@ -30,12 +32,18 @@ class GetAction extends Action
             );
     }
 
+    public function getResponseDataParameters(): ParametersInterface
+    {
+        return (new Parameters)
+            ->withAddedRequired(new Parameter('user', new Type(User::class)));
+    }
+
     public function run(array $arguments): ResponseSuccessInterface
     {
-        $data = [
-            'user' => new User(1),
-        ];
+        $arguments = $this->getArguments($arguments);
 
-        return $this->getResponseSuccess([]);
+        return $this->getResponseSuccess([
+            'user' => new User($arguments->getInteger('userId')),
+        ]);
     }
 }

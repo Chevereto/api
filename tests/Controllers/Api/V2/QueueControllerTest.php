@@ -17,7 +17,7 @@ use Chevere\Components\Workflow\Task;
 use Chevere\Exceptions\Core\OutOfBoundsException;
 use Chevere\Exceptions\Service\ServiceException;
 use Chevere\Interfaces\Response\ResponseSuccessInterface;
-use Chevereto\Actions\File\ValidateAction;
+use Chevereto\Actions\File\FileValidateAction;
 use Chevereto\Components\Settings;
 use Chevereto\Controllers\Api\V2\QueueController;
 use PHPUnit\Framework\TestCase;
@@ -51,7 +51,7 @@ final class TestQueueControllerTest extends QueueController
 
     public function getSteps(): array
     {
-        return ['step' => new Task(ValidateAction::class)];
+        return ['step' => new Task(FileValidateAction::class)];
     }
 
     public function run(array $arguments): ResponseSuccessInterface

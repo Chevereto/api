@@ -13,13 +13,13 @@ declare(strict_types=1);
 
 namespace Chevereto\Tests\Actions\Image;
 
-use Chevereto\Actions\Image\StripMetaAction;
+use Chevereto\Actions\Image\ImageStripMetaAction;
 use PHPUnit\Framework\TestCase;
 use function Chevereto\Image\imageManager;
 use function Safe\copy;
 use function Safe\unlink;
 
-final class StripMetaActionTest extends TestCase
+final class ImageStripMetaActionTest extends TestCase
 {
     public function testConstruct(): void
     {
@@ -28,7 +28,7 @@ final class StripMetaActionTest extends TestCase
         copy($source, $strip);
         $sourceImage = imageManager()->make($source);
         $stripImage = imageManager()->make($strip);
-        $action = new StripMetaAction;
+        $action = new ImageStripMetaAction;
         $arguments = ['image' => $stripImage];
         $action->run($arguments);
         $tag = 'GPSAltitude';

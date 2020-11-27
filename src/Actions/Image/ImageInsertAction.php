@@ -27,7 +27,7 @@ use DateTime;
 /**
  * Insert the image in the database.
  */
-class InsertAction extends Action implements ServiceDependantInterface
+class ImageInsertAction extends Action implements ServiceDependantInterface
 {
     use AssertDependenciesTrait;
 

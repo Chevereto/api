@@ -23,7 +23,7 @@ use Chevere\Interfaces\Response\ResponseSuccessInterface;
 /**
  * Detects file duplication based in both perceptual and file hashing, against the uploading frequency.
  */
-class DetectDuplicateAction extends Action
+class FileDetectDuplicateAction extends Action
 {
     public function getParameters(): ParametersInterface
     {

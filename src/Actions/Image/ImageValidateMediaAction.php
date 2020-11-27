@@ -35,7 +35,7 @@ use function Chevereto\Image\imageManager;
 /**
  * Validates an image against the image processing and image dimensions.
  */
-class ValidateMediaAction extends Action
+class ImageValidateMediaAction extends Action
 {
     private int $maxWidth;
 

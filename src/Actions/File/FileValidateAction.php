@@ -19,7 +19,6 @@ use Chevere\Components\Parameter\IntegerParameter;
 use Chevere\Components\Parameter\Parameters;
 use Chevere\Components\Parameter\StringParameter;
 use Chevere\Components\Regex\Regex;
-use Chevere\Components\Response\ResponseSuccess;
 use Chevere\Exceptions\Core\InvalidArgumentException;
 use Chevere\Interfaces\Parameter\ArgumentsInterface;
 use Chevere\Interfaces\Parameter\ParametersInterface;
@@ -33,7 +32,7 @@ use function Safe\mime_content_type;
 /**
  * Validate file type and its size.
  */
-class ValidateAction extends Action
+class FileValidateAction extends Action
 {
     private array $extensions;
 

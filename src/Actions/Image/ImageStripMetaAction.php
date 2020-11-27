@@ -14,22 +14,18 @@ declare(strict_types=1);
 namespace Chevereto\Actions\Image;
 
 use Chevere\Components\Action\Action;
-use Chevere\Components\Parameter\ArrayParameter;
 use Chevere\Components\Parameter\Parameter;
 use Chevere\Components\Parameter\Parameters;
-use Chevere\Components\Response\ResponseSuccess;
 use Chevere\Components\Type\Type;
-use Chevere\Interfaces\Parameter\ArgumentsInterface;
 use Chevere\Interfaces\Parameter\ParametersInterface;
-use Chevere\Interfaces\Response\ResponseInterface;
 use Chevere\Interfaces\Response\ResponseSuccessInterface;
+use Imagick;
 use Intervention\Image\Image;
-use JeroenDesloovere\XmpMetadataExtractor\XmpMetadataExtractor;
 
 /**
- * Fetch image metadata.
+ * Strip image metadata.
  */
-class FetchMetaAction extends Action
+class ImageStripMetaAction extends Action
 {
     public function getParameters(): ParametersInterface
     {
@@ -39,14 +35,6 @@ class FetchMetaAction extends Action
             );
     }
 
-    public function getResponseDataParameters(): ParametersInterface
-    {
-        return (new Parameters)
-            ->withAddedRequired(new ArrayParameter('exif'))
-            ->withAddedRequired(new ArrayParameter('iptc'))
-            ->withAddedRequired(new ArrayParameter('xmp'));
-    }
-
     public function run(array $arguments): ResponseSuccessInterface
     {
         $arguments = $this->getArguments($arguments);
@@ -54,12 +42,17 @@ class FetchMetaAction extends Action
          * @var Image $image
          */
         $image = $arguments->get('image');
-        $data = array_fill_keys(['exif', 'iptc', 'xmp'], []);
-        $data['exif'] = $image->exif() ?? [];
-        $data['iptc'] = $image->iptc() ?? [];
-        $xmpDataExtractor = new XmpMetadataExtractor();
-        $data['xmp'] = $xmpDataExtractor->extractFromFile($image->basePath());
+        /**
+         * @var Imagick $imagick
+         */
+        $imagick = $image->getCore();
+        $profiles = $imagick->getImageProfiles('icc', true);
+        $imagick->stripImage();
+        if (!empty($profiles)) {
+            $imagick->profileImage('icc', $profiles['icc']); //@codeCoverageIgnore
+        }
+        $image->save();
 
-        return $this->getResponseSuccess($data);
+        return $this->getResponseSuccess([]);
     }
 }

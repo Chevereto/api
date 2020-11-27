@@ -15,14 +15,17 @@ namespace Chevereto\Actions\Storage;
 
 use Chevere\Components\Action\Action;
 use Chevere\Components\Parameter\IntegerParameter;
+use Chevere\Components\Parameter\Parameter;
 use Chevere\Components\Parameter\Parameters;
+use Chevere\Components\Type\Type;
 use Chevere\Interfaces\Parameter\ParametersInterface;
 use Chevere\Interfaces\Response\ResponseSuccessInterface;
+use Chevereto\Components\Storage;
 
 /**
  * Finds a valid storage to allocate the bytes required.
  */
-class FailoverAction extends Action
+class StorageGetForUserAction extends Action
 {
     public function getParameters(): ParametersInterface
     {
@@ -38,7 +41,9 @@ class FailoverAction extends Action
     public function getResponseDataParameters(): ParametersInterface
     {
         return (new Parameters)
-            ->withAddedRequired(new IntegerParameter('storageId'));
+            ->withAddedRequired(
+                new Parameter('storage', new Type(Storage::class))
+            );
     }
 
     public function run(array $arguments): ResponseSuccessInterface
@@ -46,11 +51,8 @@ class FailoverAction extends Action
         $arguments = $this->getArguments($arguments);
         $userId = $arguments->getInteger('userId');
         $bytesRequired = $arguments->getInteger('bytesRequired');
-        $storageId = 0;
-        // user>
-        // false> $storageId = $user->getStorageIdFor($bytesRequired);
-        // $storage = new Storage($storageId)
-        // $storage->canAllocate($bytesRequired);
-        return $this->getResponseSuccess(['storageId' => $storageId]);
+        // $storage = $service->getStorageFor($userId, $bytesRequired)
+
+        return $this->getResponseSuccess(['storage' => new Storage(0)]);
     }
 }

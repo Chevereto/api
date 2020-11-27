@@ -13,18 +13,18 @@ declare(strict_types=1);
 
 namespace Chevereto\Tests\Actions\Image;
 
-use Chevereto\Actions\Image\FetchMetaAction;
+use Chevereto\Actions\Image\ImageFetchMetaAction;
 use PHPUnit\Framework\TestCase;
 use Tests\Actions\Traits\ExpectInvalidArgumentExceptionCodeTrait;
 use function Chevereto\Image\imageManager;
 
-final class FetchMetaActionTest extends TestCase
+final class ImageFetchMetaActionTest extends TestCase
 {
     use ExpectInvalidArgumentExceptionCodeTrait;
 
     public function testExif(): void
     {
-        $action = new FetchMetaAction;
+        $action = new ImageFetchMetaAction;
         $arguments = ['image' => imageManager()->make(__DIR__ . '/assets/exif.jpg')];
         $response = $action->run($arguments);
         $this->assertIsArray($response->data()['exif']);
@@ -34,7 +34,7 @@ final class FetchMetaActionTest extends TestCase
 
     public function testIptc(): void
     {
-        $action = new FetchMetaAction;
+        $action = new ImageFetchMetaAction;
         $arguments = ['image' => imageManager()->make(__DIR__ . '/assets/iptc.jpg')];
         $response = $action->run($arguments);
         $this->assertIsArray($response->data()['exif']);
@@ -44,7 +44,7 @@ final class FetchMetaActionTest extends TestCase
 
     public function testXmp(): void
     {
-        $action = new FetchMetaAction;
+        $action = new ImageFetchMetaAction;
         $arguments = ['image' => imageManager()->make(__DIR__ . '/assets/all.jpg')];
         $response = $action->run($arguments);
         $this->assertIsArray($response->data()['exif']);

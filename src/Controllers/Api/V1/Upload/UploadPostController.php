@@ -30,15 +30,15 @@ use Chevere\Interfaces\Response\ResponseSuccessInterface;
 use Chevere\Interfaces\Service\ServiceableInterface;
 use Chevere\Interfaces\Service\ServiceProvidersInterface;
 use Chevere\Interfaces\Workflow\WorkflowInterface;
-use Chevereto\Actions\File\DetectDuplicateAction;
-use Chevereto\Actions\File\UploadAction;
-use Chevereto\Actions\File\ValidateAction as ValidateFileAction;
-use Chevereto\Actions\Image\FetchMetaAction;
-use Chevereto\Actions\Image\FixOrientationAction;
-use Chevereto\Actions\Image\InsertAction;
-use Chevereto\Actions\Image\StripMetaAction;
-use Chevereto\Actions\Image\ValidateMediaAction;
-use Chevereto\Actions\Storage\FailoverAction;
+use Chevereto\Actions\File\FileDetectDuplicateAction;
+use Chevereto\Actions\File\FileUploadAction;
+use Chevereto\Actions\File\FileValidateAction as ValidateFileAction;
+use Chevereto\Actions\Image\ImageFetchMetaAction;
+use Chevereto\Actions\Image\ImageFixOrientationAction;
+use Chevereto\Actions\Image\ImageInsertAction;
+use Chevereto\Actions\Image\ImageStripMetaAction;
+use Chevereto\Actions\Image\ImageValidateMediaAction;
+use Chevereto\Actions\Storage\StorageGetForUserAction;
 use Chevereto\Components\Settings;
 use Chevereto\Controllers\Api\V2\File\Traits\FileStoreBase64SourceTrait;
 use Laminas\Uri\UriFactory;
@@ -131,7 +131,7 @@ final class UploadPostController extends Controller implements ServiceableInterf
                     'maxBytes' => '${maxBytes}',
                     'minBytes' => '${minBytes}',
                 ]),
-            'validate' => (new Task(ValidateMediaAction::class))
+            'validate' => (new Task(ImageValidateMediaAction::class))
                 ->withArguments([
                     'filename' => '${filename}',
                     'maxHeight' => '${maxHeight}',
@@ -139,39 +139,39 @@ final class UploadPostController extends Controller implements ServiceableInterf
                     'minHeight' => '${minHeight}',
                     'minWidth' => '${minWidth}',
                 ]),
-            'detect-duplication' => (new Task(DetectDuplicateAction::class))
+            'detect-duplication' => (new Task(FileDetectDuplicateAction::class))
                 ->withArguments([
                     'md5' => '${validate:md5}',
                     'perceptual' => '${validate:perceptual}',
                     'ip' => '${ip}',
                     'ipVersion' => '${ipVersion}',
                 ]),
-            'fix-orientation' => (new Task(FixOrientationAction::class))
+            'fix-orientation' => (new Task(ImageFixOrientationAction::class))
                 ->withArguments([
                     'image' => '${validate:image}'
                 ]),
-            'fetch-meta' => (new Task(FetchMetaAction::class))
+            'fetch-meta' => (new Task(ImageFetchMetaAction::class))
                 ->withArguments([
                     'image' => '${validate:image}'
                 ]),
-            'strip-meta' => (new Task(StripMetaAction::class))
+            'strip-meta' => (new Task(ImageStripMetaAction::class))
                 ->withArguments([
                     'image' => '${validate:image}'
                 ]),
-            'storage-failover' => (new Task(FailoverAction::class))
+            'storage-for-user' => (new Task(StorageGetForUserAction::class))
                 ->withArguments([
                     'userId' => '${userId}',
                     'bytesRequired' => '${validate-file:bytes}',
                 ]),
-            'upload' => (new Task(UploadAction::class))
+            'upload' => (new Task(FileUploadAction::class))
                 ->withArguments([
                     'filename' => '${filename}',
                     'naming' => '${naming}',
                     'originalName' => '${originalName}',
-                    'storageId' => '${storage-failover:storageId}',
+                    'storage' => '${storage-for-user:storage}',
                     'uploadPath' => '${uploadPath}',
                 ]),
-            'insert' => (new Task(InsertAction::class))
+            'insert' => (new Task(ImageInsertAction::class))
                 ->withArguments([
                     'albumId' => '${albumId}',
                     // 'exif' => '${fetch-meta:exif}',
@@ -180,7 +180,7 @@ final class UploadPostController extends Controller implements ServiceableInterf
                     // 'iptc' => '${fetch-meta:iptc}',
                     // 'md5' => '${validate:md5}',
                     // 'perceptual' => '${validate:perceptual}',
-                    // 'storageId' => '${storage-failover:storageId}',
+                    // 'storageId' => '${storage-for-user:storageId}',
                     'userId' => '${userId}',
                     // 'xmp' => '${fetch-meta:xmp}',
                 ])

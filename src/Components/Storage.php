@@ -13,7 +13,7 @@ declare(strict_types=1);
 
 namespace Chevereto\Components;
 
-final class User
+final class Storage
 {
     private int $id = 0;
 

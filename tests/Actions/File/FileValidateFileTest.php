@@ -13,20 +13,19 @@ declare(strict_types=1);
 
 namespace Tests\Actions\File;
 
-use Chevere\Components\Parameter\Arguments;
 use Chevere\Components\Response\ResponseSuccess;
-use Chevereto\Actions\File\ValidateAction;
+use Chevereto\Actions\File\FileValidateAction;
 use PHPUnit\Framework\TestCase;
 use Tests\Actions\Traits\ExpectInvalidArgumentExceptionCodeTrait;
 use function Safe\md5_file;
 
-final class ValidateFileTest extends TestCase
+final class FileValidateFileTest extends TestCase
 {
     use ExpectInvalidArgumentExceptionCodeTrait;
 
     public function testConstruct(): void
     {
-        $action = new ValidateAction;
+        $action = new FileValidateAction;
         $arguments = [
             'filename' => __FILE__,
             'extensions' => 'php',
@@ -44,7 +43,7 @@ final class ValidateFileTest extends TestCase
 
     public function testMinBytes(): void
     {
-        $action = new ValidateAction;
+        $action = new FileValidateAction;
         $arguments = [
             'filename' => __FILE__,
             'extensions' => 'php',
@@ -56,7 +55,7 @@ final class ValidateFileTest extends TestCase
 
     public function testMaxBytes(): void
     {
-        $action = new ValidateAction;
+        $action = new FileValidateAction;
         $arguments = [
             'filename' => __FILE__,
             'extensions' => 'php,txt',
@@ -71,7 +70,7 @@ final class ValidateFileTest extends TestCase
 
     public function testExtension(): void
     {
-        $action = new ValidateAction;
+        $action = new FileValidateAction;
         $arguments = [
             'filename' => __FILE__,
             'extensions' => 'txt',

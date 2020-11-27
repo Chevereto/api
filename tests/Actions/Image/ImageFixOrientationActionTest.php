@@ -14,11 +14,11 @@ declare(strict_types=1);
 namespace Chevereto\Tests\Actions\Image;
 
 use Chevere\Interfaces\Response\ResponseSuccessInterface;
-use Chevereto\Actions\Image\FixOrientationAction;
+use Chevereto\Actions\Image\ImageFixOrientationAction;
 use PHPUnit\Framework\TestCase;
 use function Chevereto\Image\imageManager;
 
-final class FixOrientationActionTest extends TestCase
+final class ImageFixOrientationActionTest extends TestCase
 {
     public function testConstruct(): void
     {
@@ -27,7 +27,7 @@ final class FixOrientationActionTest extends TestCase
         copy($source, $orient);
         $sourceImage = imageManager()->make($source);
         $orientImage = imageManager()->make($orient);
-        $action = new FixOrientationAction;
+        $action = new ImageFixOrientationAction;
         $this->assertSame(7, $sourceImage->exif()['Orientation']);
         $arguments = ['image' => $orientImage];
         $response = $action->run($arguments);

@@ -14,20 +14,19 @@ declare(strict_types=1);
 namespace Chevereto\Actions\Image;
 
 use Chevere\Components\Action\Action;
+use Chevere\Components\Parameter\ArrayParameter;
 use Chevere\Components\Parameter\Parameter;
 use Chevere\Components\Parameter\Parameters;
-use Chevere\Components\Response\ResponseSuccess;
 use Chevere\Components\Type\Type;
-use Chevere\Interfaces\Parameter\ArgumentsInterface;
 use Chevere\Interfaces\Parameter\ParametersInterface;
-use Chevere\Interfaces\Response\ResponseInterface;
 use Chevere\Interfaces\Response\ResponseSuccessInterface;
 use Intervention\Image\Image;
+use JeroenDesloovere\XmpMetadataExtractor\XmpMetadataExtractor;
 
 /**
- * Fix the image orientation based on Exif Orientation (if any, if needed).
+ * Fetch image metadata.
  */
-class FixOrientationAction extends Action
+class ImageFetchMetaAction extends Action
 {
     public function getParameters(): ParametersInterface
     {
@@ -37,6 +36,14 @@ class FixOrientationAction extends Action
             );
     }
 
+    public function getResponseDataParameters(): ParametersInterface
+    {
+        return (new Parameters)
+            ->withAddedRequired(new ArrayParameter('exif'))
+            ->withAddedRequired(new ArrayParameter('iptc'))
+            ->withAddedRequired(new ArrayParameter('xmp'));
+    }
+
     public function run(array $arguments): ResponseSuccessInterface
     {
         $arguments = $this->getArguments($arguments);
@@ -44,8 +51,12 @@ class FixOrientationAction extends Action
          * @var Image $image
          */
         $image = $arguments->get('image');
-        $image->orientate()->save();
+        $data = array_fill_keys(['exif', 'iptc', 'xmp'], []);
+        $data['exif'] = $image->exif() ?? [];
+        $data['iptc'] = $image->iptc() ?? [];
+        $xmpDataExtractor = new XmpMetadataExtractor();
+        $data['xmp'] = $xmpDataExtractor->extractFromFile($image->basePath());
 
-        return $this->getResponseSuccess([]);
+        return $this->getResponseSuccess($data);
     }
 }
