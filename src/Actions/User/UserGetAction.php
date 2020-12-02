@@ -17,13 +17,17 @@ use Chevere\Components\Action\Action;
 use Chevere\Components\Parameter\IntegerParameter;
 use Chevere\Components\Parameter\Parameter;
 use Chevere\Components\Parameter\Parameters;
+use Chevere\Components\Service\Traits\ServiceDependantTrait;
 use Chevere\Components\Type\Type;
 use Chevere\Interfaces\Parameter\ParametersInterface;
 use Chevere\Interfaces\Response\ResponseSuccessInterface;
+use Chevere\Interfaces\Service\ServiceDependantInterface;
 use Chevereto\Components\User;
 
-class UserGetAction extends Action
+class UserGetAction extends Action implements ServiceDependantInterface
 {
+    use ServiceDependantTrait;
+
     public function getParameters(): ParametersInterface
     {
         return (new Parameters)

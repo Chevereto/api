@@ -15,12 +15,11 @@ build:
       ini:
         "date.timezone": "UTC"
         "opcache.enable_cli": 1
-        "opcache.enable": 1
         "extension": "ds.so"
         "extension": "imagick.so"
   dependencies:
     override:
-      - composer install --prefer-dist --classmap-authoritative
+      - composer install --prefer-dist --no-progress --classmap-authoritative --ignore-platform-reqs
   nodes:
     analysis:
       tests:

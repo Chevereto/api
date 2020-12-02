@@ -11,17 +11,18 @@
 
 declare(strict_types=1);
 
-namespace Chevereto\Attributes\Conditions;
+namespace Chevereto\Components;
 
-final class ConditionImageRemoveExif extends Condition
+final class Users
 {
-    public function getDescription(): string
+    public function __construct()
     {
-        return 'Determines if image EXIF information should be removed.';
     }
 
-    public function getDefault(): bool
+    public function get(int $id): User
     {
-        return false;
+        // DB
+
+        return new User($id);
     }
 }

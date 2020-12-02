@@ -17,7 +17,7 @@ use Chevere\Components\Action\Action;
 use Chevere\Components\ClassMap\ClassMap;
 use Chevere\Components\Parameter\IntegerParameter;
 use Chevere\Components\Parameter\Parameters;
-use Chevere\Components\Service\Traits\AssertDependenciesTrait;
+use Chevere\Components\Service\Traits\ServiceDependantTrait;
 use Chevere\Interfaces\ClassMap\ClassMapInterface;
 use Chevere\Interfaces\Parameter\ParametersInterface;
 use Chevere\Interfaces\Response\ResponseSuccessInterface;
@@ -29,7 +29,7 @@ use DateTime;
  */
 class ImageInsertAction extends Action implements ServiceDependantInterface
 {
-    use AssertDependenciesTrait;
+    use ServiceDependantTrait;
 
     private DateTime $dateTime;
 

@@ -13,7 +13,7 @@ declare(strict_types=1);
 
 namespace Chevereto\Controllers\Web\Index;
 
-use Chevere\Components\Controller\Controller;
+use Chevere\Components\Action\Controller;
 use Chevere\Interfaces\Response\ResponseSuccessInterface;
 
 class IndexGetController extends Controller

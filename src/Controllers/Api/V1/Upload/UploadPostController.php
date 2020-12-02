@@ -13,13 +13,13 @@ declare(strict_types=1);
 
 namespace Chevereto\Controllers\Api\V1\Upload;
 
-use Chevere\Components\Controller\Controller;
+use Chevere\Components\Action\Controller;
 use Chevere\Components\Message\Message;
 use Chevere\Components\Parameter\Parameters;
 use Chevere\Components\Parameter\StringParameter;
 use Chevere\Components\Regex\Regex;
 use Chevere\Components\Serialize\Unserialize;
-use Chevere\Components\Service\ServiceProviders;
+use Chevere\Components\Service\Traits\ServiceDependantTrait;
 use Chevere\Components\Workflow\Task;
 use Chevere\Components\Workflow\WorkflowRun;
 use Chevere\Exceptions\Core\Exception;
@@ -27,8 +27,7 @@ use Chevere\Exceptions\Core\InvalidArgumentException;
 use Chevere\Exceptions\Core\OutOfBoundsException;
 use Chevere\Interfaces\Parameter\ParametersInterface;
 use Chevere\Interfaces\Response\ResponseSuccessInterface;
-use Chevere\Interfaces\Service\ServiceableInterface;
-use Chevere\Interfaces\Service\ServiceProvidersInterface;
+use Chevere\Interfaces\Service\ServiceDependantInterface;
 use Chevere\Interfaces\Workflow\WorkflowInterface;
 use Chevereto\Actions\File\FileDetectDuplicateAction;
 use Chevereto\Actions\File\FileUploadAction;
@@ -49,19 +48,14 @@ use function Safe\fwrite;
 use function Safe\stream_filter_append;
 use function Safe\tempnam;
 
-final class UploadPostController extends Controller implements ServiceableInterface
+final class UploadPostController extends Controller implements ServiceDependantInterface
 {
+    use ServiceDependantTrait;
     use FileStoreBase64SourceTrait;
 
     private Settings $settings;
 
     private WorkflowInterface $workflow;
-
-    public function getServiceProviders(): ServiceProvidersInterface
-    {
-        return (new ServiceProviders($this))
-            ->withAdded('withSettings');
-    }
 
     /**
      * @throws OutOfBoundsException

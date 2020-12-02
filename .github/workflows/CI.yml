@@ -13,21 +13,25 @@ jobs:
       - name: Setup PHP Action
         uses: shivammathur/setup-php@v2
         with:
-          php-version: 7.4
+          php-version: 8.0
           extensions: opcache, mbstring, ds, imagick
-          ini-values: opcache.enable_cli = 1, opcache.enable = 1, extension="ds.so"
+          ini-values: opcache.enable_cli = 1, opcache.enable = 1, extension="ds.so", pcov.directory=src
           coverage: pcov
 
       - name: Validate composer.json and composer.lock
         run: composer validate
 
       - name: Install dependencies
-        run: composer install --prefer-dist --no-progress --no-suggest --classmap-authoritative
+        run: composer install --prefer-dist --no-progress --classmap-authoritative --ignore-platform-reqs
 
-      - name: Cache
-        uses: actions/cache@v1.1.2
+      - name: Get composer cache directory
+        id: composer-cache
+        run: echo "::set-output name=dir::$(composer config cache-files-dir)"
+
+      - name: Cache dependencies
+        uses: actions/cache@v2
         with:
-          path: ~/.composer/cache
+          path: ${{ steps.composer-cache.outputs.dir }}
           key: ${{ runner.os }}-composer-${{ hashFiles('**/composer.lock') }}
           restore-keys: ${{ runner.os }}-composer-
 

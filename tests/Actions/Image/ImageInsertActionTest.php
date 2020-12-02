@@ -13,7 +13,7 @@ declare(strict_types=1);
 
 namespace Chevereto\Tests\Actions\Image;
 
-use Chevere\Exceptions\Core\LogicException;
+use Chevere\Exceptions\Core\InvalidArgumentException;
 use Chevereto\Actions\Image\ImageInsertAction;
 use PHPUnit\Framework\TestCase;
 
@@ -27,7 +27,7 @@ final class ImageInsertActionTest extends TestCase
             'userId' => 0,
             'albumId' => 0,
         ];
-        $this->expectException(LogicException::class);
+        $this->expectException(InvalidArgumentException::class);
         $action->run($arguments);
     }
 }

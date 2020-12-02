@@ -1,6 +1,8 @@
 # Composer
 /vendor
 /composer.lock
+/composer-dev.json
+/composer-dev.lock
 
 # Build
 /build

@@ -13,8 +13,9 @@ declare(strict_types=1);
 
 namespace Chevereto\Controllers\Api\V2;
 
-use Chevere\Components\Controller\Controller;
+use Chevere\Components\Action\Controller;
 use Chevere\Components\Message\Message;
+use Chevere\Components\Workflow\Step;
 use Chevere\Components\Workflow\Workflow;
 use Chevere\Exceptions\Core\OutOfBoundsException;
 use Chevere\Exceptions\Service\ServiceException;
@@ -40,7 +41,7 @@ abstract class QueueController extends Controller
         $name = str_replace('\\', '-', $class);
         $workflow = new Workflow($name);
         foreach ($this->getSteps() as $k => $v) {
-            $workflow = $workflow->withAdded($k, $v);
+            $workflow = $workflow->withAdded(new Step($k), $v);
         }
 
         return $workflow;
