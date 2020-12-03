@@ -10,6 +10,10 @@ jobs:
       - name: Checkout
         uses: actions/checkout@v2
 
+      - name: Setup FFmpeg
+        uses: FedericoCarboni/setup-ffmpeg@v1-beta
+        id: setup-ffmpeg
+
       - name: Setup PHP Action
         uses: shivammathur/setup-php@v2
         with:
