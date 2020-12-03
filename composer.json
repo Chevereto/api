@@ -1,6 +1,6 @@
 {
     "name": "chevereto/chevereto",
-    "description": "Self-hosted image sharing",
+    "description": "Self-hosted media sharing",
     "type": "library",
     "license": "MIT",
     "authors": [
