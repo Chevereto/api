@@ -39,9 +39,11 @@ class ImageFetchMetaAction extends Action
     public function getResponseDataParameters(): ParametersInterface
     {
         return (new Parameters)
-            ->withAddedRequired(new ArrayParameter('exif'))
-            ->withAddedRequired(new ArrayParameter('iptc'))
-            ->withAddedRequired(new ArrayParameter('xmp'));
+            ->withAddedRequired(
+                new ArrayParameter('exif'),
+                new ArrayParameter('iptc'),
+                new ArrayParameter('xmp'),
+            );
     }
 
     public function run(array $arguments): ResponseSuccessInterface

@@ -11,10 +11,9 @@
 
 declare(strict_types=1);
 
+use Chevere\Components\Action\ActionRunner;
 use Chevere\Components\Cache\Cache;
 use Chevere\Components\Cache\CacheKey;
-use Chevere\Components\Controller\ControllerRunner;
-use Chevere\Components\Parameter\Arguments;
 use Chevere\Components\Router\RouterDispatcher;
 use Chevere\Interfaces\Parameter\StringParameterInterface;
 use function Chevere\Components\Filesystem\dirForPath;
@@ -42,11 +41,9 @@ foreach ($controller->parameters()->getGenerator() as $parameter) {
         $arguments[$parameter->name()] = serialize(['tmp_name' => __FILE__]);
     }
 }
-$runner = new ControllerRunner($controller);
-$ran = $runner->execute(
-    new Arguments($controller->parameters(), $arguments)
-);
-if ($ran->hasThrowable()) {
-    throw $ran->throwable();
+$runner = new ActionRunner($controller);
+$executed = $runner->execute($arguments);
+if ($executed->hasThrowable()) {
+    throw $executed->throwable();
 }
-echo json_encode($ran->data());
+echo json_encode($executed->data());

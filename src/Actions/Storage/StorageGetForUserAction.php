@@ -31,10 +31,8 @@ class StorageGetForUserAction extends Action
     {
         return (new Parameters)
             ->withAddedRequired(
-                new IntegerParameter('userId')
-            )
-            ->withAddedRequired(
-                new IntegerParameter('bytesRequired')
+                new IntegerParameter('userId'),
+                new IntegerParameter('bytesRequired'),
             );
     }
 
@@ -42,7 +40,7 @@ class StorageGetForUserAction extends Action
     {
         return (new Parameters)
             ->withAddedRequired(
-                new Parameter('storage', new Type(Storage::class))
+                new Parameter('storage', new Type(Storage::class)),
             );
     }
 

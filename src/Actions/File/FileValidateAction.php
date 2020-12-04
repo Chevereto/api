@@ -45,28 +45,26 @@ class FileValidateAction extends Action
     public function getParameters(): ParametersInterface
     {
         return (new Parameters)
-        ->withAddedRequired(
-            (new StringParameter('extensions'))
-                ->withRegex(new Regex('/^[\w]+(,[\w]+)*$/'))
-                ->withDescription('Comma-separated list of allowed file extensions')
-        )
             ->withAddedRequired(
-                new StringParameter('filename')
+                (new StringParameter('extensions'))
+                    ->withRegex(new Regex('/^[\w]+(,[\w]+)*$/'))
+                    ->withDescription('Comma-separated list of allowed file extensions'),
+                new StringParameter('filename'),
             )
             ->withAddedOptional(
-                new IntegerParameter('maxBytes')
-            )
-            ->withAddedOptional(
-                new IntegerParameter('minBytes')
+                new IntegerParameter('maxBytes'),
+                new IntegerParameter('minBytes'),
             );
     }
 
     public function getResponseDataParameters(): ParametersInterface
     {
         return (new Parameters)
-            ->withAddedRequired(new IntegerParameter('bytes'))
-            ->withAddedRequired(new StringParameter('mime'))
-            ->withAddedRequired(new StringParameter('md5'));
+            ->withAddedRequired(
+                new IntegerParameter('bytes'),
+                new StringParameter('mime'),
+                new StringParameter('md5'),
+            );
     }
 
     public function run(array $arguments): ResponseSuccessInterface

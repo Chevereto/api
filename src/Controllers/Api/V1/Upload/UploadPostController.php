@@ -15,6 +15,7 @@ namespace Chevereto\Controllers\Api\V1\Upload;
 
 use Chevere\Components\Action\Controller;
 use Chevere\Components\Message\Message;
+use Chevere\Components\Parameter\IntegerParameter;
 use Chevere\Components\Parameter\Parameters;
 use Chevere\Components\Parameter\StringParameter;
 use Chevere\Components\Regex\Regex;
@@ -22,9 +23,9 @@ use Chevere\Components\Serialize\Unserialize;
 use Chevere\Components\Service\Traits\ServiceDependantTrait;
 use Chevere\Components\Workflow\Task;
 use Chevere\Components\Workflow\WorkflowRun;
+use Chevere\Components\Workflow\WorkflowRunner;
 use Chevere\Exceptions\Core\Exception;
 use Chevere\Exceptions\Core\InvalidArgumentException;
-use Chevere\Exceptions\Core\OutOfBoundsException;
 use Chevere\Interfaces\Parameter\ParametersInterface;
 use Chevere\Interfaces\Response\ResponseSuccessInterface;
 use Chevere\Interfaces\Service\ServiceDependantInterface;
@@ -38,7 +39,6 @@ use Chevereto\Actions\Image\ImageInsertAction;
 use Chevereto\Actions\Image\ImageStripMetaAction;
 use Chevereto\Actions\Image\ImageValidateMediaAction;
 use Chevereto\Actions\Storage\StorageGetForUserAction;
-use Chevereto\Components\Settings;
 use Chevereto\Controllers\Api\V2\File\Traits\FileStoreBase64SourceTrait;
 use Laminas\Uri\UriFactory;
 use function Chevere\Components\Workflow\workflowRunner;
@@ -53,43 +53,29 @@ final class UploadPostController extends Controller implements ServiceDependantI
     use ServiceDependantTrait;
     use FileStoreBase64SourceTrait;
 
-    private Settings $settings;
-
     private WorkflowInterface $workflow;
-
-    /**
-     * @throws OutOfBoundsException
-     */
-    public function withSettings(Settings $settings): self
-    {
-        $settings->assertHasKey(
-            'apiV1Key',
-            'extensions',
-            'maxBytes',
-            'maxHeight',
-            'maxWidth',
-            'minBytes',
-            'minHeight',
-            'minWidth',
-            'naming',
-            'uploadPath',
-            'userId',
-        );
-
-        $new = clone $this;
-        $new->settings = $settings;
-
-        return $new;
-    }
-
-    public function settings(): Settings
-    {
-        return $this->settings;
-    }
 
     public function getDescription(): string
     {
         return 'Uploads an image resource.';
+    }
+
+    public function getContextParameters(): ParametersInterface
+    {
+        return (new Parameters)
+            ->withAddedRequired(
+                new StringParameter('apiV1Key'),
+                new StringParameter('extensions'),
+                new IntegerParameter('maxBytes'),
+                new IntegerParameter('maxHeight'),
+                new IntegerParameter('maxWidth'),
+                new IntegerParameter('minBytes'),
+                new IntegerParameter('minHeight'),
+                new IntegerParameter('minWidth'),
+                new StringParameter('naming'),
+                new StringParameter('uploadPath'),
+                new IntegerParameter('userId')
+            );
     }
 
     public function getParameters(): ParametersInterface
@@ -98,17 +84,15 @@ final class UploadPostController extends Controller implements ServiceDependantI
             ->withAddedRequired(
                 (new StringParameter('source'))
                     ->withAddedAttribute('tryFiles')
-                    ->withDescription('A base64 image string OR an image URL. It also takes image multipart/form-data.')
-            )
-            ->withAddedRequired(
+                    ->withDescription('A base64 image string OR an image URL. It also takes image multipart/form-data.'),
                 (new StringParameter('key'))
-                    ->withDescription('API V1 key.')
+                    ->withDescription('API V1 key.'),
             )
             ->withAddedOptional(
                 (new StringParameter('format'))
                     ->withRegex(new Regex('/^(json|txt)$/'))
                     ->withDefault('json')
-                    ->withDescription('Response document output format. Defaults to `json`.')
+                    ->withDescription('Response document output format. Defaults to `json`.'),
             );
     }
 
@@ -183,8 +167,9 @@ final class UploadPostController extends Controller implements ServiceDependantI
 
     public function run(array $arguments): ResponseSuccessInterface
     {
+        $context = $this->contextArguments();
         $arguments = $this->getArguments($arguments);
-        if ($arguments->getString('key') !== $this->settings->get('apiV1Key')) {
+        if ($arguments->getString('key') !== $context->getString('apiV1Key')) {
             throw new InvalidArgumentException(
                 new Message('Invalid API V1 key provided'),
                 100
@@ -204,17 +189,14 @@ final class UploadPostController extends Controller implements ServiceDependantI
                 $this->assertStoreSource($source, $uploadFile);
             }
         }
-        $settings = $this->settings
-            ->withPut('filename', $uploadFile)
-            ->withPut('albumId', '');
-        $settings = $settings->toArray();
+        $settings = array_replace($context->toArray(), [
+            'filename' => $uploadFile,
+            'albumId' => ''
+        ]);
         unset($settings['apiV1Key']);
-        $workflowRun = workflowRunner(
-            new WorkflowRun(
-                $this->workflow,
-                $settings
-            )
-        );
+        $workflowRun = (new WorkflowRunner(
+            new WorkflowRun($this->workflow, $settings)
+        ))->run('container');
         $data = $workflowRun->get('upload')->data();
         if ($arguments->getString('format') === 'txt') {
             $raw = $data['url_viewer'];

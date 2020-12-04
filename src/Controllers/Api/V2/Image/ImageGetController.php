@@ -36,7 +36,7 @@ final class ImageGetController extends Controller
     {
         return (new Parameters)
             ->withAddedRequired(
-                (new StringParameter('id'))->withRegex(new Regex('/\d+/'))
+                (new StringParameter('id'))->withRegex(new Regex('/\d+/')),
             );
     }
 

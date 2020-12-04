@@ -17,10 +17,7 @@ use Chevere\Components\Action\Controller;
 use Chevere\Components\Parameter\Parameters;
 use Chevere\Components\Parameter\StringParameter;
 use Chevere\Components\Regex\Regex;
-use Chevere\Components\Response\ResponseSuccess;
-use Chevere\Interfaces\Parameter\ArgumentsInterface;
 use Chevere\Interfaces\Parameter\ParametersInterface;
-use Chevere\Interfaces\Response\ResponseInterface;
 use Chevere\Interfaces\Response\ResponseSuccessInterface;
 
 final class AlbumPatchController extends Controller
@@ -34,7 +31,7 @@ final class AlbumPatchController extends Controller
     {
         return (new Parameters)
             ->withAddedRequired(
-                (new StringParameter('id'))->withRegex(new Regex('/\d+/'))
+                (new StringParameter('id'))->withRegex(new Regex('/\d+/')),
             );
     }
 

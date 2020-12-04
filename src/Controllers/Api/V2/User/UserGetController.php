@@ -33,7 +33,7 @@ final class UserGetController extends Controller
             ->withAddedRequired(
                 (new StringParameter('id'))
                     ->withRegex(new Regex('/\d+/'))
-                    ->withDescription('The user identifier.')
+                    ->withDescription('The user identifier.'),
             );
     }
 

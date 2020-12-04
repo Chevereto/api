@@ -14,7 +14,6 @@ declare(strict_types=1);
 namespace Chevereto\Actions\File;
 
 use Chevere\Components\Action\Action;
-use Chevere\Components\Parameter\IntegerParameter;
 use Chevere\Components\Parameter\Parameter;
 use Chevere\Components\Parameter\Parameters;
 use Chevere\Components\Parameter\StringParameter;
@@ -33,28 +32,15 @@ class FileUploadAction extends Action
     {
         return (new Parameters)
             ->withAddedRequired(
-                new StringParameter('filename')
-            )
-            ->withAddedRequired(
+                new StringParameter('filename'),
                 (new StringParameter('naming'))
                     ->withRegex(new Regex('/^(original|random|mixed|id)$/'))
-                    ->withDefault('original')
-            )
-            ->withAddedRequired(
+                    ->withDefault('original'),
                 (new StringParameter('originalName'))
-                    ->withRegex(new Regex('/^.+\.[a-zA-Z]{3}$/'))
-            )
-            ->withAddedRequired(
-                new Parameter('storage', new Type(Storage::class))
-            )
-            ->withAddedRequired(
-                new StringParameter('uploadPath')
+                    ->withRegex(new Regex('/^.+\.[a-zA-Z]{3}$/')),
+                new Parameter('storage', new Type(Storage::class)),
+                new StringParameter('uploadPath'),
             );
-    }
-
-    public function getResponseDataParameters(): ParametersInterface
-    {
-        return (new Parameters);
     }
 
     public function run(array $arguments): ResponseSuccessInterface

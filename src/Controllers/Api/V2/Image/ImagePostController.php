@@ -13,8 +13,10 @@ declare(strict_types=1);
 
 namespace Chevereto\Controllers\Api\V2\Image;
 
+use Chevere\Components\Parameter\IntegerParameter;
 use Chevere\Components\Response\ResponseSuccess;
 use Chevere\Components\Workflow\Task;
+use Chevere\Interfaces\Parameter\ParametersInterface;
 use Chevere\Interfaces\Response\ResponseSuccessInterface;
 use Chevereto\Actions\File\FileDetectDuplicateAction;
 use Chevereto\Actions\File\FileUploadAction;
@@ -26,12 +28,20 @@ use Chevereto\Actions\Image\ImageStripMetaAction;
 use Chevereto\Actions\Image\ImageValidateMediaAction;
 use Chevereto\Actions\Storage\StorageGetForUserAction;
 use Chevereto\Controllers\Api\V2\File\FilePostController;
-use Chevereto\Controllers\Api\V2\Image\Traits\ImageSettingsKeysTrait;
 use function Chevere\Components\Workflow\getWorkflowMessage;
 
 abstract class ImagePostController extends FilePostController
 {
-    use ImageSettingsKeysTrait;
+    final public function getContextParameters(): ParametersInterface
+    {
+        return parent::getContextParameters()
+            ->withAddedRequired(
+                new IntegerParameter('maxHeight'),
+                new IntegerParameter('maxWidth'),
+                new IntegerParameter('minHeight'),
+                new IntegerParameter('minWidth'),
+            );
+    }
 
     public function getSteps(): array
     {
@@ -95,14 +105,15 @@ abstract class ImagePostController extends FilePostController
 
     public function run(array $arguments): ResponseSuccessInterface
     {
+        $context = $this->contextArguments();
         $arguments = $this->getArguments($arguments);
         $uploadFile = tempnam(sys_get_temp_dir(), 'chv.temp');
         $this->assertStoreSource($arguments->getString('source'), $uploadFile);
-        $settings = $this->settings->withPut('filename', $uploadFile);
+        $settings = array_replace($context->toArray(), ['filename' => $uploadFile]);
 
         return (new ResponseSuccess($this->getResponseDataParameters(), []))
             ->withWorkflowMessage(
-                getWorkflowMessage($this->getWorkflow(), $settings->toArray())
+                getWorkflowMessage($this->getWorkflow(), $settings)
             );
     }
 }

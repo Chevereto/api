@@ -39,7 +39,7 @@ class UserGetAction extends Action implements ServiceDependantInterface
     public function getResponseDataParameters(): ParametersInterface
     {
         return (new Parameters)
-            ->withAddedRequired(new Parameter('user', new Type(User::class)));
+            ->withAddedRequired(new Parameter('user', new Type(User::class)), );
     }
 
     public function run(array $arguments): ResponseSuccessInterface

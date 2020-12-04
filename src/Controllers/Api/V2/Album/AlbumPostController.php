@@ -32,7 +32,7 @@ final class AlbumPostController extends Controller
         return (new Parameters)
             ->withAddedRequired(
                 (new StringParameter('name'))
-                    ->withRegex(new Regex('/\w+/'))
+                    ->withRegex(new Regex('/\w+/')),
             );
     }
 

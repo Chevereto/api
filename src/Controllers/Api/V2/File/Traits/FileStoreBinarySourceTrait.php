@@ -17,9 +17,9 @@ use Chevere\Components\Message\Message;
 use Chevere\Components\Parameter\StringParameter;
 use Chevere\Components\Serialize\Unserialize;
 use Chevere\Exceptions\Core\InvalidArgumentException;
+use Chevere\Exceptions\Serialize\UnserializeException;
 use Chevere\Interfaces\Parameter\StringParameterInterface;
-use Throwable;
-use function Chevereto\Encoding\getBase64Regex;
+use Exception;
 use function Safe\copy;
 
 trait FileStoreBinarySourceTrait
@@ -34,19 +34,22 @@ trait FileStoreBinarySourceTrait
     {
         try {
             $unserialize = new Unserialize($source);
-            $filename = $unserialize->var()['tmp_name'];
-        } catch (Throwable $e) {
+            $filename = $unserialize->var()['tmp_name'] ?? null;
+            if ($filename === null) {
+                throw new Exception;
+            }
+        } catch (UnserializeException $e) {
             throw new InvalidArgumentException(
-                new Message('Invalid binary file'),
+                new Message('Invalid file serialize string'),
             );
         }
+
         copy($filename, $path);
     }
 
     private function getBinaryStringParameter(string $name): StringParameterInterface
     {
         return (new StringParameter($name))
-            ->withRegex(getBase64Regex())
             ->withAddedAttribute('tryFiles');
     }
 }

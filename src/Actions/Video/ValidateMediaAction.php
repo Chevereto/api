@@ -50,37 +50,27 @@ class ValidateMediaAction extends Action
     {
         return (new Parameters)
             ->withAddedRequired(
-                new StringParameter('filename')
-            )
-            ->withAddedRequired(
-                new IntegerParameter('maxHeight')
-            )
-            ->withAddedRequired(
-                new IntegerParameter('maxWidth')
-            )
-            ->withAddedRequired(
+                new StringParameter('filename'),
+                new IntegerParameter('maxHeight'),
+                new IntegerParameter('maxWidth'),
                 (new IntegerParameter('maxLength'))
-                    ->withDefault(3600)
-            )
-            ->withAddedRequired(
+                    ->withDefault(3600),
                 (new IntegerParameter('minHeight'))
-                    ->withDefault(16)
-            )
-            ->withAddedRequired(
+                    ->withDefault(16),
                 (new IntegerParameter('minWidth'))
-                    ->withDefault(16)
-            )
-            ->withAddedRequired(
+                    ->withDefault(16),
                 (new IntegerParameter('minLength'))
-                    ->withDefault(5)
+                    ->withDefault(5),
             );
     }
 
     public function getResponseDataParameters(): ParametersInterface
     {
         return (new Parameters)
-            ->withAddedRequired(new Parameter('format', new Type(Format::class)))
-            ->withAddedRequired(new Parameter('stream', new Type(Stream::class)));
+            ->withAddedRequired(
+                new Parameter('format', new Type(Format::class)),
+                new Parameter('stream', new Type(Stream::class)),
+            );
     }
 
     public function run(array $arguments): ResponseSuccessInterface

@@ -15,7 +15,6 @@ namespace Chevereto\Tests\Controllers\Api\V2\Image;
 
 use Chevere\Exceptions\Core\InvalidArgumentException;
 use Chevere\Interfaces\Response\ResponseSuccessInterface;
-use Chevereto\Components\Settings;
 use Chevereto\Controllers\Api\V2\Image\ImagePostUrlController;
 use PHPUnit\Framework\TestCase;
 use function Safe\file_get_contents;
@@ -44,25 +43,24 @@ final class ImagePostUrlControllerTest extends TestCase
 
     public function testRun(): void
     {
-        $controller = new ImagePostUrlController;
-        $controller = $controller
-            ->withSettings(new Settings([
-                'extensions' => 'jpg,png',
-                'maxBytes' => 200000,
-                'maxHeight' => 100,
-                'maxWidth' => 100,
-                'minBytes' => 1,
-                'minHeight' => 1,
-                'minWidth' => 1,
-                'naming' => 'original',
-                'uploadPath' => 'eeee',
-                'userId' => 1,
-                'ip' => '127.0.0.1',
-                'ipVersion' => '4',
-                'originalName' => 'laFotito.jpg',
-                'expires' => 0,
-                'albumId' => 0
-            ]));
+        $context = [
+            'extensions' => 'jpg,png',
+            'maxBytes' => 200000,
+            'maxHeight' => 100,
+            'maxWidth' => 100,
+            'minBytes' => 1,
+            'minHeight' => 1,
+            'minWidth' => 1,
+            'naming' => 'original',
+            'uploadPath' => 'eeee',
+            'userId' => 1,
+            'ip' => '127.0.0.1',
+            'ipVersion' => '4',
+            'originalName' => 'laFotito.jpg',
+            'expires' => 0,
+            'albumId' => 0
+        ];
+        $controller = (new ImagePostUrlController)->withContextArguments($context);
         $arguments = ['source' => 'https://1.1.1.1/'];
         $response = $controller->run($arguments);
         $this->assertInstanceOf(ResponseSuccessInterface::class, $response);

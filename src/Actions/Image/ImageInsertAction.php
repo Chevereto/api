@@ -51,13 +51,9 @@ class ImageInsertAction extends Action implements ServiceDependantInterface
     {
         return (new Parameters)
             ->withAddedOptional(
-                new IntegerParameter('expires')
-            )
-            ->withAddedOptional(
-                new IntegerParameter('userId')
-            )
-            ->withAddedOptional(
-                new IntegerParameter('albumId')
+                new IntegerParameter('expires'),
+                new IntegerParameter('userId'),
+                new IntegerParameter('albumId'),
             );
     }
 
