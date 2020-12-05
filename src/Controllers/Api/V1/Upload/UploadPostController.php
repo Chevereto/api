@@ -21,7 +21,8 @@ use Chevere\Components\Parameter\StringParameter;
 use Chevere\Components\Regex\Regex;
 use Chevere\Components\Serialize\Unserialize;
 use Chevere\Components\Service\Traits\ServiceDependantTrait;
-use Chevere\Components\Workflow\Task;
+use Chevere\Components\Workflow\Step;
+use Chevere\Components\Workflow\Workflow;
 use Chevere\Components\Workflow\WorkflowRun;
 use Chevere\Components\Workflow\WorkflowRunner;
 use Chevere\Exceptions\Core\Exception;
@@ -96,73 +97,71 @@ final class UploadPostController extends Controller implements ServiceDependantI
             );
     }
 
-    /**
-     * @return Array<string, Task>
-     */
-    public function getTasks(): array
+    public function getWorkflow(): WorkflowInterface
     {
-        return [
-            'validate-file' => (new Task(ValidateFileAction::class))
-                ->withArguments([
-                    'extensions' => '${extensions}',
-                    'filename' => '${filename}',
-                    'maxBytes' => '${maxBytes}',
-                    'minBytes' => '${minBytes}',
-                ]),
-            'validate' => (new Task(ImageValidateMediaAction::class))
-                ->withArguments([
-                    'filename' => '${filename}',
-                    'maxHeight' => '${maxHeight}',
-                    'maxWidth' => '${maxWidth}',
-                    'minHeight' => '${minHeight}',
-                    'minWidth' => '${minWidth}',
-                ]),
-            'detect-duplication' => (new Task(FileDetectDuplicateAction::class))
-                ->withArguments([
-                    'md5' => '${validate:md5}',
-                    'perceptual' => '${validate:perceptual}',
-                    'ip' => '${ip}',
-                    'ipVersion' => '${ipVersion}',
-                ]),
-            'fix-orientation' => (new Task(ImageFixOrientationAction::class))
-                ->withArguments([
-                    'image' => '${validate:image}'
-                ]),
-            'fetch-meta' => (new Task(ImageFetchMetaAction::class))
-                ->withArguments([
-                    'image' => '${validate:image}'
-                ]),
-            'strip-meta' => (new Task(ImageStripMetaAction::class))
+        return (new Workflow(__CLASS__))
+            ->withAdded(
+                (new Step('validate-file', ValidateFileAction::class))
+                    ->withArguments([
+                        'extensions' => '${extensions}',
+                        'filename' => '${filename}',
+                        'maxBytes' => '${maxBytes}',
+                        'minBytes' => '${minBytes}',
+                    ]),
+                (new Step('validate', ImageValidateMediaAction::class))
+                    ->withArguments([
+                        'filename' => '${filename}',
+                        'maxHeight' => '${maxHeight}',
+                        'maxWidth' => '${maxWidth}',
+                        'minHeight' => '${minHeight}',
+                        'minWidth' => '${minWidth}',
+                    ]),
+                (new Step('detect-duplication', FileDetectDuplicateAction::class))
+                    ->withArguments([
+                        'md5' => '${validate:md5}',
+                        'perceptual' => '${validate:perceptual}',
+                        'ip' => '${ip}',
+                        'ipVersion' => '${ipVersion}',
+                    ]),
+                (new Step('fix-orientation', ImageFixOrientationAction::class))
+                    ->withArguments([
+                        'image' => '${validate:image}'
+                    ]),
+                (new Step('fetch-meta', ImageFetchMetaAction::class))
                 ->withArguments([
                     'image' => '${validate:image}'
                 ]),
-            'storage-for-user' => (new Task(StorageGetForUserAction::class))
-                ->withArguments([
-                    'userId' => '${userId}',
-                    'bytesRequired' => '${validate-file:bytes}',
-                ]),
-            'upload' => (new Task(FileUploadAction::class))
-                ->withArguments([
-                    'filename' => '${filename}',
-                    'naming' => '${naming}',
-                    'originalName' => '${originalName}',
-                    'storage' => '${storage-for-user:storage}',
-                    'uploadPath' => '${uploadPath}',
-                ]),
-            'insert' => (new Task(ImageInsertAction::class))
-                ->withArguments([
-                    'albumId' => '${albumId}',
-                    // 'exif' => '${fetch-meta:exif}',
-                    'expires' => '${expires}',
-                    // 'image' => '${validate:image}',
-                    // 'iptc' => '${fetch-meta:iptc}',
-                    // 'md5' => '${validate:md5}',
-                    // 'perceptual' => '${validate:perceptual}',
-                    // 'storageId' => '${storage-for-user:storageId}',
-                    'userId' => '${userId}',
-                    // 'xmp' => '${fetch-meta:xmp}',
-                ])
-        ];
+                (new Step('strip-meta', ImageStripMetaAction::class))
+                    ->withArguments([
+                        'image' => '${validate:image}'
+                    ]),
+                (new Step('storage-for-user', StorageGetForUserAction::class))
+                    ->withArguments([
+                        'userId' => '${userId}',
+                        'bytesRequired' => '${validate-file:bytes}',
+                    ]),
+                (new Step('upload', FileUploadAction::class))
+                    ->withArguments([
+                        'filename' => '${filename}',
+                        'naming' => '${naming}',
+                        'originalName' => '${originalName}',
+                        'storage' => '${storage-for-user:storage}',
+                        'uploadPath' => '${uploadPath}',
+                    ]),
+                (new Step('insert', ImageInsertAction::class))
+                    ->withArguments([
+                        'albumId' => '${albumId}',
+                        // 'exif' => '${fetch-meta:exif}',
+                        'expires' => '${expires}',
+                        // 'image' => '${validate:image}',
+                        // 'iptc' => '${fetch-meta:iptc}',
+                        // 'md5' => '${validate:md5}',
+                        // 'perceptual' => '${validate:perceptual}',
+                        // 'storageId' => '${storage-for-user:storageId}',
+                        'userId' => '${userId}',
+                        // 'xmp' => '${fetch-meta:xmp}',
+                    ])
+            );
     }
 
     public function run(array $arguments): ResponseSuccessInterface

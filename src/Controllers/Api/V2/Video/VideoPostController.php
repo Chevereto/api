@@ -20,30 +20,6 @@ use function Chevere\Components\Workflow\workflowRunner;
 
 abstract class VideoPostController extends FilePostController
 {
-    public function getSettingsKeys(): array
-    {
-        return [
-            'extensions',
-            'maxBytes',
-            'maxHeight',
-            'maxLength',
-            'maxWidth',
-            'minBytes',
-            'minHeight',
-            'minLength',
-            'minWidth',
-            'naming',
-            'storageId',
-            'uploadPath',
-            'userId'
-        ];
-    }
-
-    public function getSteps(): array
-    {
-        return [];
-    }
-
     public function run(array $arguments): ResponseSuccessInterface
     {
         $arguments = $this->getArguments($arguments);

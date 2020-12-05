@@ -13,8 +13,6 @@ declare(strict_types=1);
 
 namespace Tests\Controllers\Api\V1\Upload;
 
-use Chevere\Components\Workflow\Step;
-use Chevere\Components\Workflow\Workflow;
 use Chevere\Interfaces\Workflow\WorkflowInterface;
 use Chevereto\Controllers\Api\V1\Upload\UploadPostController;
 use PHPUnit\Framework\TestCase;
@@ -42,11 +40,7 @@ final class UploadPostControllerTest extends TestCase
 
     public function testWorkflow(): void
     {
-        $tasks = (new UploadPostController)->getTasks();
-        $workflow = new Workflow('api-v1-upload');
-        foreach ($tasks as $step => $task) {
-            $workflow = $workflow->withAdded(new Step($step), $task);
-        }
+        $workflow = (new UploadPostController)->getWorkflow();
         $this->assertInstanceOf(
             WorkflowInterface::class,
             $workflow
