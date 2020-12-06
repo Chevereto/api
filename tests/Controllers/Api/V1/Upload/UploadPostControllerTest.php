@@ -34,7 +34,7 @@ final class UploadPostControllerTest extends TestCase
             'uploadPath' => '2020/10/23',
             'userId' => 123,
         ];
-        $controller = (new UploadPostController)->withContextArguments($context);
+        $controller = (new UploadPostController)->withContextArguments(...$context);
         $this->assertSame($context, $controller->contextArguments()->toArray());
     }
 

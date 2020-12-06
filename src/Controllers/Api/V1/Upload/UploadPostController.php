@@ -101,66 +101,57 @@ final class UploadPostController extends Controller implements ServiceDependantI
     {
         return (new Workflow(__CLASS__))
             ->withAdded(
-                (new Step('validate-file', ValidateFileAction::class))
-                    ->withArguments([
-                        'extensions' => '${extensions}',
-                        'filename' => '${filename}',
-                        'maxBytes' => '${maxBytes}',
-                        'minBytes' => '${minBytes}',
-                    ]),
-                (new Step('validate', ImageValidateMediaAction::class))
-                    ->withArguments([
-                        'filename' => '${filename}',
-                        'maxHeight' => '${maxHeight}',
-                        'maxWidth' => '${maxWidth}',
-                        'minHeight' => '${minHeight}',
-                        'minWidth' => '${minWidth}',
-                    ]),
-                (new Step('detect-duplication', FileDetectDuplicateAction::class))
-                    ->withArguments([
-                        'md5' => '${validate:md5}',
-                        'perceptual' => '${validate:perceptual}',
-                        'ip' => '${ip}',
-                        'ipVersion' => '${ipVersion}',
-                    ]),
-                (new Step('fix-orientation', ImageFixOrientationAction::class))
-                    ->withArguments([
-                        'image' => '${validate:image}'
-                    ]),
-                (new Step('fetch-meta', ImageFetchMetaAction::class))
-                ->withArguments([
-                    'image' => '${validate:image}'
-                ]),
-                (new Step('strip-meta', ImageStripMetaAction::class))
-                    ->withArguments([
-                        'image' => '${validate:image}'
-                    ]),
-                (new Step('storage-for-user', StorageGetForUserAction::class))
-                    ->withArguments([
-                        'userId' => '${userId}',
-                        'bytesRequired' => '${validate-file:bytes}',
-                    ]),
-                (new Step('upload', FileUploadAction::class))
-                    ->withArguments([
-                        'filename' => '${filename}',
-                        'naming' => '${naming}',
-                        'originalName' => '${originalName}',
-                        'storage' => '${storage-for-user:storage}',
-                        'uploadPath' => '${uploadPath}',
-                    ]),
-                (new Step('insert', ImageInsertAction::class))
-                    ->withArguments([
-                        'albumId' => '${albumId}',
-                        // 'exif' => '${fetch-meta:exif}',
-                        'expires' => '${expires}',
-                        // 'image' => '${validate:image}',
-                        // 'iptc' => '${fetch-meta:iptc}',
-                        // 'md5' => '${validate:md5}',
-                        // 'perceptual' => '${validate:perceptual}',
-                        // 'storageId' => '${storage-for-user:storageId}',
-                        'userId' => '${userId}',
-                        // 'xmp' => '${fetch-meta:xmp}',
-                    ])
+                validateFile: (new Step(ValidateFileAction::class))
+                    ->withArguments(
+                        extensions: '${extensions}',
+                        filename: '${filename}',
+                        maxBytes: '${maxBytes}',
+                        minBytes: '${minBytes}',
+                    ),
+                validate: (new Step(ImageValidateMediaAction::class))
+                    ->withArguments(
+                        filename: '${filename}',
+                        maxHeight: '${maxHeight}',
+                        maxWidth: '${maxWidth}',
+                        minHeight: '${minHeight}',
+                        minWidth: '${minWidth}',
+                    ),
+                detectDuplication: (new Step(FileDetectDuplicateAction::class))
+                    ->withArguments(
+                        md5: '${validate:md5}',
+                        perceptual: '${validate:perceptual}',
+                        ip: '${ip}',
+                        ipVersion: '${ipVersion}',
+                    ),
+                fixOrientation: (new Step(ImageFixOrientationAction::class))
+                    ->withArguments(
+                        image: '${validate:image}'
+                    ),
+                fetchMeta: (new Step(ImageFetchMetaAction::class))
+                    ->withArguments(image: '${validate:image}'),
+                stripMeta: (new Step(ImageStripMetaAction::class))
+                    ->withArguments(
+                        image: '${validate:image}'
+                    ),
+                storageForUser: (new Step(StorageGetForUserAction::class))
+                    ->withArguments(
+                        userId: '${userId}',
+                        bytesRequired: '${validateFile:bytes}',
+                    ),
+                upload: (new Step(FileUploadAction::class))
+                    ->withArguments(
+                        filename: '${filename}',
+                        naming: '${naming}',
+                        originalName: '${originalName}',
+                        storage: '${storageForUser:storage}',
+                        uploadPath: '${uploadPath}',
+                    ),
+                insert: (new Step(ImageInsertAction::class))
+                    ->withArguments(
+                        albumId: '${albumId}',
+                        expires: '${expires}',
+                        userId: '${userId}',
+                    )
             );
     }
 

@@ -33,7 +33,7 @@ class ImageInsertAction extends Action implements ServiceDependantInterface
 
     private DateTime $dateTime;
 
-    public function withDependencies(array $namedArguments): self
+    public function withDependencies(mixed ...$namedArguments): self
     {
         $new = clone $this;
         $new->dateTime = $namedArguments['dateTime'];

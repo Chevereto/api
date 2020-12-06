@@ -25,12 +25,10 @@ final class DetectDuplicateActionTest extends TestCase
         $action = new FileDetectDuplicateAction;
         new Arguments(
             $action->parameters(),
-            [
-                'md5' => 'ad9ad3a94cff902a07058f5be9b2aea0',
-                'perceptual' => '63686576657265746f',
-                'ip' => '1.1.1.1',
-                'ipVersion' => '4',
-            ]
+            md5: 'ad9ad3a94cff902a07058f5be9b2aea0',
+            perceptual: '63686576657265746f',
+            ip: '1.1.1.1',
+            ipVersion: '4',
         );
     }
 }

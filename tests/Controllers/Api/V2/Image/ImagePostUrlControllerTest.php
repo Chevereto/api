@@ -60,7 +60,7 @@ final class ImagePostUrlControllerTest extends TestCase
             'expires' => 0,
             'albumId' => 0
         ];
-        $controller = (new ImagePostUrlController)->withContextArguments($context);
+        $controller = (new ImagePostUrlController)->withContextArguments(...$context);
         $arguments = ['source' => 'https://1.1.1.1/'];
         $response = $controller->run($arguments);
         $this->assertInstanceOf(ResponseSuccessInterface::class, $response);
