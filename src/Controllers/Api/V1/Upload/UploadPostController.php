@@ -27,6 +27,7 @@ use Chevere\Components\Workflow\WorkflowRun;
 use Chevere\Components\Workflow\WorkflowRunner;
 use Chevere\Exceptions\Core\Exception;
 use Chevere\Exceptions\Core\InvalidArgumentException;
+use Chevere\Interfaces\Parameter\ArgumentsInterface;
 use Chevere\Interfaces\Parameter\ParametersInterface;
 use Chevere\Interfaces\Response\ResponseSuccessInterface;
 use Chevere\Interfaces\Service\ServiceDependantInterface;
@@ -65,17 +66,17 @@ final class UploadPostController extends Controller implements ServiceDependantI
     {
         return (new Parameters)
             ->withAddedRequired(
-                new StringParameter('apiV1Key'),
-                new StringParameter('extensions'),
-                new IntegerParameter('maxBytes'),
-                new IntegerParameter('maxHeight'),
-                new IntegerParameter('maxWidth'),
-                new IntegerParameter('minBytes'),
-                new IntegerParameter('minHeight'),
-                new IntegerParameter('minWidth'),
-                new StringParameter('naming'),
-                new StringParameter('uploadPath'),
-                new IntegerParameter('userId')
+                apiV1Key: new StringParameter,
+                extensions: new StringParameter,
+                maxBytes: new IntegerParameter,
+                maxHeight: new IntegerParameter,
+                maxWidth: new IntegerParameter,
+                minBytes: new IntegerParameter,
+                minHeight: new IntegerParameter,
+                minWidth: new IntegerParameter,
+                naming: new StringParameter,
+                uploadPath: new StringParameter,
+                userId: new IntegerParameter
             );
     }
 
@@ -83,14 +84,14 @@ final class UploadPostController extends Controller implements ServiceDependantI
     {
         return (new Parameters)
             ->withAddedRequired(
-                (new StringParameter('source'))
+                source: (new StringParameter)
                     ->withAddedAttribute('tryFiles')
                     ->withDescription('A base64 image string OR an image URL. It also takes image multipart/form-data.'),
-                (new StringParameter('key'))
+                key: (new StringParameter)
                     ->withDescription('API V1 key.'),
             )
             ->withAddedOptional(
-                (new StringParameter('format'))
+                format: (new StringParameter)
                     ->withRegex(new Regex('/^(json|txt)$/'))
                     ->withDefault('json')
                     ->withDescription('Response document output format. Defaults to `json`.'),
@@ -155,10 +156,9 @@ final class UploadPostController extends Controller implements ServiceDependantI
             );
     }
 
-    public function run(array $arguments): ResponseSuccessInterface
+    public function run(ArgumentsInterface $arguments): ResponseSuccessInterface
     {
         $context = $this->contextArguments();
-        $arguments = $this->getArguments($arguments);
         if ($arguments->getString('key') !== $context->getString('apiV1Key')) {
             throw new InvalidArgumentException(
                 new Message('Invalid API V1 key provided'),

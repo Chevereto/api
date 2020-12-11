@@ -17,6 +17,7 @@ use Chevere\Components\Action\Action;
 use Chevere\Components\Parameter\Parameter;
 use Chevere\Components\Parameter\Parameters;
 use Chevere\Components\Type\Type;
+use Chevere\Interfaces\Parameter\ArgumentsInterface;
 use Chevere\Interfaces\Parameter\ParametersInterface;
 use Chevere\Interfaces\Response\ResponseSuccessInterface;
 use Imagick;
@@ -31,13 +32,12 @@ class ImageStripMetaAction extends Action
     {
         return (new Parameters)
             ->withAddedRequired(
-                new Parameter('image', new Type(Image::class))
+                image: new Parameter(new Type(Image::class))
             );
     }
 
-    public function run(array $arguments): ResponseSuccessInterface
+    public function run(ArgumentsInterface $arguments): ResponseSuccessInterface
     {
-        $arguments = $this->getArguments($arguments);
         /**
          * @var Image $image
          */

@@ -37,7 +37,7 @@ final class ImageValidateMediaActionTest extends TestCase
     {
         $action = new ImageValidateMediaAction;
         $arguments = $this->getTestArguments([]);
-        $response = $action->run($arguments);
+        $response = $action->run($action->getArguments(...$arguments));
         $this->assertInstanceOf(Image::class, $response->data()['image']);
     }
 
@@ -46,7 +46,7 @@ final class ImageValidateMediaActionTest extends TestCase
         $action = new ImageValidateMediaAction;
         $arguments = $this->getTestArguments(['filename' => __FILE__]);
         $this->expectInvalidArgumentException(1000);
-        $action->run($arguments);
+        $action->run($action->getArguments(...$arguments));
     }
 
     public function testMinHeight(): void
@@ -54,7 +54,7 @@ final class ImageValidateMediaActionTest extends TestCase
         $action = new ImageValidateMediaAction;
         $arguments = $this->getTestArguments(['minHeight' => 301]);
         $this->expectInvalidArgumentException(1001);
-        $action->run($arguments);
+        $action->run($action->getArguments(...$arguments));
     }
 
     public function testMaxHeight(): void
@@ -62,7 +62,7 @@ final class ImageValidateMediaActionTest extends TestCase
         $action = new ImageValidateMediaAction;
         $arguments = $this->getTestArguments(['maxHeight' => 299]);
         $this->expectInvalidArgumentException(1002);
-        $action->run($arguments);
+        $action->run($action->getArguments(...$arguments));
     }
 
     public function testMinWidth(): void
@@ -70,7 +70,7 @@ final class ImageValidateMediaActionTest extends TestCase
         $action = new ImageValidateMediaAction;
         $arguments = $this->getTestArguments(['minWidth' => 301]);
         $this->expectInvalidArgumentException(1003);
-        $action->run($arguments);
+        $action->run($action->getArguments(...$arguments));
     }
 
     public function testMaxWidth(): void
@@ -78,6 +78,6 @@ final class ImageValidateMediaActionTest extends TestCase
         $action = new ImageValidateMediaAction;
         $arguments = $this->getTestArguments(['maxWidth' => 299]);
         $this->expectInvalidArgumentException(1004);
-        $action->run($arguments);
+        $action->run($action->getArguments(...$arguments));
     }
 }

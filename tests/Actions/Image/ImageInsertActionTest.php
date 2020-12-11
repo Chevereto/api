@@ -17,17 +17,7 @@ use Chevere\Exceptions\Core\InvalidArgumentException;
 use Chevereto\Actions\Image\ImageInsertAction;
 use PHPUnit\Framework\TestCase;
 
-final class ImageInsertActionTest extends TestCase
-{
-    public function testConstruct(): void
-    {
-        $action = new ImageInsertAction;
-        $arguments = [
-            'expires' => 0,
-            'userId' => 0,
-            'albumId' => 0,
-        ];
-        $this->expectException(InvalidArgumentException::class);
-        $action->run($arguments);
-    }
-}
+// final class ImageInsertActionTest extends TestCase
+// {
+
+// }

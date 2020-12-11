@@ -26,7 +26,7 @@ final class ImageFetchMetaActionTest extends TestCase
     {
         $action = new ImageFetchMetaAction;
         $arguments = ['image' => imageManager()->make(__DIR__ . '/assets/exif.jpg')];
-        $response = $action->run($arguments);
+        $response = $action->run($action->getArguments(...$arguments));
         $this->assertIsArray($response->data()['exif']);
         $this->assertCount(0, $response->data()['iptc']);
         $this->assertCount(0, $response->data()['xmp']);
@@ -36,7 +36,7 @@ final class ImageFetchMetaActionTest extends TestCase
     {
         $action = new ImageFetchMetaAction;
         $arguments = ['image' => imageManager()->make(__DIR__ . '/assets/iptc.jpg')];
-        $response = $action->run($arguments);
+        $response = $action->run($action->getArguments(...$arguments));
         $this->assertIsArray($response->data()['exif']);
         $this->assertIsArray($response->data()['iptc']);
         $this->assertCount(0, $response->data()['xmp']);
@@ -46,7 +46,7 @@ final class ImageFetchMetaActionTest extends TestCase
     {
         $action = new ImageFetchMetaAction;
         $arguments = ['image' => imageManager()->make(__DIR__ . '/assets/all.jpg')];
-        $response = $action->run($arguments);
+        $response = $action->run($action->getArguments(...$arguments));
         $this->assertIsArray($response->data()['exif']);
         $this->assertIsArray($response->data()['iptc']);
         $this->assertIsArray($response->data()['xmp']);

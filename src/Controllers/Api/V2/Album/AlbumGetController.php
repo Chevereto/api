@@ -34,11 +34,11 @@ final class AlbumGetController extends Controller
     {
         return (new Parameters)
             ->withAddedRequired(
-                (new StringParameter('id'))->withRegex(new Regex('/\d+/'))
+                id: (new StringParameter)->withRegex(new Regex('/\d+/'))
             );
     }
 
-    public function run(array $arguments): ResponseSuccessInterface
+    public function run(ArgumentsInterface $arguments): ResponseSuccessInterface
     {
         return $this->getResponseSuccess([]);
     }

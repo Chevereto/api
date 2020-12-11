@@ -24,6 +24,7 @@ use Chevere\Exceptions\Core\InvalidArgumentException;
 use Chevere\Exceptions\Core\OutOfBoundsException;
 use Chevere\Exceptions\Core\TypeException;
 use Chevere\Interfaces\Message\MessageInterface;
+use Chevere\Interfaces\Parameter\ArgumentsInterface;
 use Chevere\Interfaces\Parameter\ParametersInterface;
 use Chevere\Interfaces\Response\ResponseSuccessInterface;
 use Intervention\Image\Image;
@@ -49,11 +50,11 @@ class ImageValidateMediaAction extends Action
     {
         return (new Parameters)
             ->withAddedRequired(
-                new StringParameter('filename'),
-                new IntegerParameter('maxHeight'),
-                new IntegerParameter('maxWidth'),
-                new IntegerParameter('minHeight'),
-                new IntegerParameter('minWidth'),
+                filename: new StringParameter,
+                maxHeight: new IntegerParameter,
+                maxWidth: new IntegerParameter,
+                minHeight: new IntegerParameter,
+                minWidth: new IntegerParameter,
             );
     }
 
@@ -61,8 +62,8 @@ class ImageValidateMediaAction extends Action
     {
         return (new Parameters)
             ->withAddedRequired(
-                new Parameter('image', new Type(Image::class)),
-                new StringParameter('perceptual'),
+                image: new Parameter(new Type(Image::class)),
+                perceptual: new StringParameter,
             );
     }
 
@@ -71,9 +72,8 @@ class ImageValidateMediaAction extends Action
      * @throws OutOfBoundsException
      * @throws TypeException
      */
-    public function run(array $arguments): ResponseSuccessInterface
+    public function run(ArgumentsInterface $arguments): ResponseSuccessInterface
     {
-        $arguments = $this->getArguments($arguments);
         $filename = $arguments->getString('filename');
         $image = $this->assertGetImage($filename);
         $this->maxWidth = $arguments->getInteger('maxWidth');

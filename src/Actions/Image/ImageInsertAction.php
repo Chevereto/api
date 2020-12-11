@@ -19,6 +19,7 @@ use Chevere\Components\Parameter\IntegerParameter;
 use Chevere\Components\Parameter\Parameters;
 use Chevere\Components\Service\Traits\ServiceDependantTrait;
 use Chevere\Interfaces\ClassMap\ClassMapInterface;
+use Chevere\Interfaces\Parameter\ArgumentsInterface;
 use Chevere\Interfaces\Parameter\ParametersInterface;
 use Chevere\Interfaces\Response\ResponseSuccessInterface;
 use Chevere\Interfaces\Service\ServiceDependantInterface;
@@ -51,13 +52,13 @@ class ImageInsertAction extends Action implements ServiceDependantInterface
     {
         return (new Parameters)
             ->withAddedOptional(
-                new IntegerParameter('expires'),
-                new IntegerParameter('userId'),
-                new IntegerParameter('albumId'),
+                expires: new IntegerParameter,
+                userId: new IntegerParameter,
+                albumId: new IntegerParameter,
             );
     }
 
-    public function run(array $arguments): ResponseSuccessInterface
+    public function run(ArgumentsInterface $arguments): ResponseSuccessInterface
     {
         $this->assertDependencies();
         // TODO: DB inserting

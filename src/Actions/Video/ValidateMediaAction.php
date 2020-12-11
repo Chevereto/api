@@ -22,6 +22,7 @@ use Chevere\Components\Parameter\StringParameter;
 use Chevere\Components\Type\Type;
 use Chevere\Exceptions\Core\InvalidArgumentException;
 use Chevere\Interfaces\Message\MessageInterface;
+use Chevere\Interfaces\Parameter\ArgumentsInterface;
 use Chevere\Interfaces\Parameter\ParametersInterface;
 use Chevere\Interfaces\Response\ResponseSuccessInterface;
 use FFMpeg\FFProbe;
@@ -50,16 +51,16 @@ class ValidateMediaAction extends Action
     {
         return (new Parameters)
             ->withAddedRequired(
-                new StringParameter('filename'),
-                new IntegerParameter('maxHeight'),
-                new IntegerParameter('maxWidth'),
-                (new IntegerParameter('maxLength'))
+                filename: new StringParameter,
+                maxHeight: new IntegerParameter,
+                maxWidth: new IntegerParameter,
+                maxLength: (new IntegerParameter)
                     ->withDefault(3600),
-                (new IntegerParameter('minHeight'))
+                minHeight: (new IntegerParameter)
                     ->withDefault(16),
-                (new IntegerParameter('minWidth'))
+                minWidth: (new IntegerParameter)
                     ->withDefault(16),
-                (new IntegerParameter('minLength'))
+                minLength: (new IntegerParameter)
                     ->withDefault(5),
             );
     }
@@ -68,14 +69,13 @@ class ValidateMediaAction extends Action
     {
         return (new Parameters)
             ->withAddedRequired(
-                new Parameter('format', new Type(Format::class)),
-                new Parameter('stream', new Type(Stream::class)),
+                format: new Parameter(new Type(Format::class)),
+                stream: new Parameter(new Type(Stream::class)),
             );
     }
 
-    public function run(array $arguments): ResponseSuccessInterface
+    public function run(ArgumentsInterface $arguments): ResponseSuccessInterface
     {
-        $arguments = $this->getArguments($arguments);
         $filename = $arguments->getString('filename');
         $probe = FFProbe::create();
         $this->assertValidMedia($probe, $filename);

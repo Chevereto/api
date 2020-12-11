@@ -17,6 +17,7 @@ use Chevere\Components\Parameter\IntegerParameter;
 use Chevere\Components\Response\ResponseSuccess;
 use Chevere\Components\Workflow\Step;
 use Chevere\Components\Workflow\Workflow;
+use Chevere\Interfaces\Parameter\ArgumentsInterface;
 use Chevere\Interfaces\Parameter\ParametersInterface;
 use Chevere\Interfaces\Response\ResponseSuccessInterface;
 use Chevere\Interfaces\Workflow\WorkflowInterface;
@@ -38,10 +39,10 @@ abstract class ImagePostController extends FilePostController
     {
         return parent::getContextParameters()
             ->withAddedRequired(
-                new IntegerParameter('maxHeight'),
-                new IntegerParameter('maxWidth'),
-                new IntegerParameter('minHeight'),
-                new IntegerParameter('minWidth'),
+                maxHeight: new IntegerParameter,
+                maxWidth: new IntegerParameter,
+                minHeight: new IntegerParameter,
+                minWidth: new IntegerParameter,
             );
     }
 
@@ -99,10 +100,9 @@ abstract class ImagePostController extends FilePostController
             );
     }
 
-    public function run(array $arguments): ResponseSuccessInterface
+    public function run(ArgumentsInterface $arguments): ResponseSuccessInterface
     {
         $context = $this->contextArguments();
-        $arguments = $this->getArguments($arguments);
         $uploadFile = tempnam(sys_get_temp_dir(), 'chv.temp');
         $this->assertStoreSource($arguments->getString('source'), $uploadFile);
         $settings = array_replace($context->toArray(), ['filename' => $uploadFile]);

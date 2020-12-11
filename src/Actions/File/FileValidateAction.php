@@ -46,14 +46,14 @@ class FileValidateAction extends Action
     {
         return (new Parameters)
             ->withAddedRequired(
-                (new StringParameter('extensions'))
+                extensions: (new StringParameter)
                     ->withRegex(new Regex('/^[\w]+(,[\w]+)*$/'))
                     ->withDescription('Comma-separated list of allowed file extensions'),
-                new StringParameter('filename'),
+                filename: new StringParameter,
             )
             ->withAddedOptional(
-                new IntegerParameter('maxBytes'),
-                new IntegerParameter('minBytes'),
+                maxBytes: new IntegerParameter,
+                minBytes: new IntegerParameter,
             );
     }
 
@@ -61,23 +61,22 @@ class FileValidateAction extends Action
     {
         return (new Parameters)
             ->withAddedRequired(
-                new IntegerParameter('bytes'),
-                new StringParameter('mime'),
-                new StringParameter('md5'),
+                bytes: new IntegerParameter,
+                mime: new StringParameter,
+                md5: new StringParameter,
             );
     }
 
-    public function run(array $arguments): ResponseSuccessInterface
+    public function run(ArgumentsInterface $arguments): ResponseSuccessInterface
     {
-        $this->arguments = $this->getArguments($arguments);
-        $this->extensions = explode(',', $this->arguments->getString('extensions')) ?: [];
-        $this->minBytes = $this->arguments->has('minBytes')
-            ? $this->arguments->getInteger('minBytes')
+        $this->extensions = explode(',', $arguments->getString('extensions')) ?: [];
+        $this->minBytes = $arguments->has('minBytes')
+            ? $arguments->getInteger('minBytes')
             : 0;
-        $filename = $this->arguments->getString('filename');
+        $filename = $arguments->getString('filename');
         $bytes = $this->assertGetFileBytes($filename);
-        if ($this->arguments->has('maxBytes')) {
-            $this->maxBytes = $this->arguments->getInteger('maxBytes');
+        if ($arguments->has('maxBytes')) {
+            $this->maxBytes = $arguments->getInteger('maxBytes');
             $this->assertMaxBytes($bytes);
         }
         $this->assertMinBytes($bytes);

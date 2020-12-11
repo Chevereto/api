@@ -19,6 +19,7 @@ use Chevere\Components\Parameter\Parameters;
 use Chevere\Components\Parameter\StringParameter;
 use Chevere\Components\Regex\Regex;
 use Chevere\Components\Type\Type;
+use Chevere\Interfaces\Parameter\ArgumentsInterface;
 use Chevere\Interfaces\Parameter\ParametersInterface;
 use Chevere\Interfaces\Response\ResponseSuccessInterface;
 use Chevereto\Components\Storage;
@@ -32,20 +33,19 @@ class FileUploadAction extends Action
     {
         return (new Parameters)
             ->withAddedRequired(
-                new StringParameter('filename'),
-                (new StringParameter('naming'))
+                filename: new StringParameter,
+                naming: (new StringParameter)
                     ->withRegex(new Regex('/^(original|random|mixed|id)$/'))
                     ->withDefault('original'),
-                (new StringParameter('originalName'))
+                originalName: (new StringParameter)
                     ->withRegex(new Regex('/^.+\.[a-zA-Z]{3}$/')),
-                new Parameter('storage', new Type(Storage::class)),
-                new StringParameter('uploadPath'),
+                storage: new Parameter(new Type(Storage::class)),
+                uploadPath: new StringParameter,
             );
     }
 
-    public function run(array $arguments): ResponseSuccessInterface
+    public function run(ArgumentsInterface $arguments): ResponseSuccessInterface
     {
-        $arguments = $this->getArguments($arguments);
         $filename = $arguments->getString('filename');
         $naming = $arguments->getString('naming');
         $originalName = $arguments->getString('originalName');

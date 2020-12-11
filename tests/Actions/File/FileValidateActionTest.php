@@ -19,7 +19,7 @@ use PHPUnit\Framework\TestCase;
 use Tests\Actions\Traits\ExpectInvalidArgumentExceptionCodeTrait;
 use function Safe\md5_file;
 
-final class FileValidateFileTest extends TestCase
+final class FileValidateActionTest extends TestCase
 {
     use ExpectInvalidArgumentExceptionCodeTrait;
 
@@ -30,7 +30,7 @@ final class FileValidateFileTest extends TestCase
             'filename' => __FILE__,
             'extensions' => 'php',
         ];
-        $response = $action->run($arguments);
+        $response = $action->run($action->getArguments(...$arguments));
         $this->assertSame(
             [
                 'bytes' => filesize(__FILE__),
@@ -50,7 +50,7 @@ final class FileValidateFileTest extends TestCase
             'minBytes' => 20000000
         ];
         $this->expectInvalidArgumentException(1001);
-        $action->run($arguments);
+        $action->run($action->getArguments(...$arguments));
     }
 
     public function testMaxBytes(): void
@@ -61,11 +61,11 @@ final class FileValidateFileTest extends TestCase
             'extensions' => 'php,txt',
             'maxBytes' => 20000000
         ];
-        $responseSuccess = $action->run($arguments);
+        $responseSuccess = $action->run($action->getArguments(...$arguments));
         $this->assertInstanceOf(ResponseSuccess::class, $responseSuccess);
         $badArguments = array_merge($arguments, ['maxBytes' => 1]);
         $this->expectInvalidArgumentException(1002);
-        $action->run($badArguments);
+        $action->run($action->getArguments(...$badArguments));
     }
 
     public function testExtension(): void
@@ -76,6 +76,6 @@ final class FileValidateFileTest extends TestCase
             'extensions' => 'txt',
         ];
         $this->expectInvalidArgumentException(1004);
-        $action->run($arguments);
+        $action->run($action->getArguments(...$arguments));
     }
 }

@@ -17,6 +17,7 @@ use Chevere\Components\Action\Controller;
 use Chevere\Components\Parameter\Parameters;
 use Chevere\Components\Parameter\StringParameter;
 use Chevere\Components\Regex\Regex;
+use Chevere\Interfaces\Parameter\ArgumentsInterface;
 use Chevere\Interfaces\Parameter\ParametersInterface;
 use Chevere\Interfaces\Response\ResponseSuccessInterface;
 
@@ -31,15 +32,14 @@ final class UserGetController extends Controller
     {
         return (new Parameters)
             ->withAddedRequired(
-                (new StringParameter('id'))
+                id: (new StringParameter)
                     ->withRegex(new Regex('/\d+/'))
-                    ->withDescription('The user identifier.'),
+                    ->withDescription('The user identifier.')
             );
     }
 
-    public function run(array $arguments): ResponseSuccessInterface
+    public function run(ArgumentsInterface $arguments): ResponseSuccessInterface
     {
-        $arguments = $this->getArguments($arguments);
         $id = $arguments->getString('id');
 
         return $this->getResponseSuccess(['id' => $id]);

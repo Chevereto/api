@@ -30,7 +30,7 @@ final class ImageStripMetaActionTest extends TestCase
         $stripImage = imageManager()->make($strip);
         $action = new ImageStripMetaAction;
         $arguments = ['image' => $stripImage];
-        $action->run($arguments);
+        $action->run($action->getArguments(...$arguments));
         $tag = 'GPSAltitude';
         $this->assertIsArray(exif_read_data($source, 'ANY_TAG'));
         $this->assertFalse(exif_read_data($strip, 'ANY_TAG'));

@@ -13,6 +13,7 @@ declare(strict_types=1);
 
 namespace Chevereto\Tests\Controllers\Api\V2\Image;
 
+use Chevere\Components\Parameter\Arguments;
 use Chevere\Exceptions\Core\InvalidArgumentException;
 use Chevere\Interfaces\Response\ResponseSuccessInterface;
 use Chevereto\Controllers\Api\V2\Image\ImagePostUrlController;
@@ -62,7 +63,9 @@ final class ImagePostUrlControllerTest extends TestCase
         ];
         $controller = (new ImagePostUrlController)->withContextArguments(...$context);
         $arguments = ['source' => 'https://1.1.1.1/'];
-        $response = $controller->run($arguments);
+        $response = $controller->run(
+            $controller->getArguments(...$arguments)
+        );
         $this->assertInstanceOf(ResponseSuccessInterface::class, $response);
     }
 }

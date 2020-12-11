@@ -30,7 +30,7 @@ final class ImageFixOrientationActionTest extends TestCase
         $action = new ImageFixOrientationAction;
         $this->assertSame(7, $sourceImage->exif()['Orientation']);
         $arguments = ['image' => $orientImage];
-        $response = $action->run($arguments);
+        $response = $action->run($action->getArguments(...$arguments));
         $this->assertInstanceOf(ResponseSuccessInterface::class, $response);
         $this->assertSame(0, $orientImage->exif()['Orientation']);
         if (!unlink($orient)) {

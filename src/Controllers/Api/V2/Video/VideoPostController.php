@@ -14,15 +14,15 @@ declare(strict_types=1);
 namespace Chevereto\Controllers\Api\V2\Video;
 
 use Chevere\Components\Workflow\WorkflowRun;
+use Chevere\Interfaces\Parameter\ArgumentsInterface;
 use Chevere\Interfaces\Response\ResponseSuccessInterface;
 use Chevereto\Controllers\Api\V2\File\FilePostController;
 use function Chevere\Components\Workflow\workflowRunner;
 
 abstract class VideoPostController extends FilePostController
 {
-    public function run(array $arguments): ResponseSuccessInterface
+    public function run(ArgumentsInterface $arguments): ResponseSuccessInterface
     {
-        $arguments = $this->getArguments($arguments);
         $source = $arguments->getString('source');
 
         $uploadFile = tempnam(sys_get_temp_dir(), 'chv.temp');

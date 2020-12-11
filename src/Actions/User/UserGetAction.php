@@ -19,6 +19,7 @@ use Chevere\Components\Parameter\Parameter;
 use Chevere\Components\Parameter\Parameters;
 use Chevere\Components\Service\Traits\ServiceDependantTrait;
 use Chevere\Components\Type\Type;
+use Chevere\Interfaces\Parameter\ArgumentsInterface;
 use Chevere\Interfaces\Parameter\ParametersInterface;
 use Chevere\Interfaces\Response\ResponseSuccessInterface;
 use Chevere\Interfaces\Service\ServiceDependantInterface;
@@ -32,20 +33,20 @@ class UserGetAction extends Action implements ServiceDependantInterface
     {
         return (new Parameters)
             ->withAddedRequired(
-                new IntegerParameter('userId')
+                userId: new IntegerParameter
             );
     }
 
     public function getResponseDataParameters(): ParametersInterface
     {
         return (new Parameters)
-            ->withAddedRequired(new Parameter('user', new Type(User::class)), );
+            ->withAddedRequired(
+                user: new Parameter(new Type(User::class))
+            );
     }
 
-    public function run(array $arguments): ResponseSuccessInterface
+    public function run(ArgumentsInterface $arguments): ResponseSuccessInterface
     {
-        $arguments = $this->getArguments($arguments);
-
         return $this->getResponseSuccess([
             'user' => new User($arguments->getInteger('userId')),
         ]);

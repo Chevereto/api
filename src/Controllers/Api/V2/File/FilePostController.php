@@ -29,26 +29,25 @@ abstract class FilePostController extends QueueController
 
     public function getParameters(): ParametersInterface
     {
-        $source = $this->getSourceParameter();
-
-        return (new Parameters)->withAddedRequired($source);
+        return (new Parameters)
+            ->withAddedRequired(source: $this->getSourceParameter());
     }
 
     public function getContextParameters(): ParametersInterface
     {
         return (new Parameters)
             ->withAddedRequired(
-                new IntegerParameter('expires'),
-                (new StringParameter('ipVersion'))
+                expires: new IntegerParameter,
+                maxBytes: new IntegerParameter,
+                minBytes: new IntegerParameter,
+                userId: new IntegerParameter,
+                extensions: new StringParameter,
+                ip: new StringParameter,
+                naming: new StringParameter,
+                originalName: new StringParameter,
+                uploadPath: new StringParameter,
+                ipVersion: (new StringParameter)
                     ->withRegex(new Regex('/^[4|6]$/')),
-                new IntegerParameter('maxBytes'),
-                new IntegerParameter('minBytes'),
-                new IntegerParameter('userId'),
-                new StringParameter('extensions'),
-                new StringParameter('ip'),
-                new StringParameter('naming'),
-                new StringParameter('originalName'),
-                new StringParameter('uploadPath'),
             );
     }
 }
