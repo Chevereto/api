@@ -84,13 +84,14 @@ class FileValidateAction extends Action
         $mimes = new MimeTypes;
         $extensions = $mimes->getAllExtensions($mime);
         $this->assertExtension($extensions);
-        $data = [
-            'bytes' => $bytes,
-            'mime' => $mime,
-            'md5' => md5_file($filename)
-        ];
 
-        return $this->getResponseSuccess($data);
+        return $this->getResponseSuccess(
+            [
+                'bytes' => $bytes,
+                'mime' => $mime,
+                'md5' => md5_file($filename)
+            ]
+        );
     }
 
     /**

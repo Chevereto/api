@@ -32,7 +32,8 @@ final class AlbumPatchController extends Controller
     {
         return (new Parameters)
             ->withAddedRequired(
-                id: (new StringParameter)->withRegex(new Regex('/\d+/')),
+                id: (new StringParameter)
+                    ->withRegex(new Regex('/\d+/')),
             );
     }
 
