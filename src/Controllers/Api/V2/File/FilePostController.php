@@ -13,6 +13,7 @@ declare(strict_types=1);
 
 namespace Chevereto\Controllers\Api\V2\File;
 
+use Chevere\Components\Action\ControllerWorkflow;
 use Chevere\Components\Parameter\IntegerParameter;
 use Chevere\Components\Parameter\Parameters;
 use Chevere\Components\Parameter\StringParameter;
@@ -21,7 +22,7 @@ use Chevere\Interfaces\Parameter\ParametersInterface;
 use Chevere\Interfaces\Parameter\StringParameterInterface;
 use Chevereto\Controllers\Api\V2\QueueController;
 
-abstract class FilePostController extends QueueController
+abstract class FilePostController extends ControllerWorkflow
 {
     abstract public function assertStoreSource(string $source, string $uploadFile): void;
 
