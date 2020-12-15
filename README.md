@@ -1,49 +1,36 @@
 # Chevereto
 
-[![Scrutinizer Code
-Quality](https://img.shields.io/scrutinizer/quality/g/chevereto/chevereto?style=flat-square)](https://scrutinizer-ci.com/g/chevereto/chevereto/?branch=master) [![codecov](https://img.shields.io/codecov/c/github/chevereto/chevereto?style=flat-square)](https://codecov.io/gh/chevereto/chevereto)
+[![Build](https://img.shields.io/github/workflow/status/chevereto/chevereto/CI/master?style=flat-square)](https://github.com/chevereto/chevereto/actions)
+[![codecov](https://img.shields.io/codecov/c/github/chevereto/chevereto?style=flat-square)](https://codecov.io/gh/chevereto/chevereto)
 [![CodeFactor](https://img.shields.io/codefactor/grade/github/chevereto/chevereto?label=code%20grade&style=flat-square)](https://www.codefactor.io/repository/github/chevereto/chevereto)
-[![Codacy Badge](https://img.shields.io/codacy/grade/9bc0696e742b438cabb258f9240cac66?style=flat-square)](https://www.codacy.com/gh/chevereto/chevereto?utm_source=github.com&utm_medium=referral&utm_content=chevere/chevere&utm_campaign=Badge_Grade)
+[![Codacy Badge](https://img.shields.io/codacy/grade/9bc0696e742b438cabb258f9240cac66?style=flat-square)](https://www.codacy.com/gh/chevereto/chevereto)
 [![Maintainability](https://img.shields.io/codeclimate/maintainability/Chevereto/chevereto?style=flat-square)](https://codeclimate.com/github/chevereto/chevereto)
 [![Tech Debt](https://img.shields.io/codeclimate/tech-debt/Chevereto/chevereto?style=flat-square)](https://codeclimate.com/github/chevereto/chevereto)
+[![MIT License](https://img.shields.io/github/license/chevereto/chevereto?style=flat-square)](LICENSE)
+
+> 🔔 [Subscribe](https://newsletter.chevereto.com/subscription?f=PmL892XuTdfErVq763PCycJQrvZ8PYc9JbsVUttqiPV1zXt6DDtf7lhepEStqE8LhGs8922ZYmGT7CYjMH5uSx23pL6Q) to don't miss any update regarding Chevereto.
 
 ![Chevereto](LOGO.svg)
 
-> 🔔 Subscribe to the [newsletter](https://newsletter.chevereto.com/subscription?f=PmL892XuTdfErVq763PCycJQrvZ8PYc9JbsVUttqiPV1zXt6DDtf7lhepEStqE8LhGs8922ZYmGT7CYjMH5uSx23pL6Q) to don't miss any update regarding Chevereto.
-
-Chevereto is a server-side software for creating a multi-user, full-featured media sharing solution. It is headless, providing a both auto-mapped and self-described REST API that allows to use it under many different situations and use cases.
+Chevereto allows to create a multi-user, full-featured media sharing solution. It is headless, providing a both auto-mapped and self-described REST API that allows to use it under many different situations and use cases.
 
 It's your application. Your rules, your eyes. Say goodbye to closures, restrictions and data mining on your media.
 
-## Use cases
+## 🐘 Use cases
 
-You can use Chevereto to build your own image hosting service for your own personal use, to enhance your existing application, to provide media sharing for your community, to provide more value to your customers, etc.
+It provides an extensible API, built on top of the [Chevere](https://chevere.org/) framework. With Chevereto you can build _exactly_ what you need around your media.
 
-It provides an extensible API, built on top of the [Chevere](https://chevere.org/) framework with support for addons. With Chevereto you can build _exactly_ what you need around your media. You can rely your project in a tested, solid, clean and highly-proficient code base, all maintained by a [highly-dedicated](https://github.com/rodolfoberrios) developer.
+You can rely your project in a tested, solid, clean and highly-proficient code base, all maintained by a [highly-dedicated](https://github.com/rodolfoberrios) developer.
 
-### Why Chevereto?
+## 🧔🏾 Experienced
 
-#### 🌏 Huge volume
+Chevereto project started in 2007 and it accounts 4 [major releases](#major-releases).
 
-Chevereto has been proved to be capable of manage collections big as 10 M images with a reasonable machine usage.
-
-#### 🧔🏾 Experienced
-
-Born in 2007, Chevereto is a project with mature development with 4 major releases. Continuos updates are steady delivered.
-
-#### 😉 Community driven
+## 😉 Community driven
 
 A [community](https://chevereto.com/community/) drives the development of Chevereto.
 
-#### 🏛 MIT Licensed
-
-It is released under the MIT License, without the _caveats_ of other open source licenses.
-
-#### 💎 Modern architecture
-
-Chevereto is PHP 8 software running under its own application servers. The application runtime can be tweaked to the bone for ultimate performance.
-
-### Powered by Chevereto
+## 💪🏽 Powered by Chevereto
 
 There are about 10~15K Chevereto installations out there, each one hosting from zero up to million images. The following [notable public websites](https://chevereto.top/) are using Chevereto (any release).
 
