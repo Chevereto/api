@@ -1,5 +1,5 @@
 {
-    "name": "\/api\/1\/upload\/",
+    "name": "api-1:\/api\/1\/upload\/",
     "spec": "\/spec\/api-1\/api\/1\/upload\/route.json",
     "path": "\/api\/1\/upload\/",
     "regex": "#\/api\/1\/upload\/#",

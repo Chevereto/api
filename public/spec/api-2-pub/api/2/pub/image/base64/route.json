@@ -1,5 +1,5 @@
 {
-    "name": "\/api\/2\/pub\/image\/base64\/",
+    "name": "api-2-pub:\/api\/2\/pub\/image\/base64\/",
     "spec": "\/spec\/api-2-pub\/api\/2\/pub\/image\/base64\/route.json",
     "path": "\/api\/2\/pub\/image\/base64\/",
     "regex": "#\/api\/2\/pub\/image\/base64\/#",

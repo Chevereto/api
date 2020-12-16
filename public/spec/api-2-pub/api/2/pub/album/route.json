@@ -1,5 +1,5 @@
 {
-    "name": "\/api\/2\/pub\/album\/",
+    "name": "api-2-pub:\/api\/2\/pub\/album\/",
     "spec": "\/spec\/api-2-pub\/api\/2\/pub\/album\/route.json",
     "path": "\/api\/2\/pub\/album\/",
     "regex": "#\/api\/2\/pub\/album\/#",

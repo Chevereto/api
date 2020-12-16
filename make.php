@@ -34,8 +34,7 @@ foreach (['api-1', 'api-2-pub', 'api-2-admin'] as $group) {
         (new RoutingDescriptorsMaker(
             $group,
             $routingDir->getChild("$group/")
-        ))->descriptors(),
-        $group
+        ))->descriptors()
     );
     foreach ($routerForGroup->routables()->getGenerator() as $routable) {
         $router = $router->withAddedRoutable($routable, $group);

@@ -4,8 +4,8 @@
             "name": "api-1",
             "spec": "\/spec\/api-1\/routes.json",
             "routes": {
-                "\/api\/1\/upload\/": {
-                    "name": "\/api\/1\/upload\/",
+                "api-1:\/api\/1\/upload\/": {
+                    "name": "api-1:\/api\/1\/upload\/",
                     "spec": "\/spec\/api-1\/api\/1\/upload\/route.json",
                     "path": "\/api\/1\/upload\/",
                     "regex": "#\/api\/1\/upload\/#",
@@ -45,30 +45,30 @@
             "name": "api-2-pub",
             "spec": "\/spec\/api-2-pub\/routes.json",
             "routes": {
-                "\/api\/2\/pub\/image\/base64\/": {
-                    "name": "\/api\/2\/pub\/image\/base64\/",
-                    "spec": "\/spec\/api-2-pub\/api\/2\/pub\/image\/base64\/route.json",
-                    "path": "\/api\/2\/pub\/image\/base64\/",
-                    "regex": "#\/api\/2\/pub\/image\/base64\/#",
+                "api-2-pub:\/api\/2\/pub\/image\/url\/": {
+                    "name": "api-2-pub:\/api\/2\/pub\/image\/url\/",
+                    "spec": "\/spec\/api-2-pub\/api\/2\/pub\/image\/url\/route.json",
+                    "path": "\/api\/2\/pub\/image\/url\/",
+                    "regex": "#\/api\/2\/pub\/image\/url\/#",
                     "wildcards": {},
                     "endpoints": {
                         "POST": {
                             "method": "POST",
-                            "spec": "\/spec\/api-2-pub\/api\/2\/pub\/image\/base64\/POST\/.json",
-                            "description": "Uploads a base64 encoded image resource.",
+                            "spec": "\/spec\/api-2-pub\/api\/2\/pub\/image\/url\/POST\/.json",
+                            "description": "Uploads an image URL image resource.",
                             "parameters": {
                                 "source": {
                                     "name": "source",
-                                    "regex": "\/^[a-zA-Z0-9\\\/\\r\\n+]*={0,2}$\/",
-                                    "description": "A base64 encoded image string.",
+                                    "regex": "\/^(https?|ftp)+\\:\\\/\\\/.+$\/",
+                                    "description": "An image URL.",
                                     "isRequired": true
                                 }
                             }
                         }
                     }
                 },
-                "\/api\/2\/pub\/image\/{id:\\d+}\/": {
-                    "name": "\/api\/2\/pub\/image\/{id:\\d+}\/",
+                "api-2-pub:\/api\/2\/pub\/image\/{id:\\d+}\/": {
+                    "name": "api-2-pub:\/api\/2\/pub\/image\/{id:\\d+}\/",
                     "spec": "\/spec\/api-2-pub\/api\/2\/pub\/image\/{id:\\d+}\/route.json",
                     "path": "\/api\/2\/pub\/image\/{id:\\d+}\/",
                     "regex": "~^(?|\/api\/2\/pub\/image\/(\\d+)\/)$~",
@@ -84,8 +84,8 @@
                         }
                     }
                 },
-                "\/api\/2\/pub\/image\/binary\/": {
-                    "name": "\/api\/2\/pub\/image\/binary\/",
+                "api-2-pub:\/api\/2\/pub\/image\/binary\/": {
+                    "name": "api-2-pub:\/api\/2\/pub\/image\/binary\/",
                     "spec": "\/spec\/api-2-pub\/api\/2\/pub\/image\/binary\/route.json",
                     "path": "\/api\/2\/pub\/image\/binary\/",
                     "regex": "#\/api\/2\/pub\/image\/binary\/#",
@@ -107,30 +107,30 @@
                         }
                     }
                 },
-                "\/api\/2\/pub\/image\/url\/": {
-                    "name": "\/api\/2\/pub\/image\/url\/",
-                    "spec": "\/spec\/api-2-pub\/api\/2\/pub\/image\/url\/route.json",
-                    "path": "\/api\/2\/pub\/image\/url\/",
-                    "regex": "#\/api\/2\/pub\/image\/url\/#",
+                "api-2-pub:\/api\/2\/pub\/image\/base64\/": {
+                    "name": "api-2-pub:\/api\/2\/pub\/image\/base64\/",
+                    "spec": "\/spec\/api-2-pub\/api\/2\/pub\/image\/base64\/route.json",
+                    "path": "\/api\/2\/pub\/image\/base64\/",
+                    "regex": "#\/api\/2\/pub\/image\/base64\/#",
                     "wildcards": {},
                     "endpoints": {
                         "POST": {
                             "method": "POST",
-                            "spec": "\/spec\/api-2-pub\/api\/2\/pub\/image\/url\/POST\/.json",
-                            "description": "Uploads an image URL image resource.",
+                            "spec": "\/spec\/api-2-pub\/api\/2\/pub\/image\/base64\/POST\/.json",
+                            "description": "Uploads a base64 encoded image resource.",
                             "parameters": {
                                 "source": {
                                     "name": "source",
-                                    "regex": "\/^(https?|ftp)+\\:\\\/\\\/.+$\/",
-                                    "description": "An image URL.",
+                                    "regex": "\/^[a-zA-Z0-9\\\/\\r\\n+]*={0,2}$\/",
+                                    "description": "A base64 encoded image string.",
                                     "isRequired": true
                                 }
                             }
                         }
                     }
                 },
-                "\/api\/2\/pub\/album\/{id:\\d+}\/": {
-                    "name": "\/api\/2\/pub\/album\/{id:\\d+}\/",
+                "api-2-pub:\/api\/2\/pub\/album\/{id:\\d+}\/": {
+                    "name": "api-2-pub:\/api\/2\/pub\/album\/{id:\\d+}\/",
                     "spec": "\/spec\/api-2-pub\/api\/2\/pub\/album\/{id:\\d+}\/route.json",
                     "path": "\/api\/2\/pub\/album\/{id:\\d+}\/",
                     "regex": "~^(?|\/api\/2\/pub\/album\/(\\d+)\/)$~",
@@ -152,8 +152,8 @@
                         }
                     }
                 },
-                "\/api\/2\/pub\/album\/": {
-                    "name": "\/api\/2\/pub\/album\/",
+                "api-2-pub:\/api\/2\/pub\/album\/": {
+                    "name": "api-2-pub:\/api\/2\/pub\/album\/",
                     "spec": "\/spec\/api-2-pub\/api\/2\/pub\/album\/route.json",
                     "path": "\/api\/2\/pub\/album\/",
                     "regex": "#\/api\/2\/pub\/album\/#",
