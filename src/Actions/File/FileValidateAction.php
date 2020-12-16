@@ -44,26 +44,26 @@ class FileValidateAction extends Action
 
     public function getParameters(): ParametersInterface
     {
-        return (new Parameters)
+        return (new Parameters())
             ->withAddedRequired(
-                extensions: (new StringParameter)
+                extensions : (new StringParameter())
                     ->withRegex(new Regex('/^[\w]+(,[\w]+)*$/'))
                     ->withDescription('Comma-separated list of allowed file extensions'),
-                filename: new StringParameter,
+                filename : new StringParameter(),
             )
             ->withAddedOptional(
-                maxBytes: new IntegerParameter,
-                minBytes: new IntegerParameter,
+                maxBytes : new IntegerParameter(),
+                minBytes : new IntegerParameter(),
             );
     }
 
     public function getResponseDataParameters(): ParametersInterface
     {
-        return (new Parameters)
+        return (new Parameters())
             ->withAddedRequired(
-                bytes: new IntegerParameter,
-                mime: new StringParameter,
-                md5: new StringParameter,
+                bytes : new IntegerParameter(),
+                mime : new StringParameter(),
+                md5 : new StringParameter(),
             );
     }
 
@@ -81,7 +81,7 @@ class FileValidateAction extends Action
         }
         $this->assertMinBytes($bytes);
         $mime = mime_content_type($filename);
-        $mimes = new MimeTypes;
+        $mimes = new MimeTypes();
         $extensions = $mimes->getAllExtensions($mime);
         $this->assertExtension($extensions);
 

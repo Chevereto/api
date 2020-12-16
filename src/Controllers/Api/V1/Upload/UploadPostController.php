@@ -64,34 +64,34 @@ final class UploadPostController extends Controller implements ServiceDependantI
 
     public function getContextParameters(): ParametersInterface
     {
-        return (new Parameters)
+        return (new Parameters())
             ->withAddedRequired(
-                apiV1Key: new StringParameter,
-                extensions: new StringParameter,
-                maxBytes: new IntegerParameter,
-                maxHeight: new IntegerParameter,
-                maxWidth: new IntegerParameter,
-                minBytes: new IntegerParameter,
-                minHeight: new IntegerParameter,
-                minWidth: new IntegerParameter,
-                naming: new StringParameter,
-                uploadPath: new StringParameter,
-                userId: new IntegerParameter
+                apiV1Key: new StringParameter(),
+                extensions: new StringParameter(),
+                maxBytes: new IntegerParameter(),
+                maxHeight: new IntegerParameter(),
+                maxWidth: new IntegerParameter(),
+                minBytes: new IntegerParameter(),
+                minHeight: new IntegerParameter(),
+                minWidth: new IntegerParameter(),
+                naming: new StringParameter(),
+                uploadPath: new StringParameter(),
+                userId: new IntegerParameter()
             );
     }
 
     public function getParameters(): ParametersInterface
     {
-        return (new Parameters)
+        return (new Parameters())
             ->withAddedRequired(
-                source: (new StringParameter)
+                source: (new StringParameter())
                     ->withAddedAttribute('tryFiles')
                     ->withDescription('A base64 image string OR an image URL. It also takes image multipart/form-data.'),
-                key: (new StringParameter)
+                key: (new StringParameter())
                     ->withDescription('API V1 key.'),
             )
             ->withAddedOptional(
-                format: (new StringParameter)
+                format: (new StringParameter())
                     ->withRegex(new Regex('/^(json|txt)$/'))
                     ->withDefault('json')
                     ->withDescription('Response document output format. Defaults to `json`.'),
@@ -167,6 +167,7 @@ final class UploadPostController extends Controller implements ServiceDependantI
         }
         // $source will be a serialized PHP array if _FILES (+tryFiles attribute)
         $source = $arguments->getString('source');
+
         try {
             $unserialize = new Unserialize($source);
             $uploadFile = $unserialize->var()['tmp_name'];

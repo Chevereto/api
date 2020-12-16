@@ -30,7 +30,7 @@ class ImageStripMetaAction extends Action
 {
     public function getParameters(): ParametersInterface
     {
-        return (new Parameters)
+        return (new Parameters())
             ->withAddedRequired(
                 image: new Parameter(new Type(Image::class))
             );
@@ -38,13 +38,9 @@ class ImageStripMetaAction extends Action
 
     public function run(ArgumentsInterface $arguments): ResponseSuccessInterface
     {
-        /**
-         * @var Image $image
-         */
+        /** @var Image $image */
         $image = $arguments->get('image');
-        /**
-         * @var Imagick $imagick
-         */
+        /** @var Imagick $imagick */
         $imagick = $image->getCore();
         $profiles = $imagick->getImageProfiles('icc', true);
         $imagick->stripImage();

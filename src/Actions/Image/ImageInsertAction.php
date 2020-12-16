@@ -44,17 +44,17 @@ class ImageInsertAction extends Action implements ServiceDependantInterface
 
     public function getDependencies(): ClassMapInterface
     {
-        return (new ClassMap)
+        return (new ClassMap())
             ->withPut(DateTime::class, 'dateTime');
     }
 
     public function getParameters(): ParametersInterface
     {
-        return (new Parameters)
+        return (new Parameters())
             ->withAddedOptional(
-                expires: new IntegerParameter,
-                userId: new IntegerParameter,
-                albumId: new IntegerParameter,
+                expires: new IntegerParameter(),
+                userId: new IntegerParameter(),
+                albumId: new IntegerParameter(),
             );
     }
 

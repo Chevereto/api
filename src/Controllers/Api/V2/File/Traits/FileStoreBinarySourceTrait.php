@@ -36,7 +36,7 @@ trait FileStoreBinarySourceTrait
             $unserialize = new Unserialize($source);
             $filename = $unserialize->var()['tmp_name'] ?? null;
             if ($filename === null) {
-                throw new Exception;
+                throw new Exception();
             }
         } catch (UnserializeException $e) {
             throw new InvalidArgumentException(

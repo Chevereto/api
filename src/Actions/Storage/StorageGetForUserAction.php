@@ -30,16 +30,16 @@ class StorageGetForUserAction extends Action
 {
     public function getParameters(): ParametersInterface
     {
-        return (new Parameters)
+        return (new Parameters())
             ->withAddedRequired(
-                userId: new IntegerParameter,
-                bytesRequired: new IntegerParameter,
+                userId: new IntegerParameter(),
+                bytesRequired: new IntegerParameter(),
             );
     }
 
     public function getResponseDataParameters(): ParametersInterface
     {
-        return (new Parameters)
+        return (new Parameters())
             ->withAddedRequired(
                 storage: new Parameter(new Type(Storage::class)),
             );

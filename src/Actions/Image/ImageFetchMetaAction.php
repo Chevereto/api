@@ -31,7 +31,7 @@ class ImageFetchMetaAction extends Action
 {
     public function getParameters(): ParametersInterface
     {
-        return (new Parameters)
+        return (new Parameters())
             ->withAddedRequired(
                 image: new Parameter(new Type(Image::class))
             );
@@ -39,19 +39,17 @@ class ImageFetchMetaAction extends Action
 
     public function getResponseDataParameters(): ParametersInterface
     {
-        return (new Parameters)
+        return (new Parameters())
             ->withAddedRequired(
-                exif: new ArrayParameter,
-                iptc: new ArrayParameter,
-                xmp: new ArrayParameter,
+                exif: new ArrayParameter(),
+                iptc: new ArrayParameter(),
+                xmp: new ArrayParameter(),
             );
     }
 
     public function run(ArgumentsInterface $arguments): ResponseSuccessInterface
     {
-        /**
-         * @var Image $image
-         */
+        /** @var Image $image */
         $image = $arguments->get('image');
         $data = array_fill_keys(['exif', 'iptc', 'xmp'], []);
         $data['exif'] = $image->exif() ?? [];

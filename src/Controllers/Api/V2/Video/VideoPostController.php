@@ -13,14 +13,21 @@ declare(strict_types=1);
 
 namespace Chevereto\Controllers\Api\V2\Video;
 
+use Chevere\Components\Workflow\Workflow;
 use Chevere\Components\Workflow\WorkflowRun;
 use Chevere\Interfaces\Parameter\ArgumentsInterface;
 use Chevere\Interfaces\Response\ResponseSuccessInterface;
+use Chevere\Interfaces\Workflow\WorkflowInterface;
 use Chevereto\Controllers\Api\V2\File\FilePostController;
 use function Chevere\Components\Workflow\workflowRunner;
 
 abstract class VideoPostController extends FilePostController
 {
+    public function getWorkflow(): WorkflowInterface
+    {
+        return new Workflow(__CLASS__);
+    }
+
     public function run(ArgumentsInterface $arguments): ResponseSuccessInterface
     {
         $source = $arguments->getString('source');

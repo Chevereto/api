@@ -49,25 +49,25 @@ class ValidateMediaAction extends Action
 
     public function getParameters(): ParametersInterface
     {
-        return (new Parameters)
+        return (new Parameters())
             ->withAddedRequired(
-                filename: new StringParameter,
-                maxHeight: new IntegerParameter,
-                maxWidth: new IntegerParameter,
-                maxLength: (new IntegerParameter)
+                filename: new StringParameter(),
+                maxHeight: new IntegerParameter(),
+                maxWidth: new IntegerParameter(),
+                maxLength: (new IntegerParameter())
                     ->withDefault(3600),
-                minHeight: (new IntegerParameter)
+                minHeight: (new IntegerParameter())
                     ->withDefault(16),
-                minWidth: (new IntegerParameter)
+                minWidth: (new IntegerParameter())
                     ->withDefault(16),
-                minLength: (new IntegerParameter)
+                minLength: (new IntegerParameter())
                     ->withDefault(5),
             );
     }
 
     public function getResponseDataParameters(): ParametersInterface
     {
-        return (new Parameters)
+        return (new Parameters())
             ->withAddedRequired(
                 format: new Parameter(new Type(Format::class)),
                 stream: new Parameter(new Type(Stream::class)),

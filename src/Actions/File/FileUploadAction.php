@@ -31,16 +31,16 @@ class FileUploadAction extends Action
 {
     public function getParameters(): ParametersInterface
     {
-        return (new Parameters)
+        return (new Parameters())
             ->withAddedRequired(
-                filename: new StringParameter,
-                naming: (new StringParameter)
+                filename: new StringParameter(),
+                naming: (new StringParameter())
                     ->withRegex(new Regex('/^(original|random|mixed|id)$/'))
                     ->withDefault('original'),
-                originalName: (new StringParameter)
+                originalName: (new StringParameter())
                     ->withRegex(new Regex('/^.+\.[a-zA-Z]{3}$/')),
                 storage: new Parameter(new Type(Storage::class)),
-                uploadPath: new StringParameter,
+                uploadPath: new StringParameter(),
             );
     }
 
@@ -49,9 +49,7 @@ class FileUploadAction extends Action
         $filename = $arguments->getString('filename');
         $naming = $arguments->getString('naming');
         $originalName = $arguments->getString('originalName');
-        /**
-         * @var Storage $storage
-         */
+        /** @var Storage $storage */
         $storage = $arguments->get('storage');
 
         return $this->getResponseSuccess(['path' => '123']);

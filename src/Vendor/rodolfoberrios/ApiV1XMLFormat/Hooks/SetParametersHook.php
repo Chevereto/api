@@ -26,9 +26,7 @@ final class SetParametersHook implements HookInterface
      */
     public function __invoke(&$parameters): void
     {
-        /**
-         * @var StringParameter $parameter
-         */
+        /** @var StringParameter $parameter */
         $parameter = $parameters->get('format');
         $parameters = $parameters->withModify(
             $parameter->withRegex(new Regex('/^(json|redirect|txt|xml)$/'))

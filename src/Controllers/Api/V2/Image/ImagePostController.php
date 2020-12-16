@@ -39,10 +39,10 @@ abstract class ImagePostController extends FilePostController
     {
         return parent::getContextParameters()
             ->withAddedRequired(
-                maxHeight: new IntegerParameter,
-                maxWidth: new IntegerParameter,
-                minHeight: new IntegerParameter,
-                minWidth: new IntegerParameter,
+                maxHeight: new IntegerParameter(),
+                maxWidth: new IntegerParameter(),
+                minHeight: new IntegerParameter(),
+                minWidth: new IntegerParameter(),
             );
     }
 

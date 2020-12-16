@@ -20,7 +20,6 @@ use Chevere\Components\Parameter\StringParameter;
 use Chevere\Components\Regex\Regex;
 use Chevere\Interfaces\Parameter\ParametersInterface;
 use Chevere\Interfaces\Parameter\StringParameterInterface;
-use Chevereto\Controllers\Api\V2\QueueController;
 
 abstract class FilePostController extends ControllerWorkflow
 {
@@ -30,24 +29,24 @@ abstract class FilePostController extends ControllerWorkflow
 
     public function getParameters(): ParametersInterface
     {
-        return (new Parameters)
+        return (new Parameters())
             ->withAddedRequired(source: $this->getSourceParameter());
     }
 
     public function getContextParameters(): ParametersInterface
     {
-        return (new Parameters)
+        return (new Parameters())
             ->withAddedRequired(
-                expires: new IntegerParameter,
-                maxBytes: new IntegerParameter,
-                minBytes: new IntegerParameter,
-                userId: new IntegerParameter,
-                extensions: new StringParameter,
-                ip: new StringParameter,
-                naming: new StringParameter,
-                originalName: new StringParameter,
-                uploadPath: new StringParameter,
-                ipVersion: (new StringParameter)
+                expires: new IntegerParameter(),
+                maxBytes: new IntegerParameter(),
+                minBytes: new IntegerParameter(),
+                userId: new IntegerParameter(),
+                extensions: new StringParameter(),
+                ip: new StringParameter(),
+                naming: new StringParameter(),
+                originalName: new StringParameter(),
+                uploadPath: new StringParameter(),
+                ipVersion: (new StringParameter())
                     ->withRegex(new Regex('/^[4|6]$/')),
             );
     }

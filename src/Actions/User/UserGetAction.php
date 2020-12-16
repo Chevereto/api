@@ -31,15 +31,15 @@ class UserGetAction extends Action implements ServiceDependantInterface
 
     public function getParameters(): ParametersInterface
     {
-        return (new Parameters)
+        return (new Parameters())
             ->withAddedRequired(
-                userId: new IntegerParameter
+                userId: new IntegerParameter()
             );
     }
 
     public function getResponseDataParameters(): ParametersInterface
     {
-        return (new Parameters)
+        return (new Parameters())
             ->withAddedRequired(
                 user: new Parameter(new Type(User::class))
             );

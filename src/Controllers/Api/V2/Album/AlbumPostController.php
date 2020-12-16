@@ -30,9 +30,9 @@ final class AlbumPostController extends Controller
 
     public function getParameters(): ParametersInterface
     {
-        return (new Parameters)
+        return (new Parameters())
             ->withAddedRequired(
-                name: (new StringParameter)
+                name: (new StringParameter())
                     ->withRegex(new Regex('/\w+/')),
             );
     }
