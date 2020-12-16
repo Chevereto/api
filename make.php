@@ -14,12 +14,12 @@ declare(strict_types=1);
 use Chevere\Components\Cache\Cache;
 use Chevere\Components\Cache\CacheKey;
 use Chevere\Components\Router\Router;
-use Chevere\Components\Routing\RoutingDescriptorsMaker;
+use Chevere\Components\Router\Routing\RoutingDescriptorsMaker;
+use Chevere\Components\Spec\SpecDir;
 use Chevere\Components\Spec\SpecMaker;
-use Chevere\Components\Spec\SpecPath;
 use Chevere\Components\VarExportable\VarExportable;
 use function Chevere\Components\Filesystem\dirForPath;
-use function Chevere\Components\Routing\routerForRoutingDescriptors;
+use function Chevere\Components\Router\Routing\routerForRoutingDescriptors;
 
 require 'vendor/autoload.php';
 
@@ -32,6 +32,7 @@ $router = new Router;
 foreach (['api-1', 'api-2-pub', 'api-2-admin'] as $group) {
     $routerForGroup = routerForRoutingDescriptors(
         (new RoutingDescriptorsMaker(
+            $group,
             $routingDir->getChild("$group/")
         ))->descriptors(),
         $group
@@ -45,13 +46,13 @@ if ($cacheDir->exists()) {
     $cacheDir->removeContents();
 }
 $cacheRouteCollector = (new Cache($cacheDir->getChild('router/')))
-    ->withAddedItem(
+    ->withPut(
         new CacheKey('public'),
         new VarExportable($router->routeCollector())
     );
 echo "Cached HTTP router\n";
 $publicDir = $dir->getChild('public/');
-$specDir = $publicDir->getChild('spec/');
-$specPath = new SpecPath('/spec');
-$specMaker = new SpecMaker($specPath, $specDir, $router);
-echo 'Spec made at ' . $specDir->path()->absolute() . "\n";
+$dir = $publicDir->getChild('spec/');
+$specDir = new SpecDir(dirForPath('/spec/'));
+$specMaker = new SpecMaker($specDir, $dir, $router);
+echo 'Spec made at ' . $dir->path()->absolute() . "\n";

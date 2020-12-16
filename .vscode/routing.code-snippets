@@ -1,16 +1,4 @@
 {
-    "routing-name": {
-        "description": "Route name",
-        "prefix": "routing-name",
-        "body": [
-            "<?php",
-            "",
-            "use Chevere\\Components\\Route\\RouteName;",
-            "",
-            "return new RouteName('${1:name}') ;",
-            "",
-        ]
-    },
     "routing-method": {
         "description": "Endpoint method",
         "prefix": "routing-method",
@@ -20,5 +8,5 @@
             "return new ${1:controller};",
             "",
         ]
-    },    
+    },
 }
