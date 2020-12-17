@@ -27,7 +27,7 @@ final class ImagePostUrlController extends ImagePostController
 
     public function getSourceParameter(): StringParameterInterface
     {
-        return $this->getUrlStringParameter('source')
+        return $this->getUrlStringParameter()
             ->withDescription('An image URL.');
     }
 }

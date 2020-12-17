@@ -27,7 +27,7 @@ final class ImagePostBase64Controller extends ImagePostController
 
     public function getSourceParameter(): StringParameterInterface
     {
-        return $this->getBase64StringParameter('source')
+        return $this->getBase64StringParameter()
             ->withDescription('A base64 encoded image string.');
     }
 }

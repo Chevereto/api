@@ -23,9 +23,9 @@ use Chevere\Interfaces\Response\ResponseSuccessInterface;
 
 final class ImageGetController extends Controller
 {
-    public function getStringParameter(string $name): StringParameter
+    public function getStringParameter(): StringParameter
     {
-        return new StringParameter($name);
+        return new StringParameter();
     }
 
     public function getDescription(): string

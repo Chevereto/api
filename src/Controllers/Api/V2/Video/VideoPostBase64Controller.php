@@ -27,7 +27,7 @@ final class VideoPostBase64Controller extends VideoPostController
 
     public function getSourceParameter(): StringParameterInterface
     {
-        return $this->getBase64StringParameter('source')
+        return $this->getBase64StringParameter()
             ->withDescription('A base64 encoded video string.');
     }
 }

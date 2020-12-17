@@ -28,7 +28,7 @@ final class VideoPostUrlController extends VideoPostController
 
     public function getSourceParameter(): StringParameterInterface
     {
-        return $this->getUrlStringParameter('source')
+        return $this->getUrlStringParameter()
             ->withDescription('An image URL.');
     }
 }

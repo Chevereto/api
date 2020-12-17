@@ -22,7 +22,7 @@ use Intervention\Image\ImageManager;
  */
 final class ImageManagerInstance
 {
-    private static ImageManager $instance;
+    private static ?ImageManager $instance;
 
     public function __construct(ImageManager $imageManager)
     {

@@ -27,7 +27,7 @@ final class ImagePostBinaryController extends ImagePostController
 
     public function getSourceParameter(): StringParameterInterface
     {
-        return $this->getBinaryStringParameter('source')
+        return $this->getBinaryStringParameter()
             ->withDescription('A binary image.');
     }
 }

@@ -28,9 +28,8 @@ trait FileStoreBinarySourceTrait
      * @param string $source A serialized PHP `$_FILES['source']` variable
      *
      * @throws InvalidArgumentException
-     * @throws FilesystemException
      */
-    public function assertStoreSource(string $source, string $path): void
+    public function assertStoreSource(string $source, string $uploadFile): void
     {
         try {
             $unserialize = new Unserialize($source);
@@ -44,12 +43,12 @@ trait FileStoreBinarySourceTrait
             );
         }
 
-        copy($filename, $path);
+        copy($filename, $uploadFile);
     }
 
-    private function getBinaryStringParameter(string $name): StringParameterInterface
+    private function getBinaryStringParameter(): StringParameterInterface
     {
-        return (new StringParameter($name))
+        return (new StringParameter())
             ->withAddedAttribute('tryFiles');
     }
 }

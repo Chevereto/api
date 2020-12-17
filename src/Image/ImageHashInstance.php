@@ -22,7 +22,7 @@ use Jenssegers\ImageHash\ImageHash;
  */
 final class ImageHashInstance
 {
-    private static ImageHash $instance;
+    private static ?ImageHash $instance;
 
     public function __construct(ImageHash $imageHash)
     {

@@ -26,7 +26,7 @@ trait FileStoreUrlTrait
     /**
      * @throws InvalidArgumentException
      */
-    public function assertStoreSource(string $source, string $path): void
+    public function assertStoreSource(string $source, string $uploadFile): void
     {
         try {
             $client = new Client([
@@ -39,12 +39,12 @@ trait FileStoreUrlTrait
                 (new Message($e->getMessage()))
             );
         }
-        file_put_contents($path, $response->getBody());
+        file_put_contents($uploadFile, $response->getBody());
     }
 
-    private function getUrlStringParameter(string $name): StringParameterInterface
+    private function getUrlStringParameter(): StringParameterInterface
     {
-        return (new StringParameter($name))
+        return (new StringParameter())
             ->withRegex(new Regex('/^(https?|ftp)+\:\/\/.+$/'));
     }
 }

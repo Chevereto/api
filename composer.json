@@ -32,7 +32,8 @@
         }
     },
     "require-dev": {
-        "symplify/easy-coding-standard": "^9.0"
+        "symplify/easy-coding-standard": "^9.0",
+        "vimeo/psalm": "^4.3"
     },
     "scripts": {
         "report": "vendor/bin/phpunit -c phpunit-report.xml",
