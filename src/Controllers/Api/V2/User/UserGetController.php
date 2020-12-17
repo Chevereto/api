@@ -42,6 +42,8 @@ final class UserGetController extends Controller
     {
         $id = $arguments->getString('id');
 
-        return $this->getResponseSuccess(['id' => $id]);
+        return $this->getResponseSuccess([
+            'id' => $id,
+        ]);
     }
 }

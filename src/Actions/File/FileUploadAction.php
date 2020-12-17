@@ -52,6 +52,8 @@ class FileUploadAction extends Action
         /** @var Storage $storage */
         $storage = $arguments->get('storage');
 
-        return $this->getResponseSuccess(['path' => '123']);
+        return $this->getResponseSuccess([
+            'path' => '123',
+        ]);
     }
 }

@@ -24,7 +24,9 @@ function imageManager(): ImageManager
         return ImageManagerInstance::get();
     } catch (LogicException $e) {
         new ImageManagerInstance(
-            new ImageManager(['driver' => 'Imagick'])
+            new ImageManager([
+                'driver' => 'Imagick',
+            ])
         );
 
         return ImageManagerInstance::get();

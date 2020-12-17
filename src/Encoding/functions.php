@@ -32,7 +32,7 @@ use function Safe\stream_filter_append;
 function assertBase64(string $string): void
 {
     $double = base64_encode(base64_decode($string, true));
-    if (!(new StrBool($string))->same($double)) {
+    if (! (new StrBool($string))->same($double)) {
         throw new InvalidArgumentException(
             new Message('Invalid base64 formatting'),
             100
@@ -54,7 +54,7 @@ function storeDecodedBase64(string $base64, string $filename): void
     $filter = 'convert.base64-decode';
     $fh = fopen($filename, 'w');
     stream_filter_append($fh, $filter, STREAM_FILTER_WRITE);
-    if (fwrite($fh, $base64) == 0) {
+    if (fwrite($fh, $base64) === 0) {
         throw new RuntimeException(
             (new Message('Unable to write %filter% provided string'))
                 ->code('%filter%', $filter),

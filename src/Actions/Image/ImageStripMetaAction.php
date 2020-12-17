@@ -44,8 +44,9 @@ class ImageStripMetaAction extends Action
         $imagick = $image->getCore();
         $profiles = $imagick->getImageProfiles('icc', true);
         $imagick->stripImage();
-        if (!empty($profiles)) {
-            $imagick->profileImage('icc', $profiles['icc']); //@codeCoverageIgnore
+        if (! empty($profiles)) {
+            //@codeCoverageIgnore
+            $imagick->profileImage('icc', $profiles['icc']);
         }
         $image->save();
 

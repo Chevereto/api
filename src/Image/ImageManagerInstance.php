@@ -31,7 +31,7 @@ final class ImageManagerInstance
 
     public static function get(): ImageManager
     {
-        if (!isset(self::$instance)) {
+        if (! isset(self::$instance)) {
             throw new LogicException(
                 new Message('No ImageManager instance present')
             );

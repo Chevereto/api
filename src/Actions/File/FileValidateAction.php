@@ -24,10 +24,10 @@ use Chevere\Interfaces\Parameter\ArgumentsInterface;
 use Chevere\Interfaces\Parameter\ParametersInterface;
 use Chevere\Interfaces\Response\ResponseSuccessInterface;
 use Mimey\MimeTypes;
-use Throwable;
 use function Safe\filesize;
 use function Safe\md5_file;
 use function Safe\mime_content_type;
+use Throwable;
 
 /**
  * Validate file type and its size.
@@ -89,7 +89,7 @@ class FileValidateAction extends Action
             [
                 'bytes' => $bytes,
                 'mime' => $mime,
-                'md5' => md5_file($filename)
+                'md5' => md5_file($filename),
             ]
         );
     }
@@ -143,7 +143,7 @@ class FileValidateAction extends Action
             );
             // @codeCoverageIgnoreEnd
         }
-        if (!array_intersect($extensions, $this->extensions)) {
+        if (! array_intersect($extensions, $this->extensions)) {
             throw new InvalidArgumentException(
                 (new Message('File extension %extension% is not allowed (allows %allowed%)'))
                     ->code('%extension%', implode(', ', $extensions))

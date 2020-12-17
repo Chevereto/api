@@ -15,6 +15,7 @@ namespace Chevereto\Controllers\Api\V2\Image;
 
 use Chevere\Components\Parameter\IntegerParameter;
 use Chevere\Components\Response\ResponseSuccess;
+use function Chevere\Components\Workflow\getWorkflowMessage;
 use Chevere\Components\Workflow\Step;
 use Chevere\Components\Workflow\Workflow;
 use Chevere\Interfaces\Parameter\ArgumentsInterface;
@@ -31,7 +32,6 @@ use Chevereto\Actions\Image\ImageStripMetaAction;
 use Chevereto\Actions\Image\ImageValidateMediaAction;
 use Chevereto\Actions\Storage\StorageGetForUserAction;
 use Chevereto\Controllers\Api\V2\File\FilePostController;
-use function Chevere\Components\Workflow\getWorkflowMessage;
 
 abstract class ImagePostController extends FilePostController
 {
@@ -48,7 +48,7 @@ abstract class ImagePostController extends FilePostController
 
     public function getWorkflow(): WorkflowInterface
     {
-        return (new Workflow(__CLASS__))
+        return (new Workflow(self::class))
             ->withAdded(
                 validateFile: (new Step(FileValidateAction::class))
                     ->withArguments(
@@ -105,7 +105,9 @@ abstract class ImagePostController extends FilePostController
         $context = $this->contextArguments();
         $uploadFile = tempnam(sys_get_temp_dir(), 'chv.temp');
         $this->assertStoreSource($arguments->getString('source'), $uploadFile);
-        $settings = array_replace($context->toArray(), ['filename' => $uploadFile]);
+        $settings = array_replace($context->toArray(), [
+            'filename' => $uploadFile,
+        ]);
 
         return (new ResponseSuccess($this->getResponseDataParameters(), []))
             ->withWorkflowMessage(

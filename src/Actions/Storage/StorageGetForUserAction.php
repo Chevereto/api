@@ -51,6 +51,8 @@ class StorageGetForUserAction extends Action
         $bytesRequired = $arguments->getInteger('bytesRequired');
         // $storage = $service->getStorageFor($userId, $bytesRequired)
 
-        return $this->getResponseSuccess(['storage' => new Storage(0)]);
+        return $this->getResponseSuccess([
+            'storage' => new Storage(0),
+        ]);
     }
 }

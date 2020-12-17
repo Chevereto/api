@@ -101,7 +101,7 @@ class ValidateMediaAction extends Action
 
     private function assertValidMedia(FFProbe $probe, $filename): void
     {
-        if (!$probe->isValid($filename)) {
+        if (! $probe->isValid($filename)) {
             throw new InvalidArgumentException(
                 $this->getManagerExceptionMessage($filename),
                 1000
@@ -111,7 +111,7 @@ class ValidateMediaAction extends Action
 
     private function assertValidVideo(Stream $stream, $filename): void
     {
-        if (!$stream->isVideo()) {
+        if (! $stream->isVideo()) {
             throw new InvalidArgumentException(
                 $this->getManagerExceptionMessage($filename),
                 1000

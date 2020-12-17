@@ -17,10 +17,10 @@ use Chevere\Components\Parameter\StringParameter;
 use Chevere\Exceptions\Core\InvalidArgumentException;
 use Chevere\Exceptions\Core\RuntimeException;
 use Chevere\Interfaces\Parameter\StringParameterInterface;
-use Safe\Exceptions\StreamException;
 use function Chevereto\Encoding\assertBase64;
 use function Chevereto\Encoding\getBase64Regex;
 use function Chevereto\Encoding\storeDecodedBase64;
+use Safe\Exceptions\StreamException;
 
 trait FileStoreBase64SourceTrait
 {

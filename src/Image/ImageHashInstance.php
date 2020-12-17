@@ -31,7 +31,7 @@ final class ImageHashInstance
 
     public static function get(): ImageHash
     {
-        if (!isset(self::$instance)) {
+        if (! isset(self::$instance)) {
             throw new LogicException(
                 (new Message('No %instance% instance present'))
                     ->code('%instance%', ImageHash::class)

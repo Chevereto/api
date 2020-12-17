@@ -25,6 +25,7 @@ use Chevere\Components\Workflow\Step;
 use Chevere\Components\Workflow\Workflow;
 use Chevere\Components\Workflow\WorkflowRun;
 use Chevere\Components\Workflow\WorkflowRunner;
+use function Chevere\Components\Workflow\workflowRunner;
 use Chevere\Exceptions\Core\Exception;
 use Chevere\Exceptions\Core\InvalidArgumentException;
 use Chevere\Interfaces\Parameter\ArgumentsInterface;
@@ -43,7 +44,6 @@ use Chevereto\Actions\Image\ImageValidateMediaAction;
 use Chevereto\Actions\Storage\StorageGetForUserAction;
 use Chevereto\Controllers\Api\V2\File\Traits\FileStoreBase64SourceTrait;
 use Laminas\Uri\UriFactory;
-use function Chevere\Components\Workflow\workflowRunner;
 use function Safe\fclose;
 use function Safe\fopen;
 use function Safe\fwrite;
@@ -100,7 +100,7 @@ final class UploadPostController extends Controller implements ServiceDependantI
 
     public function getWorkflow(): WorkflowInterface
     {
-        return (new Workflow(__CLASS__))
+        return (new Workflow(self::class))
             ->withAdded(
                 validateFile: (new Step(ValidateFileAction::class))
                     ->withArguments(
@@ -182,7 +182,7 @@ final class UploadPostController extends Controller implements ServiceDependantI
         }
         $settings = array_replace($context->toArray(), [
             'filename' => $uploadFile,
-            'albumId' => ''
+            'albumId' => '',
         ]);
         unset($settings['apiV1Key']);
         $workflowRun = (new WorkflowRunner(
@@ -195,14 +195,16 @@ final class UploadPostController extends Controller implements ServiceDependantI
             $raw = json_encode($data, JSON_PRETTY_PRINT);
         }
 
-        return $this->getResponseSuccess(['raw' => $raw]);
+        return $this->getResponseSuccess([
+            'raw' => $raw,
+        ]);
     }
 
     public function storeDecodedBase64String(string $base64, string $path): void
     {
         $fh = fopen($path, 'w');
         stream_filter_append($fh, 'convert.base64-decode', STREAM_FILTER_WRITE);
-        if (!fwrite($fh, $base64)) {
+        if (! fwrite($fh, $base64)) {
             throw new Exception(
                 new Message('Unable to store decoded base64 string'),
                 1200

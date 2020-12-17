@@ -27,11 +27,11 @@ use Chevere\Interfaces\Message\MessageInterface;
 use Chevere\Interfaces\Parameter\ArgumentsInterface;
 use Chevere\Interfaces\Parameter\ParametersInterface;
 use Chevere\Interfaces\Response\ResponseSuccessInterface;
+use function Chevereto\Image\imageHash;
+use function Chevereto\Image\imageManager;
 use Intervention\Image\Image;
 use Intervention\Image\ImageManager;
 use Throwable;
-use function Chevereto\Image\imageHash;
-use function Chevereto\Image\imageManager;
 
 /**
  * Validates an image against the image processing and image dimensions.
