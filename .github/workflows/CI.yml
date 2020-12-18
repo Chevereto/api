@@ -10,9 +10,16 @@ jobs:
       - name: Checkout
         uses: actions/checkout@v2
 
-      # - name: Setup FFmpeg
-      #   uses: FedericoCarboni/setup-ffmpeg@v1-beta
-      #   id: setup-ffmpeg
+      - name: Setup FFmpeg
+        uses: FedericoCarboni/setup-ffmpeg@v1-beta
+        id: setup-ffmpeg
+
+      - name: Update alternatives for FFmpeg binaries
+        run: |
+          sudo update-alternatives --install /usr/bin/ffmpeg ffmpeg ${{ steps.setup-ffmpeg.outputs.ffmpeg-path }} 10
+          sudo update-alternatives --install /usr/bin/ffprobe ffprobe ${{ steps.setup-ffmpeg.outputs.ffprobe-path }} 10
+          ffmpeg -version
+          ffprobe -version
 
       - name: Setup PHP Action
         uses: shivammathur/setup-php@v2
