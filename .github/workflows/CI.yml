@@ -10,22 +10,14 @@ jobs:
       - name: Checkout
         uses: actions/checkout@v2
 
-      - name: Setup FFmpeg
-        uses: FedericoCarboni/setup-ffmpeg@v1-beta
-        id: setup-ffmpeg
-
-      - name: Update alternatives for FFmpeg binaries
-        run: |
-          sudo update-alternatives --install /usr/bin/ffmpeg ffmpeg ${{ steps.setup-ffmpeg.outputs.ffmpeg-path }} 10
-          sudo update-alternatives --install /usr/bin/ffprobe ffprobe ${{ steps.setup-ffmpeg.outputs.ffprobe-path }} 10
-          ffmpeg -version
-          ffprobe -version
+      - name: Setup dependencies
+        run: sudo apt update && apt install -y imagemagick ffmpeg
 
       - name: Setup PHP Action
         uses: shivammathur/setup-php@v2
         with:
-          php-version: "8.0"
-          extensions: imagick, opcache, mbstring, ds, imagick
+          php-version: 8.0
+          extensions: imagick, opcache, mbstring, ds
           ini-values: opcache.enable_cli = 1, opcache.enable = 1, pcov.directory=src
           coverage: pcov
 
