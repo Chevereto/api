@@ -10,16 +10,16 @@ jobs:
       - name: Checkout
         uses: actions/checkout@v2
 
-      - name: Setup FFmpeg
-        uses: FedericoCarboni/setup-ffmpeg@v1-beta
-        id: setup-ffmpeg
+      # - name: Setup FFmpeg
+      #   uses: FedericoCarboni/setup-ffmpeg@v1-beta
+      #   id: setup-ffmpeg
 
       - name: Setup PHP Action
         uses: shivammathur/setup-php@v2
         with:
-          php-version: 8.0
-          extensions: opcache, mbstring, ds, imagick
-          ini-values: opcache.enable_cli = 1, opcache.enable = 1, extension="ds.so", pcov.directory=src
+          php-version: "8.0"
+          extensions: imagick, opcache, mbstring, ds, imagick
+          ini-values: opcache.enable_cli = 1, opcache.enable = 1, pcov.directory=src
           coverage: pcov
 
       - name: Validate composer.json and composer.lock

@@ -13,12 +13,12 @@ declare(strict_types=1);
 
 use Chevere\Components\Cache\Cache;
 use Chevere\Components\Cache\CacheKey;
+use function Chevere\Components\Filesystem\dirForPath;
 use Chevere\Components\Router\Router;
+use function Chevere\Components\Router\Routing\routerForRoutingDescriptors;
 use Chevere\Components\Router\Routing\RoutingDescriptorsMaker;
 use Chevere\Components\Spec\SpecMaker;
 use Chevere\Components\VarExportable\VarExportable;
-use function Chevere\Components\Filesystem\dirForPath;
-use function Chevere\Components\Router\Routing\routerForRoutingDescriptors;
 
 require 'vendor/autoload.php';
 
@@ -32,13 +32,14 @@ foreach (['api-1', 'api-2-pub', 'api-2-admin'] as $group) {
     $routerForGroup = routerForRoutingDescriptors(
         (new RoutingDescriptorsMaker(
             $group,
-            $routingDir->getChild("$group/")
+            $routingDir->getChild("${group}/")
         ))->descriptors()
     );
     foreach ($routerForGroup->routables()->getGenerator() as $routable) {
         $router = $router->withAddedRoutable($routable, $group);
     }
 }
+// {adds extend routing}
 $cacheDir = $specDir->getChild('volumes/cache/');
 if ($cacheDir->exists()) {
     $cacheDir->removeContents();
