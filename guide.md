@@ -1,10 +1,6 @@
-# Parameters
+# Guide
 
-_All values can be configurable `true` or `false`._
-
-## System
-
-### System conditions
+## Services
 
 - [ ] Search
 - [ ] Explore
@@ -20,7 +16,7 @@ _All values can be configurable `true` or `false`._
 - [ ] SEO image/album URLs
 - [ ] Maintenance
 
-### System values
+## Config
 
 - [ ] Name
 - [ ] Description
