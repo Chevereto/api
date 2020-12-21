@@ -6,33 +6,5 @@
                 "cmd": "vendor/bin/ecs check ${file} --fix"
             }
         ]
-    },
-    "files.exclude": {
-        "**/.git": true,
-        "**/.svn": true,
-        "**/.hg": true,
-        "**/CVS": true,
-        "**/.DS_Store": true,
-        ".phpunit.cache": true,
-        "build": true,
-        "composer-dev.lock": true,
-        ".phpunit.result.cache": true,
-        "composer.lock": true,
-        "ecs-chevere.php": true,
-        ".github": false,
-        ".vscode": true,
-        ".gitattributes": true,
-        ".gitignore": true,
-        ".header": true,
-        "composer-dev.json": true,
-        "vendor": true,
-        "phpunit-report.xml": true,
-        "phpunit.xml": true,
-        "LICENSE": true,
-        "ecs.php": true,
-        "DONORS.md": true,
-        "LOGO.svg": true,
-        "SPONSORS.md": true
-    },
-    "explorerExclude.backup": null
+    }
 }

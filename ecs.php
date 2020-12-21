@@ -1,7 +1,7 @@
 <?php
 
 /*
- * This file is part of Chevereeto.
+ * This file is part of Chevereto.
  *
  * (c) Rodolfo Berrios <rodolfo@chevereto.com>
  *
@@ -16,8 +16,8 @@ use Symplify\EasyCodingStandard\ValueObject\Option;
 
 return static function (ContainerConfigurator $containerConfigurator): void {
     $containerConfigurator->import(__DIR__ . '/ecs-chevere.php');
-    $parameters = $containerConfigurator->parameters();
-    $parameters->set(Option::SKIP, [
-        __DIR__ . '/tests/*',
-    ]);
+    // $parameters = $containerConfigurator->parameters();
+    // $parameters->set(Option::SKIP, [
+    //     __DIR__ . '/tests/*',
+    // ]);
 };

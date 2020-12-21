@@ -23,7 +23,7 @@ final class ImagePostBase64ControllerTest extends TestCase
         $source = 'dGVzdA==';
         $original = 'test';
         $path = __DIR__ . '/tmp';
-        $controller = new ImagePostBase64Controller;
+        $controller = new ImagePostBase64Controller();
         $controller->assertStoreSource($source, $path);
         $this->assertStringEqualsFile($path, $original);
         unlink($path);
