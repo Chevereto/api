@@ -38,13 +38,17 @@ use Throwable;
  */
 class ImageValidateMediaAction extends Action
 {
-    private int $maxWidth;
+    private int $width = 0;
 
-    private int $maxHeight;
+    private int $height = 0;
 
-    private int $minWidth;
+    private int $maxWidth = 0;
 
-    private int $minHeight;
+    private int $maxHeight = 0;
+
+    private int $minWidth = 0;
+
+    private int $minHeight = 0;
 
     public function getParameters(): ParametersInterface
     {
@@ -76,12 +80,16 @@ class ImageValidateMediaAction extends Action
     {
         $filename = $arguments->getString('filename');
         $image = $this->assertGetImage($filename);
+        $this->width = $image->width();
+        $this->height = $image->height();
         $this->maxWidth = $arguments->getInteger('maxWidth');
         $this->maxHeight = $arguments->getInteger('maxHeight');
         $this->minWidth = $arguments->getInteger('minWidth');
         $this->minHeight = $arguments->getInteger('minHeight');
-        $this->assertHeight($image->height());
-        $this->assertWidth($image->width());
+        $this->assertMinHeight();
+        $this->assertMaxHeight();
+        $this->assertMinWidth();
+        $this->assertMaxWidth();
         $data = [
             'image' => $image,
             'perceptual' => imageHash()->hash($filename)->toHex(),
@@ -104,33 +112,41 @@ class ImageValidateMediaAction extends Action
         }
     }
 
-    private function assertHeight(int $height): void
+    private function assertMinHeight(): void
     {
-        if ($height < $this->minHeight) {
+        if ($this->height < $this->minHeight) {
             throw new InvalidArgumentException(
-                $this->getMinExceptionMessage('height', $height),
+                $this->getMinExceptionMessage('height', $this->height),
                 1001
             );
         }
-        if ($height > $this->maxHeight) {
+    }
+
+    private function assertMaxHeight(): void
+    {
+        if ($this->height > $this->maxHeight) {
             throw new InvalidArgumentException(
-                $this->getMaxExceptionMessage('height', $height),
+                $this->getMaxExceptionMessage('height', $this->height),
                 1002
             );
         }
     }
 
-    private function assertWidth(int $width): void
+    private function assertMinWidth(): void
     {
-        if ($width < $this->minWidth) {
+        if ($this->width < $this->minWidth) {
             throw new InvalidArgumentException(
-                $this->getMinExceptionMessage('width', $width),
+                $this->getMinExceptionMessage('width', $this->width),
                 1003
             );
         }
-        if ($width > $this->maxWidth) {
+    }
+
+    private function assertMaxWidth(): void
+    {
+        if ($this->width > $this->maxWidth) {
             throw new InvalidArgumentException(
-                $this->getMaxExceptionMessage('width', $width),
+                $this->getMaxExceptionMessage('width', $this->width),
                 1004
             );
         }

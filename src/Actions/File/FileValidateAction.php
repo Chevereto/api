@@ -34,13 +34,11 @@ use Throwable;
  */
 class FileValidateAction extends Action
 {
-    private array $extensions;
+    private array $extensions = [];
 
-    private int $maxBytes;
+    private int $maxBytes = 0;
 
-    private int $minBytes;
-
-    private ArgumentsInterface $arguments;
+    private int $minBytes = 0;
 
     public function getParameters(): ParametersInterface
     {
@@ -109,7 +107,7 @@ class FileValidateAction extends Action
         }
     }
 
-    private function assertMinBytes(int $bytes)
+    private function assertMinBytes(int $bytes): void
     {
         if ($bytes < $this->minBytes) {
             throw new InvalidArgumentException(

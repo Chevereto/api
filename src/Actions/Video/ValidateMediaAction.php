@@ -35,17 +35,17 @@ use Throwable;
  */
 class ValidateMediaAction extends Action
 {
-    private int $maxHeight;
+    private int $maxHeight = 0;
 
-    private int $maxLength;
+    private int $maxLength = 0;
 
-    private int $maxWidth;
+    private int $maxWidth = 0;
 
-    private int $minHeight;
+    private int $minHeight = 0;
 
-    private int $minLength;
+    private int $minLength = 0;
 
-    private int $minWidth;
+    private int $minWidth = 0;
 
     public function getParameters(): ParametersInterface
     {
@@ -99,7 +99,7 @@ class ValidateMediaAction extends Action
         return $this->getResponseSuccess($data);
     }
 
-    private function assertValidMedia(FFProbe $probe, $filename): void
+    private function assertValidMedia(FFProbe $probe, string $filename): void
     {
         if (! $probe->isValid($filename)) {
             throw new InvalidArgumentException(
@@ -109,7 +109,7 @@ class ValidateMediaAction extends Action
         }
     }
 
-    private function assertValidVideo(Stream $stream, $filename): void
+    private function assertValidVideo(Stream $stream, string $filename): void
     {
         if (! $stream->isVideo()) {
             throw new InvalidArgumentException(
