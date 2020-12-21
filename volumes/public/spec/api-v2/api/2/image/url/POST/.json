@@ -1,0 +1,13 @@
+{
+    "method": "POST",
+    "spec": "\/spec\/api-v2\/api\/2\/image\/url\/POST\/.json",
+    "description": "Uploads an image URL image resource.",
+    "parameters": {
+        "source": {
+            "name": "source",
+            "regex": "\/^(https?|ftp)+\\:\\\/\\\/.+$\/",
+            "description": "An image URL.",
+            "isRequired": true
+        }
+    }
+}

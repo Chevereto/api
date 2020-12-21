@@ -1,0 +1,13 @@
+{
+    "method": "POST",
+    "spec": "\/spec\/api-v2\/api\/2\/album\/POST\/.json",
+    "description": "Creates an album.",
+    "parameters": {
+        "name": {
+            "name": "name",
+            "regex": "\/\\w+\/",
+            "description": "",
+            "isRequired": true
+        }
+    }
+}

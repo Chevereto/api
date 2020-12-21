@@ -1,0 +1,6 @@
+{
+    "method": "GET",
+    "spec": "\/spec\/api-v2\/api\/2\/album\/{id:\\d+}\/GET\/.json",
+    "description": "Get an album identified by its id.",
+    "parameters": {}
+}

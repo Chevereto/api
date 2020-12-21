@@ -1,0 +1,23 @@
+{
+    "name": "api-v2:\/api\/2\/album\/{id:\\d+}\/",
+    "spec": "\/spec\/api-v2\/api\/2\/album\/{id:\\d+}\/route.json",
+    "path": "\/api\/2\/album\/{id:\\d+}\/",
+    "regex": "~^(?|\/api\/2\/album\/(\\d+)\/)$~",
+    "wildcards": {
+        "id": "^\\d+$"
+    },
+    "endpoints": {
+        "GET": {
+            "method": "GET",
+            "spec": "\/spec\/api-v2\/api\/2\/album\/{id:\\d+}\/GET\/.json",
+            "description": "Get an album identified by its id.",
+            "parameters": {}
+        },
+        "PATCH": {
+            "method": "PATCH",
+            "spec": "\/spec\/api-v2\/api\/2\/album\/{id:\\d+}\/PATCH\/.json",
+            "description": "Updates an album identified by its id.",
+            "parameters": {}
+        }
+    }
+}

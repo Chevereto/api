@@ -1,6 +1,0 @@
-{
-    "method": "PATCH",
-    "spec": "\/spec\/api-2-pub\/api\/2\/pub\/album\/{id:\\d+}\/PATCH\/.json",
-    "description": "Updates an album identified by its id.",
-    "parameters": {}
-}

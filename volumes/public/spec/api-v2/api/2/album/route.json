@@ -1,0 +1,22 @@
+{
+    "name": "api-v2:\/api\/2\/album\/",
+    "spec": "\/spec\/api-v2\/api\/2\/album\/route.json",
+    "path": "\/api\/2\/album\/",
+    "regex": "#\/api\/2\/album\/#",
+    "wildcards": {},
+    "endpoints": {
+        "POST": {
+            "method": "POST",
+            "spec": "\/spec\/api-v2\/api\/2\/album\/POST\/.json",
+            "description": "Creates an album.",
+            "parameters": {
+                "name": {
+                    "name": "name",
+                    "regex": "\/\\w+\/",
+                    "description": "",
+                    "isRequired": true
+                }
+            }
+        }
+    }
+}

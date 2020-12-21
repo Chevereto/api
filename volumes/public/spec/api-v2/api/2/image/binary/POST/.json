@@ -1,0 +1,14 @@
+{
+    "method": "POST",
+    "spec": "\/spec\/api-v2\/api\/2\/image\/binary\/POST\/.json",
+    "description": "Uploads a binary image resource.",
+    "parameters": {
+        "source": {
+            "name": "source",
+            "regex": "\/^.*$\/",
+            "description": "A binary image.",
+            "isRequired": true,
+            "attributes": "tryFiles"
+        }
+    }
+}

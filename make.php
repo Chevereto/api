@@ -28,7 +28,7 @@ set_exception_handler('Chevere\Components\ThrowableHandler\consoleHandler');
 $specDir = dirForPath(__DIR__ . '/');
 $routingDir = $specDir->getChild('app/routing/');
 $router = new Router();
-foreach (['api-1', 'api-2-pub', 'api-2-admin'] as $group) {
+foreach (['api-v1', 'api-v2'] as $group) {
     $routerForGroup = routerForRoutingDescriptors(
         (new RoutingDescriptorsMaker(
             $group,
@@ -40,6 +40,7 @@ foreach (['api-1', 'api-2-pub', 'api-2-admin'] as $group) {
     }
 }
 // {adds extend routing}
+// {adds vendor routing}
 $cacheDir = $specDir->getChild('volumes/cache/');
 if ($cacheDir->exists()) {
     $cacheDir->removeContents();

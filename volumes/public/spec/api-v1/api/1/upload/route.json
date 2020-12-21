@@ -1,0 +1,35 @@
+{
+    "name": "api-v1:\/api\/1\/upload\/",
+    "spec": "\/spec\/api-v1\/api\/1\/upload\/route.json",
+    "path": "\/api\/1\/upload\/",
+    "regex": "#\/api\/1\/upload\/#",
+    "wildcards": {},
+    "endpoints": {
+        "POST": {
+            "method": "POST",
+            "spec": "\/spec\/api-v1\/api\/1\/upload\/POST\/.json",
+            "description": "Uploads an image resource.",
+            "parameters": {
+                "source": {
+                    "name": "source",
+                    "regex": "\/^.*$\/",
+                    "description": "A base64 image string OR an image URL. It also takes image multipart\/form-data.",
+                    "isRequired": true,
+                    "attributes": "tryFiles"
+                },
+                "key": {
+                    "name": "key",
+                    "regex": "\/^.*$\/",
+                    "description": "API V1 key.",
+                    "isRequired": true
+                },
+                "format": {
+                    "name": "format",
+                    "regex": "\/^(json|txt)$\/",
+                    "description": "Response document output format. Defaults to `json`.",
+                    "isRequired": false
+                }
+            }
+        }
+    }
+}
