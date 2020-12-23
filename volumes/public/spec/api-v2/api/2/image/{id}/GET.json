@@ -1,6 +1,6 @@
 {
     "method": "GET",
-    "spec": "\/spec\/api-v2\/api\/2\/image\/{id:\\d+}\/GET\/.json",
+    "spec": "\/spec\/api-v2\/api\/2\/image\/{id}\/GET.json",
     "description": "Get the image identified by its id.",
     "parameters": {}
 }

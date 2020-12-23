@@ -2,16 +2,16 @@
     "name": "api-v1",
     "spec": "\/spec\/api-v1\/routes.json",
     "routes": {
-        "api-v1:\/api\/1\/upload\/": {
-            "name": "api-v1:\/api\/1\/upload\/",
+        "\/api\/1\/upload": {
+            "name": "\/api\/1\/upload",
+            "locator": "api-v1:\/api\/1\/upload",
             "spec": "\/spec\/api-v1\/api\/1\/upload\/route.json",
-            "path": "\/api\/1\/upload\/",
-            "regex": "#\/api\/1\/upload\/#",
+            "regex": "#\/api\/1\/upload#",
             "wildcards": {},
             "endpoints": {
                 "POST": {
                     "method": "POST",
-                    "spec": "\/spec\/api-v1\/api\/1\/upload\/POST\/.json",
+                    "spec": "\/spec\/api-v1\/api\/1\/upload\/POST.json",
                     "description": "Uploads an image resource.",
                     "parameters": {
                         "source": {

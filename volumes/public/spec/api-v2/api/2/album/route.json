@@ -1,13 +1,13 @@
 {
-    "name": "api-v2:\/api\/2\/album\/",
+    "name": "\/api\/2\/album",
+    "locator": "api-v2:\/api\/2\/album",
     "spec": "\/spec\/api-v2\/api\/2\/album\/route.json",
-    "path": "\/api\/2\/album\/",
-    "regex": "#\/api\/2\/album\/#",
+    "regex": "#\/api\/2\/album#",
     "wildcards": {},
     "endpoints": {
         "POST": {
             "method": "POST",
-            "spec": "\/spec\/api-v2\/api\/2\/album\/POST\/.json",
+            "spec": "\/spec\/api-v2\/api\/2\/album\/POST.json",
             "description": "Creates an album.",
             "parameters": {
                 "name": {

@@ -1,6 +1,6 @@
 {
     "method": "POST",
-    "spec": "\/spec\/api-v1\/api\/1\/upload\/POST\/.json",
+    "spec": "\/spec\/api-v1\/api\/1\/upload\/POST.json",
     "description": "Uploads an image resource.",
     "parameters": {
         "source": {

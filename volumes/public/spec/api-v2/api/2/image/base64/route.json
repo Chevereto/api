@@ -1,13 +1,13 @@
 {
-    "name": "api-v2:\/api\/2\/image\/base64\/",
+    "name": "\/api\/2\/image\/base64",
+    "locator": "api-v2:\/api\/2\/image\/base64",
     "spec": "\/spec\/api-v2\/api\/2\/image\/base64\/route.json",
-    "path": "\/api\/2\/image\/base64\/",
-    "regex": "#\/api\/2\/image\/base64\/#",
+    "regex": "#\/api\/2\/image\/base64#",
     "wildcards": {},
     "endpoints": {
         "POST": {
             "method": "POST",
-            "spec": "\/spec\/api-v2\/api\/2\/image\/base64\/POST\/.json",
+            "spec": "\/spec\/api-v2\/api\/2\/image\/base64\/POST.json",
             "description": "Uploads a base64 encoded image resource.",
             "parameters": {
                 "source": {

@@ -1,13 +1,13 @@
 {
-    "name": "api-v2:\/api\/2\/image\/binary\/",
+    "name": "\/api\/2\/image\/binary",
+    "locator": "api-v2:\/api\/2\/image\/binary",
     "spec": "\/spec\/api-v2\/api\/2\/image\/binary\/route.json",
-    "path": "\/api\/2\/image\/binary\/",
-    "regex": "#\/api\/2\/image\/binary\/#",
+    "regex": "#\/api\/2\/image\/binary#",
     "wildcards": {},
     "endpoints": {
         "POST": {
             "method": "POST",
-            "spec": "\/spec\/api-v2\/api\/2\/image\/binary\/POST\/.json",
+            "spec": "\/spec\/api-v2\/api\/2\/image\/binary\/POST.json",
             "description": "Uploads a binary image resource.",
             "parameters": {
                 "source": {

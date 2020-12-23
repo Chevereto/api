@@ -1,13 +1,13 @@
 {
-    "name": "api-v2:\/api\/2\/image\/url\/",
+    "name": "\/api\/2\/image\/url",
+    "locator": "api-v2:\/api\/2\/image\/url",
     "spec": "\/spec\/api-v2\/api\/2\/image\/url\/route.json",
-    "path": "\/api\/2\/image\/url\/",
-    "regex": "#\/api\/2\/image\/url\/#",
+    "regex": "#\/api\/2\/image\/url#",
     "wildcards": {},
     "endpoints": {
         "POST": {
             "method": "POST",
-            "spec": "\/spec\/api-v2\/api\/2\/image\/url\/POST\/.json",
+            "spec": "\/spec\/api-v2\/api\/2\/image\/url\/POST.json",
             "description": "Uploads an image URL image resource.",
             "parameters": {
                 "source": {

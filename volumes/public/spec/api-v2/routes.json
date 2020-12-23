@@ -2,16 +2,16 @@
     "name": "api-v2",
     "spec": "\/spec\/api-v2\/routes.json",
     "routes": {
-        "api-v2:\/api\/2\/image\/base64\/": {
-            "name": "api-v2:\/api\/2\/image\/base64\/",
+        "\/api\/2\/image\/base64": {
+            "name": "\/api\/2\/image\/base64",
+            "locator": "api-v2:\/api\/2\/image\/base64",
             "spec": "\/spec\/api-v2\/api\/2\/image\/base64\/route.json",
-            "path": "\/api\/2\/image\/base64\/",
-            "regex": "#\/api\/2\/image\/base64\/#",
+            "regex": "#\/api\/2\/image\/base64#",
             "wildcards": {},
             "endpoints": {
                 "POST": {
                     "method": "POST",
-                    "spec": "\/spec\/api-v2\/api\/2\/image\/base64\/POST\/.json",
+                    "spec": "\/spec\/api-v2\/api\/2\/image\/base64\/POST.json",
                     "description": "Uploads a base64 encoded image resource.",
                     "parameters": {
                         "source": {
@@ -24,33 +24,33 @@
                 }
             }
         },
-        "api-v2:\/api\/2\/image\/{id:\\d+}\/": {
-            "name": "api-v2:\/api\/2\/image\/{id:\\d+}\/",
-            "spec": "\/spec\/api-v2\/api\/2\/image\/{id:\\d+}\/route.json",
-            "path": "\/api\/2\/image\/{id:\\d+}\/",
-            "regex": "~^(?|\/api\/2\/image\/(\\d+)\/)$~",
+        "\/api\/2\/image\/{id}": {
+            "name": "\/api\/2\/image\/{id}",
+            "locator": "api-v2:\/api\/2\/image\/{id}",
+            "spec": "\/spec\/api-v2\/api\/2\/image\/{id}\/route.json",
+            "regex": "~^(?|\/api\/2\/image\/(\\d+))$~",
             "wildcards": {
                 "id": "^\\d+$"
             },
             "endpoints": {
                 "GET": {
                     "method": "GET",
-                    "spec": "\/spec\/api-v2\/api\/2\/image\/{id:\\d+}\/GET\/.json",
+                    "spec": "\/spec\/api-v2\/api\/2\/image\/{id}\/GET.json",
                     "description": "Get the image identified by its id.",
                     "parameters": {}
                 }
             }
         },
-        "api-v2:\/api\/2\/image\/binary\/": {
-            "name": "api-v2:\/api\/2\/image\/binary\/",
+        "\/api\/2\/image\/binary": {
+            "name": "\/api\/2\/image\/binary",
+            "locator": "api-v2:\/api\/2\/image\/binary",
             "spec": "\/spec\/api-v2\/api\/2\/image\/binary\/route.json",
-            "path": "\/api\/2\/image\/binary\/",
-            "regex": "#\/api\/2\/image\/binary\/#",
+            "regex": "#\/api\/2\/image\/binary#",
             "wildcards": {},
             "endpoints": {
                 "POST": {
                     "method": "POST",
-                    "spec": "\/spec\/api-v2\/api\/2\/image\/binary\/POST\/.json",
+                    "spec": "\/spec\/api-v2\/api\/2\/image\/binary\/POST.json",
                     "description": "Uploads a binary image resource.",
                     "parameters": {
                         "source": {
@@ -64,16 +64,16 @@
                 }
             }
         },
-        "api-v2:\/api\/2\/image\/url\/": {
-            "name": "api-v2:\/api\/2\/image\/url\/",
+        "\/api\/2\/image\/url": {
+            "name": "\/api\/2\/image\/url",
+            "locator": "api-v2:\/api\/2\/image\/url",
             "spec": "\/spec\/api-v2\/api\/2\/image\/url\/route.json",
-            "path": "\/api\/2\/image\/url\/",
-            "regex": "#\/api\/2\/image\/url\/#",
+            "regex": "#\/api\/2\/image\/url#",
             "wildcards": {},
             "endpoints": {
                 "POST": {
                     "method": "POST",
-                    "spec": "\/spec\/api-v2\/api\/2\/image\/url\/POST\/.json",
+                    "spec": "\/spec\/api-v2\/api\/2\/image\/url\/POST.json",
                     "description": "Uploads an image URL image resource.",
                     "parameters": {
                         "source": {
@@ -86,39 +86,39 @@
                 }
             }
         },
-        "api-v2:\/api\/2\/album\/{id:\\d+}\/": {
-            "name": "api-v2:\/api\/2\/album\/{id:\\d+}\/",
-            "spec": "\/spec\/api-v2\/api\/2\/album\/{id:\\d+}\/route.json",
-            "path": "\/api\/2\/album\/{id:\\d+}\/",
-            "regex": "~^(?|\/api\/2\/album\/(\\d+)\/)$~",
+        "\/api\/2\/album\/{id}": {
+            "name": "\/api\/2\/album\/{id}",
+            "locator": "api-v2:\/api\/2\/album\/{id}",
+            "spec": "\/spec\/api-v2\/api\/2\/album\/{id}\/route.json",
+            "regex": "~^(?|\/api\/2\/album\/(\\d+))$~",
             "wildcards": {
                 "id": "^\\d+$"
             },
             "endpoints": {
                 "GET": {
                     "method": "GET",
-                    "spec": "\/spec\/api-v2\/api\/2\/album\/{id:\\d+}\/GET\/.json",
+                    "spec": "\/spec\/api-v2\/api\/2\/album\/{id}\/GET.json",
                     "description": "Get an album identified by its id.",
                     "parameters": {}
                 },
                 "PATCH": {
                     "method": "PATCH",
-                    "spec": "\/spec\/api-v2\/api\/2\/album\/{id:\\d+}\/PATCH\/.json",
+                    "spec": "\/spec\/api-v2\/api\/2\/album\/{id}\/PATCH.json",
                     "description": "Updates an album identified by its id.",
                     "parameters": {}
                 }
             }
         },
-        "api-v2:\/api\/2\/album\/": {
-            "name": "api-v2:\/api\/2\/album\/",
+        "\/api\/2\/album": {
+            "name": "\/api\/2\/album",
+            "locator": "api-v2:\/api\/2\/album",
             "spec": "\/spec\/api-v2\/api\/2\/album\/route.json",
-            "path": "\/api\/2\/album\/",
-            "regex": "#\/api\/2\/album\/#",
+            "regex": "#\/api\/2\/album#",
             "wildcards": {},
             "endpoints": {
                 "POST": {
                     "method": "POST",
-                    "spec": "\/spec\/api-v2\/api\/2\/album\/POST\/.json",
+                    "spec": "\/spec\/api-v2\/api\/2\/album\/POST.json",
                     "description": "Creates an album.",
                     "parameters": {
                         "name": {
