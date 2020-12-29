@@ -14,38 +14,30 @@ declare(strict_types=1);
 namespace Chevereto\Actions\Image;
 
 use Chevere\Components\Action\Action;
-use Chevere\Components\ClassMap\ClassMap;
+use Chevere\Components\Dependent\Dependencies;
+use Chevere\Components\Dependent\Traits\DependentTrait;
 use Chevere\Components\Parameter\IntegerParameter;
 use Chevere\Components\Parameter\Parameters;
-use Chevere\Components\Service\Traits\ServiceDependantTrait;
-use Chevere\Interfaces\ClassMap\ClassMapInterface;
+use Chevere\Interfaces\Dependent\DependenciesInterface;
+use Chevere\Interfaces\Dependent\DependentInterface;
 use Chevere\Interfaces\Parameter\ArgumentsInterface;
 use Chevere\Interfaces\Parameter\ParametersInterface;
 use Chevere\Interfaces\Response\ResponseSuccessInterface;
-use Chevere\Interfaces\Service\ServiceDependantInterface;
 use DateTime;
 
 /**
  * Insert the image in the database.
  */
-class ImageInsertAction extends Action implements ServiceDependantInterface
+class ImageInsertAction extends Action implements DependentInterface
 {
-    use ServiceDependantTrait;
+    use DependentTrait;
 
     private DateTime $dateTime;
 
-    public function withDependencies(mixed ...$namedArguments): self
+    public function getDependencies(): DependenciesInterface
     {
-        $new = clone $this;
-        $new->dateTime = $namedArguments['dateTime'];
-
-        return $new;
-    }
-
-    public function getDependencies(): ClassMapInterface
-    {
-        return (new ClassMap())
-            ->withPut(DateTime::class, 'dateTime');
+        return (new Dependencies())
+            ->withPut(dateTime: DateTime::class);
     }
 
     public function getParameters(): ParametersInterface
