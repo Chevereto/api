@@ -1,6 +1,6 @@
 {
-    "name": "chevereto/chevereto",
-    "description": "Self-hosted media sharing",
+    "name": "chevereto/api",
+    "description": "Chevereto User API",
     "type": "library",
     "license": "MIT",
     "authors": [
