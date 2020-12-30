@@ -22,7 +22,7 @@ use Chevere\Interfaces\Dependent\DependenciesInterface;
 use Chevere\Interfaces\Dependent\DependentInterface;
 use Chevere\Interfaces\Parameter\ArgumentsInterface;
 use Chevere\Interfaces\Parameter\ParametersInterface;
-use Chevere\Interfaces\Response\ResponseSuccessInterface;
+use Chevere\Interfaces\Response\ResponseInterface;
 use DateTime;
 
 /**
@@ -50,10 +50,10 @@ class ImageInsertAction extends Action implements DependentInterface
             );
     }
 
-    public function run(ArgumentsInterface $arguments): ResponseSuccessInterface
+    public function run(ArgumentsInterface $arguments): ResponseInterface
     {
         $this->assertDependencies();
         // TODO: DB inserting
-        return $this->getResponseSuccess([]);
+        return $this->getResponse();
     }
 }

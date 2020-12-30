@@ -13,11 +13,11 @@ declare(strict_types=1);
 
 namespace Tests\Actions\File;
 
-use Chevere\Components\Response\ResponseSuccess;
+use Chevere\Interfaces\Response\ResponseInterface;
 use Chevereto\Actions\File\FileValidateAction;
 use PHPUnit\Framework\TestCase;
-use Tests\Actions\Traits\ExpectInvalidArgumentExceptionCodeTrait;
 use function Safe\md5_file;
+use Tests\Actions\Traits\ExpectInvalidArgumentExceptionCodeTrait;
 
 final class FileValidateActionTest extends TestCase
 {
@@ -25,7 +25,7 @@ final class FileValidateActionTest extends TestCase
 
     public function testConstruct(): void
     {
-        $action = new FileValidateAction;
+        $action = new FileValidateAction();
         $arguments = [
             'filename' => __FILE__,
             'extensions' => 'php',
@@ -43,11 +43,11 @@ final class FileValidateActionTest extends TestCase
 
     public function testMinBytes(): void
     {
-        $action = new FileValidateAction;
+        $action = new FileValidateAction();
         $arguments = [
             'filename' => __FILE__,
             'extensions' => 'php',
-            'minBytes' => 20000000
+            'minBytes' => 20000000,
         ];
         $this->expectInvalidArgumentException(1001);
         $action->run($action->getArguments(...$arguments));
@@ -55,22 +55,24 @@ final class FileValidateActionTest extends TestCase
 
     public function testMaxBytes(): void
     {
-        $action = new FileValidateAction;
+        $action = new FileValidateAction();
         $arguments = [
             'filename' => __FILE__,
             'extensions' => 'php,txt',
-            'maxBytes' => 20000000
+            'maxBytes' => 20000000,
         ];
-        $responseSuccess = $action->run($action->getArguments(...$arguments));
-        $this->assertInstanceOf(ResponseSuccess::class, $responseSuccess);
-        $badArguments = array_merge($arguments, ['maxBytes' => 1]);
+        $response = $action->run($action->getArguments(...$arguments));
+        $this->assertInstanceOf(ResponseInterface::class, $response);
+        $badArguments = array_merge($arguments, [
+            'maxBytes' => 1,
+        ]);
         $this->expectInvalidArgumentException(1002);
         $action->run($action->getArguments(...$badArguments));
     }
 
     public function testExtension(): void
     {
-        $action = new FileValidateAction;
+        $action = new FileValidateAction();
         $arguments = [
             'filename' => __FILE__,
             'extensions' => 'txt',

@@ -31,7 +31,7 @@ use Chevere\Exceptions\Core\InvalidArgumentException;
 use Chevere\Interfaces\Dependent\DependentInterface;
 use Chevere\Interfaces\Parameter\ArgumentsInterface;
 use Chevere\Interfaces\Parameter\ParametersInterface;
-use Chevere\Interfaces\Response\ResponseSuccessInterface;
+use Chevere\Interfaces\Response\ResponseInterface;
 use Chevere\Interfaces\Workflow\WorkflowInterface;
 use Chevereto\Actions\File\FileDetectDuplicateAction;
 use Chevereto\Actions\File\FileUploadAction;
@@ -156,7 +156,7 @@ final class UploadPostController extends Controller implements DependentInterfac
             );
     }
 
-    public function run(ArgumentsInterface $arguments): ResponseSuccessInterface
+    public function run(ArgumentsInterface $arguments): ResponseInterface
     {
         $context = $this->contextArguments();
         if ($arguments->getString('key') !== $context->getString('apiV1Key')) {
@@ -195,9 +195,7 @@ final class UploadPostController extends Controller implements DependentInterfac
             $raw = json_encode($data, JSON_PRETTY_PRINT);
         }
 
-        return $this->getResponseSuccess([
-            'raw' => $raw,
-        ]);
+        return $this->getResponse(raw: $raw);
     }
 
     public function storeDecodedBase64String(string $base64, string $path): void

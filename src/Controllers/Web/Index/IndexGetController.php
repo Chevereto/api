@@ -15,7 +15,7 @@ namespace Chevereto\Controllers\Web\Index;
 
 use Chevere\Components\Action\Controller;
 use Chevere\Interfaces\Parameter\ArgumentsInterface;
-use Chevere\Interfaces\Response\ResponseSuccessInterface;
+use Chevere\Interfaces\Response\ResponseInterface;
 
 class IndexGetController extends Controller
 {
@@ -24,8 +24,8 @@ class IndexGetController extends Controller
         return 'Presents the user interface.';
     }
 
-    public function run(ArgumentsInterface $arguments): ResponseSuccessInterface
+    public function run(ArgumentsInterface $arguments): ResponseInterface
     {
-        return $this->getResponseSuccess([]);
+        return $this->getResponse();
     }
 }

@@ -22,7 +22,7 @@ use Chevere\Components\Type\Type;
 use Chevere\Interfaces\Dependent\DependentInterface;
 use Chevere\Interfaces\Parameter\ArgumentsInterface;
 use Chevere\Interfaces\Parameter\ParametersInterface;
-use Chevere\Interfaces\Response\ResponseSuccessInterface;
+use Chevere\Interfaces\Response\ResponseInterface;
 use Chevereto\Components\User;
 
 class UserGetAction extends Action implements DependentInterface
@@ -45,10 +45,10 @@ class UserGetAction extends Action implements DependentInterface
             );
     }
 
-    public function run(ArgumentsInterface $arguments): ResponseSuccessInterface
+    public function run(ArgumentsInterface $arguments): ResponseInterface
     {
-        return $this->getResponseSuccess([
-            'user' => new User($arguments->getInteger('userId')),
-        ]);
+        return $this->getResponse(
+            user: new User($arguments->getInteger('userId'))
+        );
     }
 }

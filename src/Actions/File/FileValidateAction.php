@@ -22,7 +22,7 @@ use Chevere\Components\Regex\Regex;
 use Chevere\Exceptions\Core\InvalidArgumentException;
 use Chevere\Interfaces\Parameter\ArgumentsInterface;
 use Chevere\Interfaces\Parameter\ParametersInterface;
-use Chevere\Interfaces\Response\ResponseSuccessInterface;
+use Chevere\Interfaces\Response\ResponseInterface;
 use Mimey\MimeTypes;
 use function Safe\filesize;
 use function Safe\md5_file;
@@ -65,7 +65,7 @@ class FileValidateAction extends Action
             );
     }
 
-    public function run(ArgumentsInterface $arguments): ResponseSuccessInterface
+    public function run(ArgumentsInterface $arguments): ResponseInterface
     {
         $this->extensions = explode(',', $arguments->getString('extensions')) ?: [];
         $this->minBytes = $arguments->has('minBytes')
@@ -83,12 +83,10 @@ class FileValidateAction extends Action
         $extensions = $mimes->getAllExtensions($mime);
         $this->assertExtension($extensions);
 
-        return $this->getResponseSuccess(
-            [
-                'bytes' => $bytes,
-                'mime' => $mime,
-                'md5' => md5_file($filename),
-            ]
+        return $this->getResponse(
+            bytes: $bytes,
+            mime: $mime,
+            md5: md5_file($filename),
         );
     }
 

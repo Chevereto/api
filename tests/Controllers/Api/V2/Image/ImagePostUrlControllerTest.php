@@ -13,9 +13,8 @@ declare(strict_types=1);
 
 namespace Chevereto\Tests\Controllers\Api\V2\Image;
 
-use Chevere\Components\Parameter\Arguments;
 use Chevere\Exceptions\Core\InvalidArgumentException;
-use Chevere\Interfaces\Response\ResponseSuccessInterface;
+use Chevere\Interfaces\Response\ResponseInterface;
 use Chevereto\Controllers\Api\V2\Image\ImagePostUrlController;
 use PHPUnit\Framework\TestCase;
 use function Safe\file_get_contents;
@@ -24,7 +23,7 @@ final class ImagePostUrlControllerTest extends TestCase
 {
     public function testParameters(): void
     {
-        $controller = new ImagePostUrlController;
+        $controller = new ImagePostUrlController();
         $sourceString = 'http://test.com';
         $source = $controller->getSourceParameter();
         $this->assertSame($sourceString, $source->regex()->match($sourceString)[0]);
@@ -34,7 +33,7 @@ final class ImagePostUrlControllerTest extends TestCase
     {
         $source = 'https://1.1.1.1/';
         $path = __DIR__ . '/tmp';
-        $controller = new ImagePostUrlController;
+        $controller = new ImagePostUrlController();
         $controller->assertStoreSource($source, $path);
         $this->assertStringEqualsFile($path, file_get_contents($source));
         unlink($path);
@@ -59,13 +58,15 @@ final class ImagePostUrlControllerTest extends TestCase
             'ipVersion' => '4',
             'originalName' => 'laFotito.jpg',
             'expires' => 0,
-            'albumId' => 0
+            'albumId' => 0,
         ];
-        $controller = (new ImagePostUrlController)->withContextArguments(...$context);
-        $arguments = ['source' => 'https://1.1.1.1/'];
+        $controller = (new ImagePostUrlController())->withContextArguments(...$context);
+        $arguments = [
+            'source' => 'https://1.1.1.1/',
+        ];
         $response = $controller->run(
             $controller->getArguments(...$arguments)
         );
-        $this->assertInstanceOf(ResponseSuccessInterface::class, $response);
+        $this->assertInstanceOf(ResponseInterface::class, $response);
     }
 }

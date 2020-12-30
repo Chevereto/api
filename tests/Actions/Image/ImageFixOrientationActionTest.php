@@ -13,10 +13,10 @@ declare(strict_types=1);
 
 namespace Chevereto\Tests\Actions\Image;
 
-use Chevere\Interfaces\Response\ResponseSuccessInterface;
+use Chevere\Interfaces\Response\ResponseInterface;
 use Chevereto\Actions\Image\ImageFixOrientationAction;
-use PHPUnit\Framework\TestCase;
 use function Chevereto\Image\imageManager;
+use PHPUnit\Framework\TestCase;
 
 final class ImageFixOrientationActionTest extends TestCase
 {
@@ -27,14 +27,13 @@ final class ImageFixOrientationActionTest extends TestCase
         copy($source, $orient);
         $sourceImage = imageManager()->make($source);
         $orientImage = imageManager()->make($orient);
-        $action = new ImageFixOrientationAction;
+        $action = new ImageFixOrientationAction();
         $this->assertSame(7, $sourceImage->exif()['Orientation']);
-        $arguments = ['image' => $orientImage];
-        $response = $action->run($action->getArguments(...$arguments));
-        $this->assertInstanceOf(ResponseSuccessInterface::class, $response);
+        $response = $action->run($action->getArguments(image: $orientImage));
+        $this->assertInstanceOf(ResponseInterface::class, $response);
         $this->assertSame(0, $orientImage->exif()['Orientation']);
-        if (!unlink($orient)) {
-            $this->markTestIncomplete("Failed to remove $orient");
+        if (! unlink($orient)) {
+            $this->markTestIncomplete("Failed to remove ${orient}");
         }
     }
 }

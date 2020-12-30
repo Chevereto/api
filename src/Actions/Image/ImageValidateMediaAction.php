@@ -26,7 +26,7 @@ use Chevere\Exceptions\Core\TypeException;
 use Chevere\Interfaces\Message\MessageInterface;
 use Chevere\Interfaces\Parameter\ArgumentsInterface;
 use Chevere\Interfaces\Parameter\ParametersInterface;
-use Chevere\Interfaces\Response\ResponseSuccessInterface;
+use Chevere\Interfaces\Response\ResponseInterface;
 use function Chevereto\Image\imageHash;
 use function Chevereto\Image\imageManager;
 use Intervention\Image\Image;
@@ -76,7 +76,7 @@ class ImageValidateMediaAction extends Action
      * @throws OutOfBoundsException
      * @throws TypeException
      */
-    public function run(ArgumentsInterface $arguments): ResponseSuccessInterface
+    public function run(ArgumentsInterface $arguments): ResponseInterface
     {
         $filename = $arguments->getString('filename');
         $image = $this->assertGetImage($filename);
@@ -90,12 +90,11 @@ class ImageValidateMediaAction extends Action
         $this->assertMaxHeight();
         $this->assertMinWidth();
         $this->assertMaxWidth();
-        $data = [
-            'image' => $image,
-            'perceptual' => imageHash()->hash($filename)->toHex(),
-        ];
 
-        return $this->getResponseSuccess($data);
+        return $this->getResponse(
+            image: $image,
+            perceptual: imageHash()->hash($filename)->toHex()
+        );
     }
 
     private function assertGetImage(string $filename): Image

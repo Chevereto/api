@@ -21,7 +21,7 @@ use Chevere\Components\Regex\Regex;
 use Chevere\Components\Type\Type;
 use Chevere\Interfaces\Parameter\ArgumentsInterface;
 use Chevere\Interfaces\Parameter\ParametersInterface;
-use Chevere\Interfaces\Response\ResponseSuccessInterface;
+use Chevere\Interfaces\Response\ResponseInterface;
 use Chevereto\Components\Storage;
 
 /**
@@ -44,7 +44,7 @@ class FileUploadAction extends Action
             );
     }
 
-    public function run(ArgumentsInterface $arguments): ResponseSuccessInterface
+    public function run(ArgumentsInterface $arguments): ResponseInterface
     {
         $filename = $arguments->getString('filename');
         $naming = $arguments->getString('naming');
@@ -52,8 +52,6 @@ class FileUploadAction extends Action
         /** @var Storage $storage */
         $storage = $arguments->get('storage');
 
-        return $this->getResponseSuccess([
-            'path' => '123',
-        ]);
+        return $this->getResponse(path: '123');
     }
 }

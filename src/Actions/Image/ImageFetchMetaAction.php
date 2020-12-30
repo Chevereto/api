@@ -20,7 +20,7 @@ use Chevere\Components\Parameter\Parameters;
 use Chevere\Components\Type\Type;
 use Chevere\Interfaces\Parameter\ArgumentsInterface;
 use Chevere\Interfaces\Parameter\ParametersInterface;
-use Chevere\Interfaces\Response\ResponseSuccessInterface;
+use Chevere\Interfaces\Response\ResponseInterface;
 use Intervention\Image\Image;
 use JeroenDesloovere\XmpMetadataExtractor\XmpMetadataExtractor;
 
@@ -47,7 +47,7 @@ class ImageFetchMetaAction extends Action
             );
     }
 
-    public function run(ArgumentsInterface $arguments): ResponseSuccessInterface
+    public function run(ArgumentsInterface $arguments): ResponseInterface
     {
         /** @var Image $image */
         $image = $arguments->get('image');
@@ -57,6 +57,6 @@ class ImageFetchMetaAction extends Action
         $xmpDataExtractor = new XmpMetadataExtractor();
         $data['xmp'] = $xmpDataExtractor->extractFromFile($image->basePath());
 
-        return $this->getResponseSuccess($data);
+        return $this->getResponse(...$data);
     }
 }

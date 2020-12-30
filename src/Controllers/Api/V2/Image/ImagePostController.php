@@ -14,13 +14,13 @@ declare(strict_types=1);
 namespace Chevereto\Controllers\Api\V2\Image;
 
 use Chevere\Components\Parameter\IntegerParameter;
-use Chevere\Components\Response\ResponseSuccess;
 use function Chevere\Components\Workflow\getWorkflowMessage;
 use Chevere\Components\Workflow\Step;
 use Chevere\Components\Workflow\Workflow;
+use Chevere\Components\Workflow\WorkflowResponse;
 use Chevere\Interfaces\Parameter\ArgumentsInterface;
 use Chevere\Interfaces\Parameter\ParametersInterface;
-use Chevere\Interfaces\Response\ResponseSuccessInterface;
+use Chevere\Interfaces\Response\ResponseInterface;
 use Chevere\Interfaces\Workflow\WorkflowInterface;
 use Chevereto\Actions\File\FileDetectDuplicateAction;
 use Chevereto\Actions\File\FileUploadAction;
@@ -100,7 +100,7 @@ abstract class ImagePostController extends FilePostController
             );
     }
 
-    public function run(ArgumentsInterface $arguments): ResponseSuccessInterface
+    public function run(ArgumentsInterface $arguments): ResponseInterface
     {
         $context = $this->contextArguments();
         $uploadFile = tempnam(sys_get_temp_dir(), 'chv.temp');
@@ -109,7 +109,7 @@ abstract class ImagePostController extends FilePostController
             'filename' => $uploadFile,
         ]);
 
-        return (new ResponseSuccess($this->getResponseDataParameters(), []))
+        return (new WorkflowResponse($this->getResponseDataParameters(), []))
             ->withWorkflowMessage(
                 getWorkflowMessage($this->getWorkflow(), ...$settings)
             );

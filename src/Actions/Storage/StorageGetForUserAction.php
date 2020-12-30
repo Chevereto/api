@@ -20,7 +20,7 @@ use Chevere\Components\Parameter\Parameters;
 use Chevere\Components\Type\Type;
 use Chevere\Interfaces\Parameter\ArgumentsInterface;
 use Chevere\Interfaces\Parameter\ParametersInterface;
-use Chevere\Interfaces\Response\ResponseSuccessInterface;
+use Chevere\Interfaces\Response\ResponseInterface;
 use Chevereto\Components\Storage;
 
 /**
@@ -45,14 +45,12 @@ class StorageGetForUserAction extends Action
             );
     }
 
-    public function run(ArgumentsInterface $arguments): ResponseSuccessInterface
+    public function run(ArgumentsInterface $arguments): ResponseInterface
     {
         $userId = $arguments->getInteger('userId');
         $bytesRequired = $arguments->getInteger('bytesRequired');
         // $storage = $service->getStorageFor($userId, $bytesRequired)
 
-        return $this->getResponseSuccess([
-            'storage' => new Storage(0),
-        ]);
+        return $this->getResponse(storage: new Storage(0));
     }
 }

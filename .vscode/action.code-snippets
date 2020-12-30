@@ -11,7 +11,7 @@
             "use Chevere\\Components\\Parameter\\StringParameter;",
             "use Chevere\\Components\\Parameter\\Parameters;",
             "use Chevere\\Interfaces\\Parameter\\ParametersInterface;",
-            "use Chevere\\Interfaces\\Response\\ResponseSuccessInterface;",
+            "use Chevere\\Interfaces\\Response\\ResponseInterface;",
             "",
             "class $TM_FILENAME_BASE extends Action",
             "{",
@@ -29,11 +29,11 @@
             "\t\treturn (new Parameters);",
             "\t}",
             "",
-            "\tpublic function run(array \\$arguments): ResponseSuccessInterface",
+            "\tpublic function run(array \\$arguments): ResponseInterface",
             "\t{",
             "\t\t$0",
             "\t\t\\$arguments = \\$this->getArguments(\\$arguments);",
-            "\t\treturn \\$this->getResponseSuccess([]);",
+            "\t\treturn \\$this->getResponse([]);",
             "\t}",
             "}"
         ]
