@@ -44,10 +44,6 @@ use Chevereto\Actions\Image\ImageValidateMediaAction;
 use Chevereto\Actions\Storage\StorageGetForUserAction;
 use Chevereto\Controllers\Api\V2\File\Traits\FileStoreBase64SourceTrait;
 use Laminas\Uri\UriFactory;
-use function Safe\fclose;
-use function Safe\fopen;
-use function Safe\fwrite;
-use function Safe\stream_filter_append;
 use function Safe\tempnam;
 
 final class UploadPostController extends Controller implements DependentInterface
@@ -196,18 +192,5 @@ final class UploadPostController extends Controller implements DependentInterfac
         }
 
         return $this->getResponse(raw: $raw);
-    }
-
-    public function storeDecodedBase64String(string $base64, string $path): void
-    {
-        $fh = fopen($path, 'w');
-        stream_filter_append($fh, 'convert.base64-decode', STREAM_FILTER_WRITE);
-        if (! fwrite($fh, $base64)) {
-            throw new Exception(
-                new Message('Unable to store decoded base64 string'),
-                1200
-            );
-        }
-        fclose($fh);
     }
 }
