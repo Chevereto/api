@@ -3,9 +3,9 @@
 [![Build](https://img.shields.io/github/workflow/status/chevereto/api/CI/master?style=flat-square)](https://github.com/chevereto/api/actions)
 [![codecov](https://img.shields.io/codecov/c/github/chevereto/api?style=flat-square)](https://codecov.io/gh/chevereto/api)
 [![CodeFactor](https://img.shields.io/codefactor/grade/github/chevereto/api?label=code%20grade&style=flat-square)](https://www.codefactor.io/repository/github/chevereto/api)
-[![Codacy Badge](https://img.shields.io/codacy/grade/9bc0696e742b438cabb258f9240cac66?style=flat-square)](https://www.codacy.com/gh/chevereto/api)
-[![Maintainability](https://img.shields.io/codeclimate/maintainability/Chevereto/api?style=flat-square)](https://codeclimate.com/github/chevereto/api)
-[![Tech Debt](https://img.shields.io/codeclimate/tech-debt/Chevereto/api?style=flat-square)](https://codeclimate.com/github/chevereto/api)
+[![Codacy Badge](https://img.shields.io/codacy/grade/9bc0696e742b438cabb258f9240cac66?style=flat-square)](https://www.codacy.com/gh/Chevereto/api)
+[![Maintainability](https://img.shields.io/codeclimate/maintainability/Chevereto/api?style=flat-square)](https://codeclimate.com/github/Chevereto/api)
+[![Tech Debt](https://img.shields.io/codeclimate/tech-debt/Chevereto/api?style=flat-square)](https://codeclimate.com/github/Chevereto/api)
 [![MIT License](https://img.shields.io/github/license/chevereto/api?style=flat-square)](LICENSE)
 
 > 🔔 [Subscribe](https://newsletter.chevereto.com/subscription?f=PmL892XuTdfErVq763PCycJQrvZ8PYc9JbsVUttqiPV1zXt6DDtf7lhepEStqE8LhGs8922ZYmGT7CYjMH5uSx23pL6Q) to don't miss any update regarding Chevereto.
