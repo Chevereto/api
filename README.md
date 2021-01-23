@@ -16,9 +16,11 @@ This is the Chevereto API, a server side application providing the public user e
 
 ## Technical Overview
 
-Chevereto API is a [Chevere](https://chevere.org/) application written in the [PHP](https://www.php.net/) programming language. It uses [Swoole](https://www.swoole.co.uk/) as an application runner to serve most of the application instructions.
+Chevereto API is a [Chevere](https://chevere.org/) application written in the [PHP](https://www.php.net/) programming language. It uses [Swoole](https://www.swoole.co.uk/) as an application runner to serve most of the application services.
 
-Chevereto API handles stored application states that are intended to be persistent, without having to bootstrap the whole application on every request. This enables Chevereto API to offer way higher I/O throughput than conventional PHP software. On top of that, Chevereto API is built to be heavily extended with plugins altering the default application [Workflows](https://chevere.org/components/Workflow.html).
+Chevereto API handles stored application states that are intended to be persistent, without having to bootstrap the whole application on every request. This enables Chevereto API to offer way higher I/O throughput than conventional PHP software. Also, it is built to be heavily extended with plugins altering the default application [Workflows](https://chevere.org/components/Workflow.html).
+
+Chevereto API is headless software and is completely decoupled from the user interface. It exposes a self-described REST API, but also other endpoints to command the application from _anywhere_.
 
 ## Contribution
 
