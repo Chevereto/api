@@ -24,7 +24,9 @@ Chevereto API is headless software and is completely decoupled from the user int
 
 ## Contribution
 
-This project is under alpha development and is not recommended to use it for production yet. Developers (and those wanting to become) are welcome! Join our [Discord](https://chv.to/discord) channel for more into this.
+Developers (and those wanting to become) are welcome! Join our [Discord](https://chv.to/discord) channel for more into this.
+
+❤ You can also [donate](https://paypal.me/RodolfoBerrios) to support my work.
 
 ## License
 
