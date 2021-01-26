@@ -10,7 +10,7 @@
         }
     ],
     "require": {
-        "chevere/chevere": "dev-master",
+        "chevere/chevere": "dev-main",
         "phpunit/phpunit": "^9.2",
         "laminas/laminas-uri": "^2.7",
         "ralouphie/mimey": "^2.1",
