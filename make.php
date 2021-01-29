@@ -18,7 +18,7 @@ use Chevere\Components\Router\Router;
 use function Chevere\Components\Router\Routing\routerForRoutingDescriptors;
 use Chevere\Components\Router\Routing\RoutingDescriptorsMaker;
 use Chevere\Components\Spec\SpecMaker;
-use Chevere\Components\VarExportable\VarExportable;
+use Chevere\Components\VarStorable\VarStorable;
 
 require 'vendor/autoload.php';
 
@@ -30,10 +30,9 @@ $routingDir = $specDir->getChild('app/routing/');
 $router = new Router();
 foreach (['api-v1', 'api-v2'] as $group) {
     $routerForGroup = routerForRoutingDescriptors(
-        (new RoutingDescriptorsMaker(
-            $group,
-            $routingDir->getChild("${group}/")
-        ))->descriptors()
+        (new RoutingDescriptorsMaker($group))
+            ->withDescriptorsFor($routingDir->getChild("${group}/"))
+            ->descriptors()
     );
     foreach ($routerForGroup->routables()->getGenerator() as $routable) {
         $router = $router->withAddedRoutable($routable, $group);
@@ -48,7 +47,7 @@ if ($cacheDir->exists()) {
 (new Cache($cacheDir->getChild('router/')))
     ->withPut(
         new CacheKey('public'),
-        new VarExportable($router->routeCollector())
+        new VarStorable($router->routeCollector())
     );
 echo "Cached HTTP router\n";
 $publicDir = $specDir->getChild('volumes/public/');
