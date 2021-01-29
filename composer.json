@@ -13,7 +13,6 @@
         "chevere/chevere": "dev-main",
         "phpunit/phpunit": "^9.2",
         "laminas/laminas-uri": "^2.7",
-        "ralouphie/mimey": "^2.1",
         "intervention/image": "^2.5",
         "jeroendesloovere/xmp-metadata-extractor": "^2.0",
         "ext-imagick": "^3.4",

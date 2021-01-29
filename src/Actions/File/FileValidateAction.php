@@ -23,7 +23,6 @@ use Chevere\Exceptions\Core\InvalidArgumentException;
 use Chevere\Interfaces\Parameter\ArgumentsInterface;
 use Chevere\Interfaces\Parameter\ParametersInterface;
 use Chevere\Interfaces\Response\ResponseInterface;
-use Mimey\MimeTypes;
 use function Safe\filesize;
 use function Safe\md5_file;
 use function Safe\mime_content_type;
@@ -34,7 +33,7 @@ use Throwable;
  */
 class FileValidateAction extends Action
 {
-    private array $extensions = [];
+    private array $mimes = [];
 
     private int $maxBytes = 0;
 
@@ -44,9 +43,9 @@ class FileValidateAction extends Action
     {
         return (new Parameters())
             ->withAddedRequired(
-                extensions : (new StringParameter())
-                    ->withRegex(new Regex('/^[\w]+(,[\w]+)*$/'))
-                    ->withDescription('Comma-separated list of allowed file extensions'),
+                mimes : (new StringParameter())
+                    ->withRegex(new Regex('/^([\w]+\/[\w\-\+\.]+)+(,([\w]+\/[\w\-\+\.]+))*$/'))
+                    ->withDescription('Comma-separated list of allowed mime-types'),
                 filename : new StringParameter(),
             )
             ->withAddedOptional(
@@ -67,7 +66,7 @@ class FileValidateAction extends Action
 
     public function run(ArgumentsInterface $arguments): ResponseInterface
     {
-        $this->extensions = explode(',', $arguments->getString('extensions')) ?: [];
+        $this->mimes = explode(',', $arguments->getString('mimes')) ?: [];
         $this->minBytes = $arguments->has('minBytes')
             ? $arguments->getInteger('minBytes')
             : 0;
@@ -79,9 +78,7 @@ class FileValidateAction extends Action
         }
         $this->assertMinBytes($bytes);
         $mime = mime_content_type($filename);
-        $mimes = new MimeTypes();
-        $extensions = $mimes->getAllExtensions($mime);
-        $this->assertExtension($extensions);
+        $this->assertMime($mime);
 
         return $this->getResponse(
             bytes: $bytes,
@@ -129,21 +126,13 @@ class FileValidateAction extends Action
         }
     }
 
-    private function assertExtension(array $extensions): void
+    private function assertMime(string $mime): void
     {
-        if ($extensions === []) {
-            // @codeCoverageIgnoreStart
+        if (! in_array($mime, $this->mimes, true)) {
             throw new InvalidArgumentException(
-                new Message('Unable to detect file extension'),
-                1003
-            );
-            // @codeCoverageIgnoreEnd
-        }
-        if (! array_intersect($extensions, $this->extensions)) {
-            throw new InvalidArgumentException(
-                (new Message('File extension %extension% is not allowed (allows %allowed%)'))
-                    ->code('%extension%', implode(', ', $extensions))
-                    ->code('%allowed%', implode(', ', $this->extensions)),
+                (new Message('File mime-type %type% is not allowed (allows %allowed%)'))
+                    ->code('%type%', $mime)
+                    ->code('%allowed%', implode(', ', $this->mimes)),
                 1004
             );
         }

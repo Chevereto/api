@@ -44,7 +44,7 @@ final class ImagePostUrlControllerTest extends TestCase
     public function testRun(): void
     {
         $context = [
-            'extensions' => 'jpg,png',
+            'mimes' => 'image/jpeg,image/png',
             'maxBytes' => 200000,
             'maxHeight' => 100,
             'maxWidth' => 100,

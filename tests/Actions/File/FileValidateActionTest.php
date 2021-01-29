@@ -28,7 +28,7 @@ final class FileValidateActionTest extends TestCase
         $action = new FileValidateAction();
         $arguments = [
             'filename' => __FILE__,
-            'extensions' => 'php',
+            'mimes' => 'text/x-php',
         ];
         $response = $action->run($action->getArguments(...$arguments));
         $this->assertSame(
@@ -46,7 +46,7 @@ final class FileValidateActionTest extends TestCase
         $action = new FileValidateAction();
         $arguments = [
             'filename' => __FILE__,
-            'extensions' => 'php',
+            'mimes' => 'text/x-php',
             'minBytes' => 20000000,
         ];
         $this->expectInvalidArgumentException(1001);
@@ -58,7 +58,7 @@ final class FileValidateActionTest extends TestCase
         $action = new FileValidateAction();
         $arguments = [
             'filename' => __FILE__,
-            'extensions' => 'php,txt',
+            'mimes' => 'text/x-php,text/plain',
             'maxBytes' => 20000000,
         ];
         $response = $action->run($action->getArguments(...$arguments));
@@ -70,12 +70,12 @@ final class FileValidateActionTest extends TestCase
         $action->run($action->getArguments(...$badArguments));
     }
 
-    public function testExtension(): void
+    public function testMime(): void
     {
         $action = new FileValidateAction();
         $arguments = [
             'filename' => __FILE__,
-            'extensions' => 'txt',
+            'mimes' => 'text/plain,application/pdf',
         ];
         $this->expectInvalidArgumentException(1004);
         $action->run($action->getArguments(...$arguments));

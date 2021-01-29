@@ -52,7 +52,7 @@ abstract class ImagePostController extends FilePostController
             ->withAdded(
                 validateFile: (new Step(FileValidateAction::class))
                     ->withArguments(
-                        extensions: '${extensions}',
+                        mimes: '${mimes}',
                         filename: '${filename}',
                         maxBytes: '${maxBytes}',
                         minBytes: '${minBytes}',

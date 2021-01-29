@@ -41,7 +41,7 @@ abstract class FilePostController extends ControllerWorkflow
                 maxBytes: new IntegerParameter(),
                 minBytes: new IntegerParameter(),
                 userId: new IntegerParameter(),
-                extensions: new StringParameter(),
+                mimes: new StringParameter(),
                 ip: new StringParameter(),
                 naming: new StringParameter(),
                 originalName: new StringParameter(),

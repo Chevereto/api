@@ -23,7 +23,7 @@ final class UploadPostControllerTest extends TestCase
     {
         $context = [
             'apiV1Key' => 'api-key-value',
-            'extensions' => 'php',
+            'mimes' => 'text/x-php',
             'maxBytes' => 20000000,
             'maxHeight' => 20000,
             'maxWidth' => 20000,

@@ -63,7 +63,7 @@ final class UploadPostController extends Controller implements DependentInterfac
         return (new Parameters())
             ->withAddedRequired(
                 apiV1Key: new StringParameter(),
-                extensions: new StringParameter(),
+                mimes: new StringParameter(),
                 maxBytes: new IntegerParameter(),
                 maxHeight: new IntegerParameter(),
                 maxWidth: new IntegerParameter(),
@@ -100,7 +100,7 @@ final class UploadPostController extends Controller implements DependentInterfac
             ->withAdded(
                 validateFile: (new Step(ValidateFileAction::class))
                     ->withArguments(
-                        extensions: '${extensions}',
+                        mimes: '${mimes}',
                         filename: '${filename}',
                         maxBytes: '${maxBytes}',
                         minBytes: '${minBytes}',
