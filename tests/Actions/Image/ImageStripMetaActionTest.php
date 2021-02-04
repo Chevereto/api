@@ -14,8 +14,8 @@ declare(strict_types=1);
 namespace Chevereto\Tests\Actions\Image;
 
 use Chevereto\Actions\Image\ImageStripMetaAction;
-use PHPUnit\Framework\TestCase;
 use function Chevereto\Image\imageManager;
+use PHPUnit\Framework\TestCase;
 use function Safe\copy;
 use function Safe\unlink;
 
@@ -28,8 +28,10 @@ final class ImageStripMetaActionTest extends TestCase
         copy($source, $strip);
         $sourceImage = imageManager()->make($source);
         $stripImage = imageManager()->make($strip);
-        $action = new ImageStripMetaAction;
-        $arguments = ['image' => $stripImage];
+        $action = new ImageStripMetaAction();
+        $arguments = [
+            'image' => $stripImage,
+        ];
         $action->run($action->getArguments(...$arguments));
         $tag = 'GPSAltitude';
         $this->assertIsArray(exif_read_data($source, 'ANY_TAG'));

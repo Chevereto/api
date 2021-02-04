@@ -13,4 +13,4 @@ declare(strict_types=1);
 
 use Chevereto\Controllers\Api\V2\Image\ImagePostBinaryController;
 
-return new ImagePostBinaryController;
+return new ImagePostBinaryController();

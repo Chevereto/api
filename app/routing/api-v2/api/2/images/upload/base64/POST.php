@@ -13,4 +13,4 @@ declare(strict_types=1);
 
 use Chevereto\Controllers\Api\V2\Image\ImagePostBase64Controller;
 
-return new ImagePostBase64Controller;
+return new ImagePostBase64Controller();

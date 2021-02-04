@@ -17,13 +17,13 @@ use Chevere\Exceptions\Core\InvalidArgumentException;
 
 trait ExpectInvalidArgumentExceptionCodeTrait
 {
+    abstract public function expectException(string $exception): void;
+
+    abstract public function expectExceptionCode($code): void;
+
     private function expectInvalidArgumentException(int $code): void
     {
         $this->expectException(InvalidArgumentException::class);
         $this->expectExceptionCode($code);
     }
-
-    abstract public function expectException(string $exception): void;
-
-    abstract public function expectExceptionCode($code): void;
 }

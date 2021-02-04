@@ -22,7 +22,7 @@ final class DetectDuplicateActionTest extends TestCase
     public function testConstruct(): void
     {
         $this->expectNotToPerformAssertions();
-        $action = new FileDetectDuplicateAction;
+        $action = new FileDetectDuplicateAction();
         new Arguments(
             $action->parameters(),
             md5: 'ad9ad3a94cff902a07058f5be9b2aea0',

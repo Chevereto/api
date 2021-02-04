@@ -14,13 +14,14 @@ declare(strict_types=1);
 use Chevere\Components\Action\ActionRunner;
 use Chevere\Components\Cache\Cache;
 use Chevere\Components\Cache\CacheKey;
+use function Chevere\Components\Filesystem\dirForPath;
 use Chevere\Components\Router\RouterDispatcher;
 use Chevere\Interfaces\Parameter\StringParameterInterface;
-use function Chevere\Components\Filesystem\dirForPath;
 
 foreach (['vendor/autoload.php', '../vendor/autoload.php'] as $autoload) {
     if (stream_resolve_include_path($autoload)) {
         require $autoload;
+
         break;
     }
 }
@@ -38,7 +39,9 @@ $controller = $routed->getController()->withSetUp();
  */
 foreach ($controller->parameters()->getGenerator() as $parameter) {
     if ($parameter->hasAttribute('tryFiles')) {
-        $arguments[$parameter->name()] = serialize(['tmp_name' => __FILE__]);
+        $arguments[$parameter->name()] = serialize([
+            'tmp_name' => __FILE__,
+        ]);
     }
 }
 $runner = new ActionRunner($controller);

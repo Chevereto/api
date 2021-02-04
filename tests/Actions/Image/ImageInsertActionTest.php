@@ -13,8 +13,6 @@ declare(strict_types=1);
 
 namespace Chevereto\Tests\Actions\Image;
 
-use Chevere\Exceptions\Core\InvalidArgumentException;
-use Chevereto\Actions\Image\ImageInsertAction;
 use PHPUnit\Framework\TestCase;
 
 // final class ImageInsertActionTest extends TestCase

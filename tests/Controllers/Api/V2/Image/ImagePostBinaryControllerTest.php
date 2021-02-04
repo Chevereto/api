@@ -22,10 +22,12 @@ final class ImagePostBinaryControllerTest extends TestCase
 {
     public function testAssertStoreSource(): void
     {
-        $files = ['tmp_name' => __FILE__];
+        $files = [
+            'tmp_name' => __FILE__,
+        ];
         $source = serialize($files);
         $path = tempnam(__DIR__, 'chv');
-        $controller = new ImagePostBinaryController;
+        $controller = new ImagePostBinaryController();
         $controller->assertStoreSource($source, $path);
         $this->assertStringEqualsFile($path, file_get_contents(__FILE__));
         unlink($path);

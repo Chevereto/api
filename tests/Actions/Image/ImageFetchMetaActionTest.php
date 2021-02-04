@@ -14,9 +14,9 @@ declare(strict_types=1);
 namespace Chevereto\Tests\Actions\Image;
 
 use Chevereto\Actions\Image\ImageFetchMetaAction;
+use function Chevereto\Image\imageManager;
 use PHPUnit\Framework\TestCase;
 use Tests\Actions\Traits\ExpectInvalidArgumentExceptionCodeTrait;
-use function Chevereto\Image\imageManager;
 
 final class ImageFetchMetaActionTest extends TestCase
 {
@@ -24,8 +24,10 @@ final class ImageFetchMetaActionTest extends TestCase
 
     public function testExif(): void
     {
-        $action = new ImageFetchMetaAction;
-        $arguments = ['image' => imageManager()->make(__DIR__ . '/assets/exif.jpg')];
+        $action = new ImageFetchMetaAction();
+        $arguments = [
+            'image' => imageManager()->make(__DIR__ . '/assets/exif.jpg'),
+        ];
         $response = $action->run($action->getArguments(...$arguments));
         $this->assertIsArray($response->data()['exif']);
         $this->assertCount(0, $response->data()['iptc']);
@@ -34,8 +36,10 @@ final class ImageFetchMetaActionTest extends TestCase
 
     public function testIptc(): void
     {
-        $action = new ImageFetchMetaAction;
-        $arguments = ['image' => imageManager()->make(__DIR__ . '/assets/iptc.jpg')];
+        $action = new ImageFetchMetaAction();
+        $arguments = [
+            'image' => imageManager()->make(__DIR__ . '/assets/iptc.jpg'),
+        ];
         $response = $action->run($action->getArguments(...$arguments));
         $this->assertIsArray($response->data()['exif']);
         $this->assertIsArray($response->data()['iptc']);
@@ -44,8 +48,10 @@ final class ImageFetchMetaActionTest extends TestCase
 
     public function testXmp(): void
     {
-        $action = new ImageFetchMetaAction;
-        $arguments = ['image' => imageManager()->make(__DIR__ . '/assets/all.jpg')];
+        $action = new ImageFetchMetaAction();
+        $arguments = [
+            'image' => imageManager()->make(__DIR__ . '/assets/all.jpg'),
+        ];
         $response = $action->run($action->getArguments(...$arguments));
         $this->assertIsArray($response->data()['exif']);
         $this->assertIsArray($response->data()['iptc']);

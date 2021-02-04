@@ -13,4 +13,4 @@ declare(strict_types=1);
 
 use Chevereto\Controllers\Api\V2\Album\AlbumGetController;
 
-return new AlbumGetController;
+return new AlbumGetController();
