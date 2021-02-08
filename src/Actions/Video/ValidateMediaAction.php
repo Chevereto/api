@@ -16,10 +16,9 @@ namespace Chevereto\Actions\Video;
 use Chevere\Components\Action\Action;
 use Chevere\Components\Message\Message;
 use Chevere\Components\Parameter\IntegerParameter;
-use Chevere\Components\Parameter\Parameter;
+use Chevere\Components\Parameter\ObjectParameter;
 use Chevere\Components\Parameter\Parameters;
 use Chevere\Components\Parameter\StringParameter;
-use Chevere\Components\Type\Type;
 use Chevere\Exceptions\Core\InvalidArgumentException;
 use Chevere\Interfaces\Message\MessageInterface;
 use Chevere\Interfaces\Parameter\ArgumentsInterface;
@@ -32,6 +31,13 @@ use Throwable;
 
 /**
  * Validates a video against the video processing and file dimensions.
+ *
+ * Response parameters:
+ *
+ * ```php
+ * format: \FFMpeg\FFProbe\DataMapping\Format,
+ * stream: \FFMpeg\FFProbe\DataMapping\Stream,
+ * ```
  */
 class ValidateMediaAction extends Action
 {
@@ -69,8 +75,8 @@ class ValidateMediaAction extends Action
     {
         return (new Parameters())
             ->withAddedRequired(
-                format: new Parameter(new Type(Format::class)),
-                stream: new Parameter(new Type(Stream::class)),
+                format: new ObjectParameter(Format::class),
+                stream: new ObjectParameter(Stream::class),
             );
     }
 

@@ -37,7 +37,7 @@ use Chevereto\Actions\Db\DbReserveRowAction;
 use Chevereto\Actions\File\FileAssertNotDuplicateAction;
 use Chevereto\Actions\File\FileTargetBasenameAction;
 use Chevereto\Actions\File\FileUploadAction;
-use Chevereto\Actions\File\FileValidateAction as ValidateFileAction;
+use Chevereto\Actions\File\FileValidateAction;
 use Chevereto\Actions\Image\ImageFetchMetaAction;
 use Chevereto\Actions\Image\ImageFixOrientationAction;
 use Chevereto\Actions\Image\ImageInsertAction;
@@ -100,7 +100,7 @@ final class UploadPostController extends Controller implements DependentInterfac
     {
         return (new Workflow(self::class))
             ->withAdded(
-                validateFile: (new Step(ValidateFileAction::class))
+                validateFile: (new Step(FileValidateAction::class))
                     ->withArguments(
                         mimes: '${mimes}',
                         filename: '${filename}',
