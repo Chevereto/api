@@ -11,13 +11,14 @@
 
 declare(strict_types=1);
 
-namespace Chevereto\Actions\Image;
+namespace Chevereto\Actions\Db;
 
 use Chevere\Components\Action\Action;
 use Chevere\Components\Dependent\Dependencies;
 use Chevere\Components\Dependent\Traits\DependentTrait;
 use Chevere\Components\Parameter\IntegerParameter;
 use Chevere\Components\Parameter\Parameters;
+use Chevere\Components\Parameter\StringParameter;
 use Chevere\Interfaces\Dependent\DependenciesInterface;
 use Chevere\Interfaces\Dependent\DependentInterface;
 use Chevere\Interfaces\Parameter\ArgumentsInterface;
@@ -26,9 +27,15 @@ use Chevere\Interfaces\Response\ResponseInterface;
 use Chevereto\Components\Db;
 
 /**
- * Insert the image in the database.
+ * Reserves a row in the database.
+ *
+ * Response parameters:
+ *
+ * ```php
+ * id: int,
+ * ```
  */
-class ImageInsertAction extends Action implements DependentInterface
+class DbReserveRowAction extends Action implements DependentInterface
 {
     use DependentTrait;
 
@@ -37,24 +44,30 @@ class ImageInsertAction extends Action implements DependentInterface
     public function getDependencies(): DependenciesInterface
     {
         return (new Dependencies())
-            ->withPut(db: Db::class);
+            ->withPut(
+                db: Db::class
+            );
     }
 
     public function getParameters(): ParametersInterface
     {
+    return (new Parameters())
+        ->withAddedRequired(
+            table: new StringParameter()
+        );
+    }
+
+    public function getResponseDataParameters(): ParametersInterface
+    {
         return (new Parameters())
-            ->withAddedOptional(
+            ->withAddedRequired(
                 id: new IntegerParameter(),
-                expires: new IntegerParameter(),
-                userId: new IntegerParameter(),
-                albumId: new IntegerParameter(),
             );
     }
 
     public function run(ArgumentsInterface $arguments): ResponseInterface
     {
-        $this->assertDependencies();
-        // TODO: DB inserting
-        return $this->getResponse();
+        // $db->insert row
+        return $this->getResponse(id: 123);
     }
 }

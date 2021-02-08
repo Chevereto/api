@@ -26,6 +26,14 @@ use JeroenDesloovere\XmpMetadataExtractor\XmpMetadataExtractor;
 
 /**
  * Fetch image metadata.
+ *
+ * Response parameters:
+ *
+ * ```php
+ * exif: array,
+ * iptc: array,
+ * xmp: array,
+ * ```
  */
 class ImageFetchMetaAction extends Action
 {

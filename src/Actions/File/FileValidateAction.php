@@ -30,6 +30,14 @@ use Throwable;
 
 /**
  * Validate file type and its size.
+ *
+ * Response parameters:
+ *
+ * ```php
+ * bytes: int,
+ * mime: string,
+ * md5: string,
+ * ```
  */
 class FileValidateAction extends Action
 {

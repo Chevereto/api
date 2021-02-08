@@ -11,7 +11,7 @@
 
 declare(strict_types=1);
 
-namespace Chevereto\Actions\Storage;
+namespace Chevereto\Actions\File;
 
 use Chevere\Components\Action\Action;
 use Chevere\Components\Dependent\Dependencies;
@@ -19,6 +19,8 @@ use Chevere\Components\Dependent\Traits\DependentTrait;
 use Chevere\Components\Parameter\IntegerParameter;
 use Chevere\Components\Parameter\ObjectParameter;
 use Chevere\Components\Parameter\Parameters;
+use Chevere\Components\Parameter\StringParameter;
+use Chevere\Components\Regex\Regex;
 use Chevere\Interfaces\Dependent\DependenciesInterface;
 use Chevere\Interfaces\Dependent\DependentInterface;
 use Chevere\Interfaces\Parameter\ArgumentsInterface;
@@ -26,18 +28,17 @@ use Chevere\Interfaces\Parameter\ParametersInterface;
 use Chevere\Interfaces\Response\ResponseInterface;
 use Chevereto\Components\Db;
 use Chevereto\Components\Storage\Storage;
-use League\Flysystem\Local\LocalFilesystemAdapter;
 
 /**
- * Finds a valid storage to allocate the bytes required.
+ * Determines the best (available) file target basename.
  *
  * Response parameters:
  *
  * ```php
- * storage: \Chevereto\Interfaces\Storage\StorageInterface,
+ * basename: string,
  * ```
  */
-class StorageGetForUserAction extends Action implements DependentInterface
+class FileTargetBasenameAction extends Action implements DependentInterface
 {
     use DependentTrait;
 
@@ -53,28 +54,36 @@ class StorageGetForUserAction extends Action implements DependentInterface
 
     public function getParameters(): ParametersInterface
     {
-        return (new Parameters())
-            ->withAddedRequired(
-                userId: new IntegerParameter(),
-                bytesRequired: new IntegerParameter(),
-            );
+    return (new Parameters())
+        ->withAddedRequired(
+            id: new IntegerParameter(),
+            name: (new StringParameter())
+                ->withRegex(new Regex('/^.+\.[a-zA-Z]+$/')),
+            naming: (new StringParameter())
+                ->withRegex(new Regex('/^(original|random|mixed|id)$/'))
+                ->withDefault('original'),
+            storage: new ObjectParameter(Storage::class)
+        );
     }
 
     public function getResponseDataParameters(): ParametersInterface
     {
         return (new Parameters())
             ->withAddedRequired(
-                storage: new ObjectParameter(Storage::class),
+                basename: (new StringParameter())
+                    ->withRegex(new Regex('/^.+\.[a-zA-Z]+$/'))
             );
     }
 
     public function run(ArgumentsInterface $arguments): ResponseInterface
     {
-        $userId = $arguments->getInteger('userId');
-        $bytesRequired = $arguments->getInteger('bytesRequired');
-        // $adapter = db->query storage for user;
-        $adapter = new LocalFilesystemAdapter(__DIR__);
+        $name = $arguments->getString('name');
+        /** @var Storage $storage */
+        $storage = $arguments->get('storage');
+        while($storage->adapter()->fileExists($name)) {
+            $name .= 'e';
+        }
 
-        return $this->getResponse(storage: new Storage($adapter));
+        return $this->getResponse(basename: $name);
     }
 }

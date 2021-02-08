@@ -14,15 +14,15 @@ declare(strict_types=1);
 namespace Chevereto\Tests\Actions\File;
 
 use Chevere\Components\Parameter\Arguments;
-use Chevereto\Actions\File\FileDetectDuplicateAction;
+use Chevereto\Actions\File\FileAssertNotDuplicateAction;
 use PHPUnit\Framework\TestCase;
 
-final class DetectDuplicateActionTest extends TestCase
+final class AssertNotDuplicateActionTest extends TestCase
 {
     public function testConstruct(): void
     {
         $this->expectNotToPerformAssertions();
-        $action = new FileDetectDuplicateAction();
+        $action = new FileAssertNotDuplicateAction();
         new Arguments(
             $action->parameters(),
             md5: 'ad9ad3a94cff902a07058f5be9b2aea0',

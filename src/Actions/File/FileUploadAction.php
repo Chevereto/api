@@ -14,15 +14,14 @@ declare(strict_types=1);
 namespace Chevereto\Actions\File;
 
 use Chevere\Components\Action\Action;
-use Chevere\Components\Parameter\Parameter;
+use Chevere\Components\Parameter\ObjectParameter;
 use Chevere\Components\Parameter\Parameters;
 use Chevere\Components\Parameter\StringParameter;
 use Chevere\Components\Regex\Regex;
-use Chevere\Components\Type\Type;
 use Chevere\Interfaces\Parameter\ArgumentsInterface;
 use Chevere\Interfaces\Parameter\ParametersInterface;
 use Chevere\Interfaces\Response\ResponseInterface;
-use Chevereto\Components\Storage;
+use Chevereto\Components\Storage\Storage;
 
 /**
  * Upload the filename to the target storage.
@@ -34,13 +33,10 @@ class FileUploadAction extends Action
         return (new Parameters())
             ->withAddedRequired(
                 filename: new StringParameter(),
-                naming: (new StringParameter())
-                    ->withRegex(new Regex('/^(original|random|mixed|id)$/'))
-                    ->withDefault('original'),
-                originalName: (new StringParameter())
-                    ->withRegex(new Regex('/^.+\.[a-zA-Z]{3}$/')),
-                storage: new Parameter(new Type(Storage::class)),
-                uploadPath: new StringParameter(),
+                targetBasename: (new StringParameter())
+                    ->withRegex(new Regex('/^.+\.[a-zA-Z]+$/')),
+                storage: new ObjectParameter(Storage::class),
+                path: new StringParameter()
             );
     }
 
@@ -48,10 +44,11 @@ class FileUploadAction extends Action
     {
         $filename = $arguments->getString('filename');
         $naming = $arguments->getString('naming');
-        $originalName = $arguments->getString('originalName');
+        $name = $arguments->getString('name');
         /** @var Storage $storage */
         $storage = $arguments->get('storage');
+        // $storage->adapter()->write();
 
-        return $this->getResponse(path: '123');
+        return $this->getResponse();
     }
 }

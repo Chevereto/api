@@ -22,7 +22,9 @@ use Chevere\Interfaces\Parameter\ArgumentsInterface;
 use Chevere\Interfaces\Parameter\ParametersInterface;
 use Chevere\Interfaces\Response\ResponseInterface;
 use Chevere\Interfaces\Workflow\WorkflowInterface;
-use Chevereto\Actions\File\FileDetectDuplicateAction;
+use Chevereto\Actions\Db\DbReserveRowAction;
+use Chevereto\Actions\File\FileAssertNotDuplicateAction;
+use Chevereto\Actions\File\FileTargetBasenameAction;
 use Chevereto\Actions\File\FileUploadAction;
 use Chevereto\Actions\File\FileValidateAction;
 use Chevereto\Actions\Image\ImageFetchMetaAction;
@@ -65,7 +67,7 @@ abstract class ImagePostController extends FilePostController
                         minHeight: '${minHeight}',
                         minWidth: '${minWidth}',
                     ),
-                detectDuplicate: (new Step(FileDetectDuplicateAction::class))
+                assertNotDuplicate: (new Step(FileAssertNotDuplicateAction::class))
                     ->withArguments(
                         md5: '${validateFile:md5}',
                         perceptual: '${validateMedia:perceptual}',
@@ -83,16 +85,27 @@ abstract class ImagePostController extends FilePostController
                         userId: '${userId}',
                         bytesRequired: '${validateFile:bytes}',
                     ),
+                reserveId: (new Step(DbReserveRowAction::class))
+                    ->withArguments(
+                        table: '${table}',
+                    ),
+                targetBasename: (new Step(FileTargetBasenameAction::class))
+                    ->withArguments(
+                        id: '${reserveId:id}',
+                        name: '${name}',
+                        naming: '${naming}',
+                        storage: '${storageForUser:storage}',
+                    ),
                 upload: (new Step(FileUploadAction::class))
                     ->withArguments(
                         filename: '${filename}',
-                        naming: '${naming}',
-                        originalName: '${originalName}',
+                        targetBasename: '${targetBasename:name}',
                         storage: '${storageForUser:storage}',
-                        uploadPath: '${uploadPath}',
+                        path: '${path}',
                     ),
                 insert: (new Step(ImageInsertAction::class))
                     ->withArguments(
+                        id: '${reserveId:id}',
                         albumId: '${albumId}',
                         expires: '${expires}',
                         userId: '${userId}',

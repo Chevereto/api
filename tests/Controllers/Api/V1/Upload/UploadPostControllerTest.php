@@ -31,7 +31,7 @@ final class UploadPostControllerTest extends TestCase
             'minHeight' => 20,
             'minWidth' => 20,
             'naming' => 'original',
-            'uploadPath' => '2020/10/23',
+            'path' => '2020/10/23',
             'userId' => 123,
         ];
         $controller = (new UploadPostController())->withContextArguments(...$context);

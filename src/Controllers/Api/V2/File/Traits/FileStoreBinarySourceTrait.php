@@ -13,11 +13,9 @@ declare(strict_types=1);
 
 namespace Chevereto\Controllers\Api\V2\File\Traits;
 
-use Chevere\Components\Message\Message;
 use Chevere\Components\Parameter\StringParameter;
-use Chevere\Components\Serialize\Unserialize;
+use Chevere\Components\Serialize\Deserialize;
 use Chevere\Exceptions\Core\InvalidArgumentException;
-use Chevere\Exceptions\Serialize\UnserializeException;
 use Chevere\Interfaces\Parameter\StringParameterInterface;
 use Exception;
 use function Safe\copy;
@@ -31,16 +29,10 @@ trait FileStoreBinarySourceTrait
      */
     public function assertStoreSource(string $source, string $uploadFile): void
     {
-        try {
-            $unserialize = new Unserialize($source);
-            $filename = $unserialize->var()['tmp_name'] ?? null;
-            if ($filename === null) {
-                throw new Exception();
-            }
-        } catch (UnserializeException $e) {
-            throw new InvalidArgumentException(
-                new Message('Invalid file serialize string'),
-            );
+        $deserialize = new Deserialize($source);
+        $filename = $deserialize->var()['tmp_name'] ?? null;
+        if ($filename === null) {
+            throw new Exception();
         }
 
         copy($filename, $uploadFile);

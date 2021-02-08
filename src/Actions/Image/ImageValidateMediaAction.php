@@ -16,10 +16,9 @@ namespace Chevereto\Actions\Image;
 use Chevere\Components\Action\Action;
 use Chevere\Components\Message\Message;
 use Chevere\Components\Parameter\IntegerParameter;
-use Chevere\Components\Parameter\Parameter;
+use Chevere\Components\Parameter\ObjectParameter;
 use Chevere\Components\Parameter\Parameters;
 use Chevere\Components\Parameter\StringParameter;
-use Chevere\Components\Type\Type;
 use Chevere\Exceptions\Core\InvalidArgumentException;
 use Chevere\Exceptions\Core\OutOfBoundsException;
 use Chevere\Exceptions\Core\TypeException;
@@ -35,6 +34,13 @@ use Throwable;
 
 /**
  * Validates an image against the image processing and image dimensions.
+ *
+ * Response parameters:
+ *
+ * ```php
+ * image: \Intervention\Image\Image,
+ * perceptual: string,
+ * ```
  */
 class ImageValidateMediaAction extends Action
 {
@@ -66,7 +72,7 @@ class ImageValidateMediaAction extends Action
     {
         return (new Parameters())
             ->withAddedRequired(
-                image: new Parameter(new Type(Image::class)),
+                image: new ObjectParameter(Image::class),
                 perceptual: new StringParameter(),
             );
     }

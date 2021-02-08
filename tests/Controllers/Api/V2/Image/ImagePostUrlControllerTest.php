@@ -52,13 +52,14 @@ final class ImagePostUrlControllerTest extends TestCase
             'minHeight' => 1,
             'minWidth' => 1,
             'naming' => 'original',
-            'uploadPath' => 'eeee',
+            'path' => 'ee/ee',
             'userId' => 1,
             'ip' => '127.0.0.1',
             'ipVersion' => '4',
-            'originalName' => 'laFotito.jpg',
+            'name' => 'laFotito.jpg',
             'expires' => 0,
             'albumId' => 0,
+            'table' => 'images',
         ];
         $controller = (new ImagePostUrlController())->withContextArguments(...$context);
         $arguments = [

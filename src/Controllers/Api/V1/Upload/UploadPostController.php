@@ -20,7 +20,7 @@ use Chevere\Components\Parameter\IntegerParameter;
 use Chevere\Components\Parameter\Parameters;
 use Chevere\Components\Parameter\StringParameter;
 use Chevere\Components\Regex\Regex;
-use Chevere\Components\Serialize\Unserialize;
+use Chevere\Components\Serialize\Deserialize;
 use Chevere\Components\Workflow\Step;
 use Chevere\Components\Workflow\Workflow;
 use Chevere\Components\Workflow\WorkflowRun;
@@ -33,7 +33,9 @@ use Chevere\Interfaces\Parameter\ArgumentsInterface;
 use Chevere\Interfaces\Parameter\ParametersInterface;
 use Chevere\Interfaces\Response\ResponseInterface;
 use Chevere\Interfaces\Workflow\WorkflowInterface;
-use Chevereto\Actions\File\FileDetectDuplicateAction;
+use Chevereto\Actions\Db\DbReserveRowAction;
+use Chevereto\Actions\File\FileAssertNotDuplicateAction;
+use Chevereto\Actions\File\FileTargetBasenameAction;
 use Chevereto\Actions\File\FileUploadAction;
 use Chevereto\Actions\File\FileValidateAction as ValidateFileAction;
 use Chevereto\Actions\Image\ImageFetchMetaAction;
@@ -71,7 +73,7 @@ final class UploadPostController extends Controller implements DependentInterfac
                 minHeight: new IntegerParameter(),
                 minWidth: new IntegerParameter(),
                 naming: new StringParameter(),
-                uploadPath: new StringParameter(),
+                path: new StringParameter(),
                 userId: new IntegerParameter()
             );
     }
@@ -113,9 +115,9 @@ final class UploadPostController extends Controller implements DependentInterfac
                         minHeight: '${minHeight}',
                         minWidth: '${minWidth}',
                     ),
-                detectDuplication: (new Step(FileDetectDuplicateAction::class))
+                assertNotDuplicate: (new Step(FileAssertNotDuplicateAction::class))
                     ->withArguments(
-                        md5: '${validate:md5}',
+                        md5: '${validateFile:md5}',
                         perceptual: '${validate:perceptual}',
                         ip: '${ip}',
                         ipVersion: '${ipVersion}',
@@ -135,16 +137,27 @@ final class UploadPostController extends Controller implements DependentInterfac
                         userId: '${userId}',
                         bytesRequired: '${validateFile:bytes}',
                     ),
+                reserveId: (new Step(DbReserveRowAction::class))
+                    ->withArguments(
+                        table: '${table}',
+                    ),
+                targetBasename: (new Step(FileTargetBasenameAction::class))
+                    ->withArguments(
+                        id: '${reserveId:id}',
+                        name: '${name}',
+                        naming: '${naming}',
+                        storage: '${storageForUser:storage}',
+                    ),
                 upload: (new Step(FileUploadAction::class))
                     ->withArguments(
                         filename: '${filename}',
-                        naming: '${naming}',
-                        originalName: '${originalName}',
+                        targetBasename: '${targetBasename:name}',
                         storage: '${storageForUser:storage}',
-                        uploadPath: '${uploadPath}',
+                        path: '${path}',
                     ),
                 insert: (new Step(ImageInsertAction::class))
                     ->withArguments(
+                        id: '${reserveId:id}',
                         albumId: '${albumId}',
                         expires: '${expires}',
                         userId: '${userId}',
@@ -165,8 +178,8 @@ final class UploadPostController extends Controller implements DependentInterfac
         $source = $arguments->getString('source');
 
         try {
-            $unserialize = new Unserialize($source);
-            $uploadFile = $unserialize->var()['tmp_name'];
+            $Deserialize = new Deserialize($source);
+            $uploadFile = $Deserialize->var()['tmp_name'];
         } catch (Exception $e) {
             $uploadFile = tempnam(sys_get_temp_dir(), 'chv.temp');
             $uri = UriFactory::factory($source);

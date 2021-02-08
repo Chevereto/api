@@ -14,18 +14,33 @@ declare(strict_types=1);
 namespace Chevereto\Actions\File;
 
 use Chevere\Components\Action\Action;
+use Chevere\Components\Dependent\Dependencies;
+use Chevere\Components\Dependent\Traits\DependentTrait;
 use Chevere\Components\Parameter\Parameters;
 use Chevere\Components\Parameter\StringParameter;
 use Chevere\Components\Regex\Regex;
+use Chevere\Interfaces\Dependent\DependenciesInterface;
+use Chevere\Interfaces\Dependent\DependentInterface;
 use Chevere\Interfaces\Parameter\ArgumentsInterface;
 use Chevere\Interfaces\Parameter\ParametersInterface;
 use Chevere\Interfaces\Response\ResponseInterface;
+use Chevereto\Components\Db;
 
 /**
  * Detects file duplication based in both perceptual and file hashing, against the uploading frequency.
  */
-class FileDetectDuplicateAction extends Action
+class FileAssertNotDuplicateAction extends Action implements DependentInterface
 {
+    use DependentTrait;
+
+    private Db $db;
+
+    public function getDependencies(): DependenciesInterface
+    {
+        return (new Dependencies())
+            ->withPut(db: Db::class);
+    }
+
     public function getParameters(): ParametersInterface
     {
         return (new Parameters())
@@ -43,7 +58,7 @@ class FileDetectDuplicateAction extends Action
 
     public function run(ArgumentsInterface $arguments): ResponseInterface
     {
-        // TODO: Use DB check
+        // $db->query hash, rate, HALT if dupe
 
         return $this->getResponse();
     }

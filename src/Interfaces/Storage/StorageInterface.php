@@ -11,19 +11,13 @@
 
 declare(strict_types=1);
 
-namespace Chevereto\Components;
+namespace Chevereto\Interfaces\Storage;
 
-final class Storage
+use League\Flysystem\FilesystemAdapter;
+
+interface StorageInterface
 {
-    private int $id = 0;
+    public function __construct(FilesystemAdapter $adapter);
 
-    public function __construct(int $id)
-    {
-        $this->id = $id;
-    }
-
-    public function id(): int
-    {
-        return $this->id;
-    }
+    public function adapter(): FilesystemAdapter;
 }

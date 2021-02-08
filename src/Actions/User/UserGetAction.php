@@ -16,9 +16,8 @@ namespace Chevereto\Actions\User;
 use Chevere\Components\Action\Action;
 use Chevere\Components\Dependent\Traits\DependentTrait;
 use Chevere\Components\Parameter\IntegerParameter;
-use Chevere\Components\Parameter\Parameter;
+use Chevere\Components\Parameter\ObjectParameter;
 use Chevere\Components\Parameter\Parameters;
-use Chevere\Components\Type\Type;
 use Chevere\Interfaces\Dependent\DependentInterface;
 use Chevere\Interfaces\Parameter\ArgumentsInterface;
 use Chevere\Interfaces\Parameter\ParametersInterface;
@@ -41,7 +40,7 @@ class UserGetAction extends Action implements DependentInterface
     {
         return (new Parameters())
             ->withAddedRequired(
-                user: new Parameter(new Type(User::class))
+                user: new ObjectParameter(User::class)
             );
     }
 

@@ -44,8 +44,8 @@ abstract class FilePostController extends ControllerWorkflow
                 mimes: new StringParameter(),
                 ip: new StringParameter(),
                 naming: new StringParameter(),
-                originalName: new StringParameter(),
-                uploadPath: new StringParameter(),
+                name: new StringParameter(),
+                path: new StringParameter(),
                 ipVersion: (new StringParameter())
                     ->withRegex(new Regex('/^[4|6]$/')),
             );
