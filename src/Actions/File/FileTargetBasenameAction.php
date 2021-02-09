@@ -14,15 +14,16 @@ declare(strict_types=1);
 namespace Chevereto\Actions\File;
 
 use Chevere\Components\Action\Action;
+use Chevere\Components\Filesystem\Basename;
 use Chevere\Components\Filesystem\Path;
 use Chevere\Components\Parameter\ObjectParameter;
 use Chevere\Components\Parameter\Parameters;
 use Chevere\Components\Parameter\StringParameter;
 use Chevere\Components\Regex\Regex;
+use function Chevere\Components\Str\randomString;
 use Chevere\Interfaces\Parameter\ArgumentsInterface;
 use Chevere\Interfaces\Parameter\ParametersInterface;
 use Chevere\Interfaces\Response\ResponseInterface;
-use Chevereto\Components\Filesystem\Basename;
 use Chevereto\Components\Storage\Storage;
 
 /**
@@ -90,6 +91,7 @@ class FileTargetBasenameAction extends Action
             }
             $name = $this->getName($naming, $basename);
         }
+        // xdd($name);
 
         return $this->getResponse(basename: new Basename($name));
     }
@@ -104,16 +106,19 @@ class FileTargetBasenameAction extends Action
 
     private function getRandomName(Basename $basename): string
     {
-        return bin2hex(random_bytes(32)) . '.' . $basename->extension();
+        return randomString(32) . '.' . $basename->extension();
     }
 
     private function getMixedName(Basename $basename): string
     {
         $charsLength = 16;
-        $chars = bin2hex(random_bytes($charsLength));
+        $chars = randomString($charsLength);
         $name = $basename->name();
-        if (mb_strlen($name) + $charsLength > Basename::MAX_LENGTH_BYTES) {
-            $name = mb_substr($name, 0, Basename::MAX_LENGTH_BYTES - $charsLength - mb_strlen($name));
+        $nameLength = mb_strlen($name);
+        $withExtensionLength = mb_strlen($basename->extension()) + 1;
+        if ($nameLength + $charsLength > Basename::MAX_LENGTH_BYTES) {
+            $chop = Basename::MAX_LENGTH_BYTES - $charsLength - $nameLength - $withExtensionLength;          
+            $name = mb_substr($name, 0, $chop);
         }
 
         return $name . $chars . '.' . $basename->extension();
