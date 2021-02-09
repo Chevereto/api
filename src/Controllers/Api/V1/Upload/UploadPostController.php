@@ -147,6 +147,7 @@ final class UploadPostController extends Controller implements DependentInterfac
                         name: '${name}',
                         naming: '${naming}',
                         storage: '${storageForUser:storage}',
+                        path: '${path}'
                     ),
                 upload: (new Step(FileUploadAction::class))
                     ->withArguments(

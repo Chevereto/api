@@ -14,76 +14,108 @@ declare(strict_types=1);
 namespace Chevereto\Actions\File;
 
 use Chevere\Components\Action\Action;
-use Chevere\Components\Dependent\Dependencies;
-use Chevere\Components\Dependent\Traits\DependentTrait;
-use Chevere\Components\Parameter\IntegerParameter;
+use Chevere\Components\Filesystem\Path;
 use Chevere\Components\Parameter\ObjectParameter;
 use Chevere\Components\Parameter\Parameters;
 use Chevere\Components\Parameter\StringParameter;
 use Chevere\Components\Regex\Regex;
-use Chevere\Interfaces\Dependent\DependenciesInterface;
-use Chevere\Interfaces\Dependent\DependentInterface;
 use Chevere\Interfaces\Parameter\ArgumentsInterface;
 use Chevere\Interfaces\Parameter\ParametersInterface;
 use Chevere\Interfaces\Response\ResponseInterface;
-use Chevereto\Components\Db;
+use Chevereto\Components\Filesystem\Basename;
 use Chevereto\Components\Storage\Storage;
 
 /**
- * Determines the best (available) file target basename.
+ * Determines the best available target basename for the given storage and path.
  *
- * Response parameters:
+ * Arguments:
  *
  * ```php
- * basename: string,
+ * id: string,
+ * name: string,
+ * naming: string,
+ * storage: Storage,
+ * path: string,
+ * ```
+ *
+ * Response:
+ *
+ * ```php
+ * basename: Basename,
  * ```
  */
-class FileTargetBasenameAction extends Action implements DependentInterface
+class FileTargetBasenameAction extends Action
 {
-    use DependentTrait;
-
-    private Db $db;
-
-    public function getDependencies(): DependenciesInterface
-    {
-        return (new Dependencies())
-            ->withPut(
-                db: Db::class
-            );
-    }
-
     public function getParameters(): ParametersInterface
     {
-    return (new Parameters())
-        ->withAddedRequired(
-            id: new IntegerParameter(),
-            name: (new StringParameter())
-                ->withRegex(new Regex('/^.+\.[a-zA-Z]+$/')),
-            naming: (new StringParameter())
-                ->withRegex(new Regex('/^(original|random|mixed|id)$/'))
-                ->withDefault('original'),
-            storage: new ObjectParameter(Storage::class)
-        );
-    }
+        return (new Parameters())
+            ->withAddedRequired(
+                id: new StringParameter(),
+                name: (new StringParameter())
+                    ->withRegex(new Regex('/^.+\.[a-zA-Z]+$/')),
+                naming: (new StringParameter())
+                    ->withRegex(new Regex('/^original|random|mixed|id$/'))
+                    ->withDefault('original'),
+                storage: new ObjectParameter(Storage::class),
+                path: new ObjectParameter(Path::class)
+            );
+        }
 
     public function getResponseDataParameters(): ParametersInterface
     {
         return (new Parameters())
             ->withAddedRequired(
-                basename: (new StringParameter())
-                    ->withRegex(new Regex('/^.+\.[a-zA-Z]+$/'))
+                basename: new ObjectParameter(Basename::class)
             );
     }
 
-    public function run(ArgumentsInterface $arguments): ResponseInterface
-    {
+    public function run(ArgumentsInterface $arguments): ResponseInterface {
+        $id = $arguments->getString('id');
         $name = $arguments->getString('name');
+        $naming = $arguments->getString('naming');
+        $basename = new Basename($name);
+        if($naming === 'id') {
+            return $this->getResponse(
+                basename: new Basename($id . '.' . $basename->extension())
+            );
+        }
         /** @var Storage $storage */
         $storage = $arguments->get('storage');
-        while($storage->adapter()->fileExists($name)) {
-            $name .= 'e';
+        /** @var Path $path */
+        $path = $arguments->get('path');
+        $name = $this->getName($naming, $basename);
+        while($storage->adapter()->fileExists($path->getChild($name)->toString())) {
+            if($naming === 'original') {
+                $naming = 'mixed';
+            }
+            $name = $this->getName($naming, $basename);
         }
 
-        return $this->getResponse(basename: $name);
+        return $this->getResponse(basename: new Basename($name));
+    }
+
+    public function getName(string $naming, Basename $basename): string {
+        return match($naming) {
+            'original' => $basename->toString(),
+            'random' => $this->getRandomName($basename),
+            'mixed' => $this->getMixedName($basename),
+        };
+    }
+
+    private function getRandomName(Basename $basename): string
+    {
+        return bin2hex(random_bytes(32)) . '.' . $basename->extension();
+    }
+
+    private function getMixedName(Basename $basename): string
+    {
+        $charsLength = 16;
+        $chars = bin2hex(random_bytes($charsLength));
+        $name = $basename->name();
+        if (mb_strlen($name) + $charsLength > Basename::MAX_LENGTH_BYTES) {
+            $name = mb_substr($name, 0, Basename::MAX_LENGTH_BYTES - $charsLength - mb_strlen($name));
+        }
+
+        return $name . $chars . '.' . $basename->extension();
     }
 }

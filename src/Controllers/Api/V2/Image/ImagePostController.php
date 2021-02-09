@@ -95,6 +95,7 @@ abstract class ImagePostController extends FilePostController
                         name: '${name}',
                         naming: '${naming}',
                         storage: '${storageForUser:storage}',
+                        path: '${path}'
                     ),
                 upload: (new Step(FileUploadAction::class))
                     ->withArguments(

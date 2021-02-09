@@ -29,7 +29,13 @@ use Chevereto\Components\Db;
 /**
  * Reserves a row in the database.
  *
- * Response parameters:
+ * Arguments:
+ *
+ * ```php
+ * table: string,
+ * ```
+ *
+ * Response:
  *
  * ```php
  * id: int,
