@@ -10,7 +10,7 @@ jobs:
         operating-system: [ubuntu-latest]
         php-versions: ["8.0"]
     env:
-      extensions: opcache, mbstring, ds, pcov, imagick
+      extensions: opcache, mbstring, ds, pcov, imagick, bcmath
       tools: composer
       ini-values: opcache.enable_cli = 1, precision=16, default_charset='UTF-8', pcov.directory=src
       key: cache-1608580286975
