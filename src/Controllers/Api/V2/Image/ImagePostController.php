@@ -50,7 +50,7 @@ abstract class ImagePostController extends FilePostController
 
     public function getWorkflow(): WorkflowInterface
     {
-        return (new Workflow(self::class))
+        return (new Workflow(static::class))
             ->withAdded(
                 validateFile: (new Step(FileValidateAction::class))
                     ->withArguments(
