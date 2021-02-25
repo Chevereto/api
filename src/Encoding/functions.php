@@ -15,7 +15,6 @@ namespace Chevereto\Encoding;
 
 use Chevere\Components\Message\Message;
 use Chevere\Components\Regex\Regex;
-use Chevere\Components\Str\StrBool;
 use Chevere\Exceptions\Core\InvalidArgumentException;
 use Chevere\Exceptions\Core\RuntimeException;
 use Chevere\Interfaces\Regex\RegexInterface;
@@ -32,11 +31,13 @@ use function Safe\stream_filter_append;
 function assertBase64(string $string): void
 {
     $double = base64_encode(base64_decode($string, true));
-    if (! (new StrBool($string))->same($double)) {
+    if ($string !== $double) {
+        // @codeCoverageIgnoreStart
         throw new InvalidArgumentException(
             new Message('Invalid base64 formatting'),
             100
         );
+        // @codeCoverageIgnoreEnd
     }
     unset($double);
 }
@@ -55,11 +56,13 @@ function storeDecodedBase64(string $base64, string $filename): void
     $fh = fopen($filename, 'w');
     stream_filter_append($fh, $filter, STREAM_FILTER_WRITE);
     if (fwrite($fh, $base64) === 0) {
+        // @codeCoverageIgnoreStart
         throw new RuntimeException(
             (new Message('Unable to write %filter% provided string'))
                 ->code('%filter%', $filter),
             1200
         );
+        // @codeCoverageIgnoreEnd
     }
     fclose($fh);
 }
