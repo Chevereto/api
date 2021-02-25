@@ -14,19 +14,32 @@ declare(strict_types=1);
 namespace Chevereto\Actions\User;
 
 use Chevere\Components\Action\Action;
+use Chevere\Components\Dependent\Dependencies;
 use Chevere\Components\Dependent\Traits\DependentTrait;
 use Chevere\Components\Parameter\IntegerParameter;
 use Chevere\Components\Parameter\ObjectParameter;
 use Chevere\Components\Parameter\Parameters;
+use Chevere\Interfaces\Dependent\DependenciesInterface;
 use Chevere\Interfaces\Dependent\DependentInterface;
 use Chevere\Interfaces\Parameter\ArgumentsInterface;
 use Chevere\Interfaces\Parameter\ParametersInterface;
 use Chevere\Interfaces\Response\ResponseInterface;
+use Chevereto\Components\Db;
 use Chevereto\Components\User;
 
 class UserGetAction extends Action implements DependentInterface
 {
     use DependentTrait;
+
+    private Db $db;
+
+    public function getDependencies(): DependenciesInterface
+    {
+        return (new Dependencies())
+            ->withPut(
+                db: Db::class
+            );
+    }
 
     public function getParameters(): ParametersInterface
     {
