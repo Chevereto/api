@@ -40,7 +40,7 @@ abstract class ImagePostController extends FilePostController
     final public function getContextParameters(): ParametersInterface
     {
         return parent::getContextParameters()
-            ->withAddedRequired(
+            ->withAdded(
                 maxHeight: new IntegerParameter(),
                 maxWidth: new IntegerParameter(),
                 minHeight: new IntegerParameter(),

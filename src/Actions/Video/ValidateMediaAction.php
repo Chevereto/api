@@ -55,29 +55,27 @@ class ValidateMediaAction extends Action
 
     public function getParameters(): ParametersInterface
     {
-        return (new Parameters())
-            ->withAddedRequired(
-                filename: new StringParameter(),
-                maxHeight: new IntegerParameter(),
-                maxWidth: new IntegerParameter(),
-                maxLength: (new IntegerParameter())
-                    ->withDefault(3600),
-                minHeight: (new IntegerParameter())
-                    ->withDefault(16),
-                minWidth: (new IntegerParameter())
-                    ->withDefault(16),
-                minLength: (new IntegerParameter())
-                    ->withDefault(5),
-            );
+        return new Parameters(
+            filename: new StringParameter(),
+            maxHeight: new IntegerParameter(),
+            maxWidth: new IntegerParameter(),
+            maxLength: (new IntegerParameter())
+                ->withDefault(3600),
+            minHeight: (new IntegerParameter())
+                ->withDefault(16),
+            minWidth: (new IntegerParameter())
+                ->withDefault(16),
+            minLength: (new IntegerParameter())
+                ->withDefault(5),
+        );
     }
 
     public function getResponseDataParameters(): ParametersInterface
     {
-        return (new Parameters())
-            ->withAddedRequired(
-                format: new ObjectParameter(Format::class),
-                stream: new ObjectParameter(Stream::class),
-            );
+        return new Parameters(
+            format: new ObjectParameter(Format::class),
+            stream: new ObjectParameter(Stream::class),
+        );
     }
 
     public function run(ArgumentsInterface $arguments): ResponseInterface

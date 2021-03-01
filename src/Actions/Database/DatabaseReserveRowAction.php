@@ -49,26 +49,23 @@ class DatabaseReserveRowAction extends Action implements DependentInterface
 
     public function getDependencies(): DependenciesInterface
     {
-        return (new Dependencies())
-            ->withPut(
-                database: Database::class
-            );
+        return new Dependencies(
+            database: Database::class
+        );
     }
 
     public function getParameters(): ParametersInterface
     {
-        return (new Parameters())
-            ->withAddedRequired(
-                table: new StringParameter()
-            );
+        return new Parameters(
+            table: new StringParameter()
+        );
     }
 
     public function getResponseDataParameters(): ParametersInterface
     {
-        return (new Parameters())
-            ->withAddedRequired(
-                id: new IntegerParameter(),
-            );
+        return new Parameters(
+            id: new IntegerParameter()
+        );
     }
 
     public function run(ArgumentsInterface $arguments): ResponseInterface

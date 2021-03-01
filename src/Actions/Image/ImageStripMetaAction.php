@@ -30,10 +30,9 @@ class ImageStripMetaAction extends Action
 {
     public function getParameters(): ParametersInterface
     {
-        return (new Parameters())
-            ->withAddedRequired(
-                image: new Parameter(new Type(Image::class))
-            );
+        return new Parameters(
+            image: new Parameter(new Type(Image::class))
+        );
     }
 
     public function run(ArgumentsInterface $arguments): ResponseInterface

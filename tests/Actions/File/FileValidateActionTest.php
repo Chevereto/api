@@ -60,6 +60,7 @@ final class FileValidateActionTest extends TestCase
             'filename' => __FILE__,
             'mimes' => 'text/x-php,text/plain',
             'maxBytes' => 20000000,
+            'minBytes' => 1,
         ];
         $response = $action->run($action->getArguments(...$arguments));
         $this->assertInstanceOf(ResponseInterface::class, $response);

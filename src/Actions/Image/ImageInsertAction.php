@@ -36,21 +36,19 @@ class ImageInsertAction extends Action implements DependentInterface
 
     public function getDependencies(): DependenciesInterface
     {
-        return (new Dependencies())
-            ->withPut(
-                database: Database::class
-            );
+        return new Dependencies(
+            database: Database::class
+        );
     }
 
     public function getParameters(): ParametersInterface
     {
-        return (new Parameters())
-            ->withAddedOptional(
-                id: new IntegerParameter(),
-                expires: new IntegerParameter(),
-                userId: new IntegerParameter(),
-                albumId: new IntegerParameter(),
-            );
+        return new Parameters(
+            id: new IntegerParameter(),
+            expires: new IntegerParameter(),
+            userId: new IntegerParameter(),
+            albumId: new IntegerParameter(),
+        );
     }
 
     public function run(ArgumentsInterface $arguments): ResponseInterface

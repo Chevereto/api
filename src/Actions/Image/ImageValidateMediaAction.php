@@ -58,23 +58,21 @@ class ImageValidateMediaAction extends Action
 
     public function getParameters(): ParametersInterface
     {
-        return (new Parameters())
-            ->withAddedRequired(
-                filename: new StringParameter(),
-                maxHeight: new IntegerParameter(),
-                maxWidth: new IntegerParameter(),
-                minHeight: new IntegerParameter(),
-                minWidth: new IntegerParameter(),
-            );
+        return new Parameters(
+            filename: new StringParameter(),
+            maxHeight: new IntegerParameter(),
+            maxWidth: new IntegerParameter(),
+            minHeight: new IntegerParameter(),
+            minWidth: new IntegerParameter(),
+        );
     }
 
     public function getResponseDataParameters(): ParametersInterface
     {
-        return (new Parameters())
-            ->withAddedRequired(
-                image: new ObjectParameter(Image::class),
-                perceptual: new StringParameter(),
-            );
+        return new Parameters(
+            image: new ObjectParameter(Image::class),
+            perceptual: new StringParameter(),
+        );
     }
 
     /**

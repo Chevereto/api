@@ -49,27 +49,25 @@ class FileValidateAction extends Action
 
     public function getParameters(): ParametersInterface
     {
-        return (new Parameters())
-            ->withAddedRequired(
-                mimes : (new StringParameter())
-                    ->withRegex(new Regex('/^([\w]+\/[\w\-\+\.]+)+(,([\w]+\/[\w\-\+\.]+))*$/'))
-                    ->withDescription('Comma-separated list of allowed mime-types'),
-                filename : new StringParameter(),
-            )
+        return (new Parameters(
+            mimes : (new StringParameter())
+                ->withRegex(new Regex('/^([\w]+\/[\w\-\+\.]+)+(,([\w]+\/[\w\-\+\.]+))*$/'))
+                ->withDescription('Comma-separated list of allowed mime-types'),
+            filename : new StringParameter(),
+        ))
             ->withAddedOptional(
-                maxBytes : new IntegerParameter(),
-                minBytes : new IntegerParameter(),
+                maxBytes : (new IntegerParameter())->withDefault(0),
+                minBytes : (new IntegerParameter())->withDefault(0),
             );
     }
 
     public function getResponseDataParameters(): ParametersInterface
     {
-        return (new Parameters())
-            ->withAddedRequired(
-                bytes : new IntegerParameter(),
-                mime : new StringParameter(),
-                md5 : new StringParameter(),
-            );
+        return new Parameters(
+            bytes : new IntegerParameter(),
+            mime : new StringParameter(),
+            md5 : new StringParameter(),
+        );
     }
 
     public function run(ArgumentsInterface $arguments): ResponseInterface

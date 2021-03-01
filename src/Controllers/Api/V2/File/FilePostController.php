@@ -29,25 +29,25 @@ abstract class FilePostController extends ControllerWorkflow
 
     public function getParameters(): ParametersInterface
     {
-        return (new Parameters())
-            ->withAddedRequired(source: $this->getSourceParameter());
+        return new Parameters(
+            source: $this->getSourceParameter()
+        );
     }
 
     public function getContextParameters(): ParametersInterface
     {
-        return (new Parameters())
-            ->withAddedRequired(
-                expires: new IntegerParameter(),
-                maxBytes: new IntegerParameter(),
-                minBytes: new IntegerParameter(),
-                userId: new IntegerParameter(),
-                mimes: new StringParameter(),
-                ip: new StringParameter(),
-                naming: new StringParameter(),
-                name: new StringParameter(),
-                path: new StringParameter(),
-                ipVersion: (new StringParameter())
-                    ->withRegex(new Regex('/^[4|6]$/')),
-            );
+        return new Parameters(
+            expires: new IntegerParameter(),
+            maxBytes: new IntegerParameter(),
+            minBytes: new IntegerParameter(),
+            userId: new IntegerParameter(),
+            mimes: new StringParameter(),
+            ip: new StringParameter(),
+            naming: new StringParameter(),
+            name: new StringParameter(),
+            path: new StringParameter(),
+            ipVersion: (new StringParameter())
+                ->withRegex(new Regex('/^[4|6]$/')),
+        );
     }
 }

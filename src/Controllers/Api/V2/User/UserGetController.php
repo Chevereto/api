@@ -30,12 +30,11 @@ final class UserGetController extends Controller
 
     public function getParameters(): ParametersInterface
     {
-        return (new Parameters())
-            ->withAddedRequired(
-                id: (new StringParameter())
-                    ->withRegex(new Regex('/\d+/'))
-                    ->withDescription('The user identifier.')
-            );
+        return new Parameters(
+            id: (new StringParameter())
+                ->withRegex(new Regex('/\d+/'))
+                ->withDescription('The user identifier.')
+        );
     }
 
     public function run(ArgumentsInterface $arguments): ResponseInterface

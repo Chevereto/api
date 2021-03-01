@@ -30,11 +30,10 @@ final class AlbumPostController extends Controller
 
     public function getParameters(): ParametersInterface
     {
-        return (new Parameters())
-            ->withAddedRequired(
-                name: (new StringParameter())
-                    ->withRegex(new Regex('/\w+/')),
-            );
+        return new Parameters(
+            name: (new StringParameter())
+                ->withRegex(new Regex('/\w+/')),
+        );
     }
 
     public function run(ArgumentsInterface $arguments): ResponseInterface

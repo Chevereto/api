@@ -35,26 +35,23 @@ class UserGetAction extends Action implements DependentInterface
 
     public function getDependencies(): DependenciesInterface
     {
-        return (new Dependencies())
-            ->withPut(
-                userIo: UserIo::class
-            );
+        return new Dependencies(
+            userIo: UserIo::class
+        );
     }
 
     public function getParameters(): ParametersInterface
     {
-        return (new Parameters())
-            ->withAddedRequired(
-                userId: new IntegerParameter()
-            );
+        return new Parameters(
+            userId: new IntegerParameter()
+        );
     }
 
     public function getResponseDataParameters(): ParametersInterface
     {
-        return (new Parameters())
-            ->withAddedRequired(
-                user: new ObjectParameter(User::class)
-            );
+        return new Parameters(
+            user: new ObjectParameter(User::class)
+        );
     }
 
     public function run(ArgumentsInterface $arguments): ResponseInterface

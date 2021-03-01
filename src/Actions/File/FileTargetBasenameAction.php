@@ -21,6 +21,7 @@ use Chevere\Components\Parameter\Parameters;
 use Chevere\Components\Parameter\StringParameter;
 use Chevere\Components\Regex\Regex;
 use function Chevere\Components\Str\randomString;
+use Chevere\Interfaces\Filesystem\PathInterface;
 use Chevere\Interfaces\Parameter\ArgumentsInterface;
 use Chevere\Interfaces\Parameter\ParametersInterface;
 use Chevere\Interfaces\Response\ResponseInterface;
@@ -49,54 +50,53 @@ class FileTargetBasenameAction extends Action
 {
     public function getParameters(): ParametersInterface
     {
-        return (new Parameters())
-            ->withAddedRequired(
-                id: new StringParameter(),
-                name: (new StringParameter())
-                    ->withRegex(new Regex('/^.+\.[a-zA-Z]+$/')),
-                naming: (new StringParameter())
-                    ->withRegex(new Regex('/^original|random|mixed|id$/'))
-                    ->withDefault('original'),
-                storage: new ObjectParameter(Storage::class),
-                path: new ObjectParameter(Path::class)
-            );
-        }
+        return new Parameters(
+            id: new StringParameter(),
+            name: (new StringParameter())
+                ->withRegex(new Regex('/^.+\.[a-zA-Z]+$/')),
+            naming: (new StringParameter())
+                ->withRegex(new Regex('/^original|random|mixed|id$/'))
+                ->withDefault('original'),
+            storage: new ObjectParameter(Storage::class),
+            path: new ObjectParameter(Path::class)
+        );
+    }
 
     public function getResponseDataParameters(): ParametersInterface
     {
-        return (new Parameters())
-            ->withAddedRequired(
-                basename: new ObjectParameter(Basename::class)
-            );
+        return new Parameters(
+            basename: new ObjectParameter(Basename::class)
+        );
     }
 
-    public function run(ArgumentsInterface $arguments): ResponseInterface {
+    public function run(ArgumentsInterface $arguments): ResponseInterface
+    {
         $id = $arguments->getString('id');
         $name = $arguments->getString('name');
         $naming = $arguments->getString('naming');
         $basename = new Basename($name);
-        if($naming === 'id') {
+        if ($naming === 'id') {
             return $this->getResponse(
                 basename: new Basename($id . '.' . $basename->extension())
             );
         }
         /** @var Storage $storage */
         $storage = $arguments->get('storage');
-        /** @var Path $path */
+        /** @var PathInterface $path */
         $path = $arguments->get('path');
         $name = $this->getName($naming, $basename);
-        while($storage->adapter()->fileExists($path->getChild($name)->toString())) {
-            if($naming === 'original') {
+        while ($storage->adapter()->fileExists($path->getChild($name)->toString())) {
+            if ($naming === 'original') {
                 $naming = 'mixed';
             }
             $name = $this->getName($naming, $basename);
         }
-        // xdd($name);
 
         return $this->getResponse(basename: new Basename($name));
     }
 
-    public function getName(string $naming, Basename $basename): string {
+    public function getName(string $naming, Basename $basename): string
+    {
         return match($naming) {
             'original' => $basename->toString(),
             'random' => $this->getRandomName($basename),
@@ -117,7 +117,7 @@ class FileTargetBasenameAction extends Action
         $nameLength = mb_strlen($name);
         $withExtensionLength = mb_strlen($basename->extension()) + 1;
         if ($nameLength + $charsLength > Basename::MAX_LENGTH_BYTES) {
-            $chop = Basename::MAX_LENGTH_BYTES - $charsLength - $nameLength - $withExtensionLength;          
+            $chop = Basename::MAX_LENGTH_BYTES - $charsLength - $nameLength - $withExtensionLength;
             $name = mb_substr($name, 0, $chop);
         }
 

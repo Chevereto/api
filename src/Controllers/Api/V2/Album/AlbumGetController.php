@@ -30,11 +30,10 @@ final class AlbumGetController extends Controller
 
     public function getParameters(): ParametersInterface
     {
-        return (new Parameters())
-            ->withAddedRequired(
-                id: (new StringParameter())
-                    ->withRegex(new Regex('/\d+/'))
-            );
+        return new Parameters(
+            id: (new StringParameter())
+                ->withRegex(new Regex('/\d+/'))
+        );
     }
 
     public function run(ArgumentsInterface $arguments): ResponseInterface

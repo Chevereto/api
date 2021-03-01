@@ -30,14 +30,13 @@ class FileUploadAction extends Action
 {
     public function getParameters(): ParametersInterface
     {
-        return (new Parameters())
-            ->withAddedRequired(
-                filename: new StringParameter(),
-                targetBasename: (new StringParameter())
-                    ->withRegex(new Regex('/^.+\.[a-zA-Z]+$/')),
-                storage: new ObjectParameter(Storage::class),
-                path: new StringParameter()
-            );
+        return new Parameters(
+            filename: new StringParameter(),
+            targetBasename: (new StringParameter())
+                ->withRegex(new Regex('/^.+\.[a-zA-Z]+$/')),
+            storage: new ObjectParameter(Storage::class),
+            path: new StringParameter()
+        );
     }
 
     public function run(ArgumentsInterface $arguments): ResponseInterface

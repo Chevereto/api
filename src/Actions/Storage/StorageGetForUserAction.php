@@ -45,27 +45,24 @@ class StorageGetForUserAction extends Action implements DependentInterface
 
     public function getDependencies(): DependenciesInterface
     {
-        return (new Dependencies())
-            ->withPut(
-                database: Database::class
-            );
+        return new Dependencies(
+            database: Database::class
+        );
     }
 
     public function getParameters(): ParametersInterface
     {
-        return (new Parameters())
-            ->withAddedRequired(
-                userId: new IntegerParameter(),
-                bytesRequired: new IntegerParameter(),
-            );
+        return new Parameters(
+            userId: new IntegerParameter(),
+            bytesRequired: new IntegerParameter(),
+        );
     }
 
     public function getResponseDataParameters(): ParametersInterface
     {
-        return (new Parameters())
-            ->withAddedRequired(
-                storage: new ObjectParameter(Storage::class),
-            );
+        return new Parameters(
+            storage: new ObjectParameter(Storage::class)
+        );
     }
 
     public function run(ArgumentsInterface $arguments): ResponseInterface

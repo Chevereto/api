@@ -62,32 +62,30 @@ final class UploadPostController extends Controller implements DependentInterfac
 
     public function getContextParameters(): ParametersInterface
     {
-        return (new Parameters())
-            ->withAddedRequired(
-                apiV1Key: new StringParameter(),
-                mimes: new StringParameter(),
-                maxBytes: new IntegerParameter(),
-                maxHeight: new IntegerParameter(),
-                maxWidth: new IntegerParameter(),
-                minBytes: new IntegerParameter(),
-                minHeight: new IntegerParameter(),
-                minWidth: new IntegerParameter(),
-                naming: new StringParameter(),
-                path: new StringParameter(),
-                userId: new IntegerParameter()
-            );
+        return new Parameters(
+            apiV1Key: new StringParameter(),
+            mimes: new StringParameter(),
+            maxBytes: new IntegerParameter(),
+            maxHeight: new IntegerParameter(),
+            maxWidth: new IntegerParameter(),
+            minBytes: new IntegerParameter(),
+            minHeight: new IntegerParameter(),
+            minWidth: new IntegerParameter(),
+            naming: new StringParameter(),
+            path: new StringParameter(),
+            userId: new IntegerParameter()
+        );
     }
 
     public function getParameters(): ParametersInterface
     {
-        return (new Parameters())
-            ->withAddedRequired(
-                source: (new StringParameter())
-                    ->withAddedAttribute('tryFiles')
-                    ->withDescription('A base64 image string OR an image URL. It also takes image multipart/form-data.'),
-                key: (new StringParameter())
-                    ->withDescription('API V1 key.'),
-            )
+        return (new Parameters(
+            source: (new StringParameter())
+                ->withAddedAttribute('tryFiles')
+                ->withDescription('A base64 image string OR an image URL. It also takes image multipart/form-data.'),
+            key: (new StringParameter())
+                ->withDescription('API V1 key.')
+        ))
             ->withAddedOptional(
                 format: (new StringParameter())
                     ->withRegex(new Regex('/^(json|txt)$/'))
