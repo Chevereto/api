@@ -22,6 +22,7 @@ final class UserIoTest extends TestCase
 {
     public function testWea(): void
     {
+        $this->expectNotToPerformAssertions();
         $connectionParams = [
             'dbname' => 'chevereto-4',
             'user' => 'root',

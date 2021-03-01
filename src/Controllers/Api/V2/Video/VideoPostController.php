@@ -25,7 +25,7 @@ abstract class VideoPostController extends FilePostController
 {
     public function getWorkflow(): WorkflowInterface
     {
-        return new Workflow(self::class);
+        return new Workflow();
     }
 
     public function run(ArgumentsInterface $arguments): ResponseInterface

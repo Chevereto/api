@@ -21,18 +21,15 @@ use function Safe\tempnam;
 
 final class ImagePostBinaryControllerTest extends TestCase
 {
-    public function testConstruct(): void {
-        $controller = new ImagePostBinaryController();
-        $this->assertSame($controller->getWorkflow()->name(), ImagePostBinaryController::class);
-    }
-
-    public function testInvalidArgument(): void {
+    public function testInvalidArgument(): void
+    {
         $controller = new ImagePostBinaryController();
         $this->expectException(InvalidArgumentException::class);
         $controller->assertStoreSource('', __DIR__ . '/stor');
     }
 
-    public function testLogicException(): void {
+    public function testLogicException(): void
+    {
         $controller = new ImagePostBinaryController();
         $this->expectException(LogicException::class);
         $controller->assertStoreSource('a:0:{}', __DIR__ . '/stor');
