@@ -11,19 +11,13 @@
 
 declare(strict_types=1);
 
-namespace Chevereto\Components;
+namespace Chevereto\Assets\User;
 
-final class User
+final class UserAvatarAsset
 {
-    private int $id = 0;
-
-    public function __construct(int $id)
-    {
-        $this->id = $id;
+    public function upload(int $userId, string $filename) {
     }
 
-    public function id(): int
-    {
-        return $this->id;
+    public function delete(int $userId) {
     }
 }

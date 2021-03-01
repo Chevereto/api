@@ -24,7 +24,7 @@ use Chevere\Interfaces\Dependent\DependentInterface;
 use Chevere\Interfaces\Parameter\ArgumentsInterface;
 use Chevere\Interfaces\Parameter\ParametersInterface;
 use Chevere\Interfaces\Response\ResponseInterface;
-use Chevereto\Components\Db;
+use Chevereto\Components\Database\Database;
 
 /**
  * Detects file duplication based in both perceptual and file hashing, against the uploading frequency.
@@ -33,12 +33,14 @@ class FileAssertNotDuplicateAction extends Action implements DependentInterface
 {
     use DependentTrait;
 
-    private Db $db;
+    private Database $database;
 
     public function getDependencies(): DependenciesInterface
     {
         return (new Dependencies())
-            ->withPut(db: Db::class);
+            ->withPut(
+                database: Database::class
+            );
     }
 
     public function getParameters(): ParametersInterface

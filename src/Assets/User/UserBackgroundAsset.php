@@ -11,8 +11,13 @@
 
 declare(strict_types=1);
 
-namespace Chevereto\Components;
+namespace Chevereto\Assets\User;
 
-final class Db
+final class UserBackgroundAsset
 {
+    public function upload(int $userId, string $filename) {
+    }
+
+    public function delete(int $userId) {
+    }
 }

@@ -11,7 +11,7 @@
 
 declare(strict_types=1);
 
-namespace Chevereto\Actions\Db;
+namespace Chevereto\Actions\Database;
 
 use Chevere\Components\Action\Action;
 use Chevere\Components\Dependent\Dependencies;
@@ -24,7 +24,7 @@ use Chevere\Interfaces\Dependent\DependentInterface;
 use Chevere\Interfaces\Parameter\ArgumentsInterface;
 use Chevere\Interfaces\Parameter\ParametersInterface;
 use Chevere\Interfaces\Response\ResponseInterface;
-use Chevereto\Components\Db;
+use Chevereto\Components\Database\Database;
 
 /**
  * Reserves a row in the database.
@@ -41,26 +41,26 @@ use Chevereto\Components\Db;
  * id: int,
  * ```
  */
-class DbReserveRowAction extends Action implements DependentInterface
+class DatabaseReserveRowAction extends Action implements DependentInterface
 {
     use DependentTrait;
 
-    private Db $db;
+    private Database $database;
 
     public function getDependencies(): DependenciesInterface
     {
         return (new Dependencies())
             ->withPut(
-                db: Db::class
+                database: Database::class
             );
     }
 
     public function getParameters(): ParametersInterface
     {
-    return (new Parameters())
-        ->withAddedRequired(
-            table: new StringParameter()
-        );
+        return (new Parameters())
+            ->withAddedRequired(
+                table: new StringParameter()
+            );
     }
 
     public function getResponseDataParameters(): ParametersInterface

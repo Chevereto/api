@@ -24,20 +24,20 @@ use Chevere\Interfaces\Dependent\DependentInterface;
 use Chevere\Interfaces\Parameter\ArgumentsInterface;
 use Chevere\Interfaces\Parameter\ParametersInterface;
 use Chevere\Interfaces\Response\ResponseInterface;
-use Chevereto\Components\Db;
-use Chevereto\Components\User;
+use Chevereto\Entities\User\User;
+use Chevereto\Entities\User\UserIo;
 
 class UserGetAction extends Action implements DependentInterface
 {
     use DependentTrait;
 
-    private Db $db;
+    private UserIo $userIo;
 
     public function getDependencies(): DependenciesInterface
     {
         return (new Dependencies())
             ->withPut(
-                db: Db::class
+                userIo: UserIo::class
             );
     }
 
@@ -59,8 +59,12 @@ class UserGetAction extends Action implements DependentInterface
 
     public function run(ArgumentsInterface $arguments): ResponseInterface
     {
+        $this->assertDependencies();
+        $userId = $arguments->getInteger('userId');
+        $raw = $this->userIo->get($userId);
+
         return $this->getResponse(
-            user: new User($arguments->getInteger('userId'))
+            user: new User($raw)
         );
     }
 }

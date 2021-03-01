@@ -33,7 +33,7 @@ use Chevere\Interfaces\Parameter\ArgumentsInterface;
 use Chevere\Interfaces\Parameter\ParametersInterface;
 use Chevere\Interfaces\Response\ResponseInterface;
 use Chevere\Interfaces\Workflow\WorkflowInterface;
-use Chevereto\Actions\Db\DbReserveRowAction;
+use Chevereto\Actions\Database\DatabaseReserveRowAction;
 use Chevereto\Actions\File\FileAssertNotDuplicateAction;
 use Chevereto\Actions\File\FileTargetBasenameAction;
 use Chevereto\Actions\File\FileUploadAction;
@@ -137,7 +137,7 @@ final class UploadPostController extends Controller implements DependentInterfac
                         userId: '${userId}',
                         bytesRequired: '${validateFile:bytes}',
                     ),
-                reserveId: (new Step(DbReserveRowAction::class))
+                reserveId: (new Step(DatabaseReserveRowAction::class))
                     ->withArguments(
                         table: '${table}',
                     ),
