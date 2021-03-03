@@ -11,7 +11,7 @@
 
 declare(strict_types=1);
 
-namespace Chevereto\Encoding;
+namespace Chevereto\Components\Encoding;
 
 use Chevere\Components\Message\Message;
 use Chevere\Components\Regex\Regex;

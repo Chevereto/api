@@ -17,9 +17,9 @@ use Chevere\Components\Parameter\StringParameter;
 use Chevere\Exceptions\Core\InvalidArgumentException;
 use Chevere\Exceptions\Core\RuntimeException;
 use Chevere\Interfaces\Parameter\StringParameterInterface;
-use function Chevereto\Encoding\assertBase64;
-use function Chevereto\Encoding\getBase64Regex;
-use function Chevereto\Encoding\storeDecodedBase64;
+use function Chevereto\Components\Encoding\assertBase64;
+use function Chevereto\Components\Encoding\getBase64Regex;
+use function Chevereto\Components\Encoding\storeDecodedBase64;
 use Safe\Exceptions\StreamException;
 
 trait FileStoreBase64SourceTrait

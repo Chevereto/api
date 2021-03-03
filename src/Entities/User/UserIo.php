@@ -16,11 +16,11 @@ namespace Chevereto\Entities\User;
 use Chevere\Components\Message\Message;
 use Chevere\Exceptions\Core\OutOfBoundsException;
 use Chevereto\Components\Database\Database;
-use Chevereto\Components\Database\IoInterface;
+use Chevereto\Components\Database\EntityIoInterface;
 use Doctrine\DBAL\ParameterType;
 use Doctrine\DBAL\Result;
 
-final class UserIo implements IoInterface
+final class UserIo implements EntityIoInterface
 {
     private Database $database;
 

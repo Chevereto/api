@@ -15,7 +15,7 @@ namespace Chevereto\Components\DataBase\User;
 
 use Chevereto\Components\Database\Database;
 
-final class UserAlbumDb
+final class UserAlbum
 {
     private Database $database;
 

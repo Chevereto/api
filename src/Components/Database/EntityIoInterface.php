@@ -13,10 +13,16 @@ declare(strict_types=1);
 
 namespace Chevereto\Components\Database;
 
-interface IoInterface
+/**
+ * Describes the component in charge of providing single-entity I/O interaction.
+ */
+interface EntityIoInterface
 {
     public function __construct(Database $database);
 
+    /**
+     * @return array Raw associative result.
+     */
     public function get(int $userId, string ...$columns): array;
 
     /**

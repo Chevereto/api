@@ -21,7 +21,7 @@ use Throwable;
 /**
  * Provides encoding/decoding for integer IDs.
  */
-class HashId
+final class HashId
 {
     private string $alphabet;
 
@@ -103,7 +103,7 @@ class HashId
             (new StrAssert($salt))
                 ->notEmpty()
                 ->notCtypeSpace();
-        } catch(Throwable $e) {
+        } catch (Throwable $e) {
             throw new InvalidArgumentException(
                 message: new Message('Invalid salt provided'),
             );
@@ -112,7 +112,7 @@ class HashId
 
     private function assertPadding(int $padding): void
     {
-        if($padding < 0) {
+        if ($padding < 0) {
             throw new InvalidArgumentException(
                 message: new Message('Padding must be greater than zero'),
             );

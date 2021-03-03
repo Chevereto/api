@@ -11,29 +11,30 @@
 
 declare(strict_types=1);
 
-namespace Chevereto\Image;
+namespace Chevereto\Components\Image;
 
 use Chevere\Components\Message\Message;
 use Chevere\Exceptions\Core\LogicException;
-use Intervention\Image\ImageManager;
+use Jenssegers\ImageHash\ImageHash;
 
 /**
  * @codeCoverageIgnore
  */
-final class ImageManagerInstance
+final class ImageHashInstance
 {
-    private static ?ImageManager $instance;
+    private static ?ImageHash $instance;
 
-    public function __construct(ImageManager $imageManager)
+    public function __construct(ImageHash $imageHash)
     {
-        self::$instance = $imageManager;
+        self::$instance = $imageHash;
     }
 
-    public static function get(): ImageManager
+    public static function get(): ImageHash
     {
         if (! isset(self::$instance)) {
             throw new LogicException(
-                new Message('No ImageManager instance present')
+                (new Message('No %instance% instance present'))
+                    ->code('%instance%', ImageHash::class)
             );
         }
 
