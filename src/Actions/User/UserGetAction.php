@@ -58,7 +58,7 @@ class UserGetAction extends Action implements DependentInterface
     {
         $this->assertDependencies();
         $userId = $arguments->getInteger('userId');
-        $raw = $this->userIo->get($userId);
+        $raw = $this->userIo->select($userId);
 
         return $this->getResponse(
             user: new User(...$raw)

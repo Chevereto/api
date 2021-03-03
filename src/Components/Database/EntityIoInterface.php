@@ -21,9 +21,19 @@ interface EntityIoInterface
     public function __construct(Database $database);
 
     /**
+     * Defines the table name.
+     */
+    public function table(): string;
+
+    /**
+     * Defines the column id name.
+     */
+    public function id(): string;
+
+    /**
      * @return array Raw associative result.
      */
-    public function get(int $userId, string ...$columns): array;
+    public function select(int $userId, string ...$columns): array;
 
     /**
      * @return int Number of deleted rows `0`, `1`.
