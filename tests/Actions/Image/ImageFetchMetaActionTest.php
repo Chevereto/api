@@ -14,7 +14,7 @@ declare(strict_types=1);
 namespace Chevereto\Tests\Actions\Image;
 
 use Chevereto\Actions\Image\ImageFetchMetaAction;
-use function Chevereto\Image\imageManager;
+use function Chevereto\Components\Image\imageManager;
 use PHPUnit\Framework\TestCase;
 use Tests\Actions\Traits\ExpectInvalidArgumentExceptionCodeTrait;
 

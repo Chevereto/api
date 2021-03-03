@@ -15,7 +15,7 @@ namespace Chevereto\Tests\Actions\Image;
 
 use Chevere\Interfaces\Response\ResponseInterface;
 use Chevereto\Actions\Image\ImageFixOrientationAction;
-use function Chevereto\Image\imageManager;
+use function Chevereto\Components\Image\imageManager;
 use PHPUnit\Framework\TestCase;
 
 final class ImageFixOrientationActionTest extends TestCase
