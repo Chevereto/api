@@ -20,6 +20,9 @@ use Chevereto\Components\Database\EntityIoInterface;
 use Doctrine\DBAL\ParameterType;
 use Doctrine\DBAL\Result;
 
+/**
+ * Provides database I/O for the User entity.
+ */
 final class UserIo implements EntityIoInterface
 {
     private Database $database;
@@ -39,15 +42,15 @@ final class UserIo implements EntityIoInterface
             ->setParameter('id', $id, ParameterType::INTEGER);
         /** @var Result $result */
         $result = $queryBuilder->execute();
-        $result = $result->fetchAssociative();
-        if ($result === false) {
+        $fetch = $result->fetchAssociative();
+        if ($fetch === false) {
             throw new OutOfBoundsException(
                 message: (new Message('No user exists for id %id%'))
                     ->code('%id%', (string) $id)
             );
         }
 
-        return $result;
+        return $fetch;
     }
 
     public function delete(int $id): int

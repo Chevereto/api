@@ -20,7 +20,7 @@ use DateTimeZone;
  * @Entity
  * @Table(name="user")
  */
-final class User
+final class User implements UserInterface
 {
     /**
      * @Id
@@ -37,7 +37,7 @@ final class User
     /**
      * @Column(type="string", length=255, nullable=true)
      */
-    private ?string $name;
+    private string $name;
 
     /**
      * @Column(type="string", length=255, nullable=false)
@@ -52,12 +52,12 @@ final class User
     /**
      * @Column(type="string", length=255, nullable=true)
      */
-    private ?string $website;
+    private string $website;
 
     /**
      * @Column(type="text", length=255, nullable=true)
      */
-    private ?string $bio;
+    private string $bio;
 
     /**
      * @Column(type="integer", nullable=false)

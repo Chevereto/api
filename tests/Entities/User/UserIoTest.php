@@ -16,6 +16,7 @@ namespace Chevereto\Tests\Entities\User;
 use Chevereto\Components\Database\Database;
 use Chevereto\Entities\User\User;
 use Chevereto\Entities\User\UserIo;
+use Chevereto\Entities\User\UserProbe;
 use Doctrine\DBAL\DriverManager;
 use PHPUnit\Framework\TestCase;
 
@@ -34,6 +35,9 @@ final class UserIoTest extends TestCase
         $connection = DriverManager::getConnection($connectionParams);
         $database = new Database($connection);
         // $userIo = new UserIo($database);
+        // xdd(
+        //     (new UserProbe($database))->isExistentUsername('rodolfo')
+        // );
         // $inserted = $userIo->insert(
         //     datetime_utc: '2021-03-03 15:27:00',
         //     name: 'Rodolfo',

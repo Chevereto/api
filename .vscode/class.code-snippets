@@ -1,4 +1,20 @@
 {
+    "interface": {
+        "description": "Chevere interface",
+        "prefix": "interface",
+        "body": [
+            "<?php",
+            "namespace Chevereto\\\\${TM_DIRECTORY/.*src\\/(([^\\/]*)(\\/)?)|(\\/)([^\\/]*)/$2${3:+\\\\}${5:+\\\\}$5/g};",
+            "",
+            "/**",
+            " * Describes the component in charge of ${1:doing}.",
+            " */",
+            "interface $TM_FILENAME_BASE",
+            "{",
+            "\t$0",
+            "}"
+        ]
+    },
     "class": {
         "description": "Create a class",
         "prefix": "class",
