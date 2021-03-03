@@ -18,6 +18,7 @@ use Chevere\Exceptions\Core\OutOfBoundsException;
 use Chevereto\Components\Database\Database;
 use Chevereto\Components\Database\IoInterface;
 use Doctrine\DBAL\ParameterType;
+use Doctrine\DBAL\Result;
 
 final class UserIo implements IoInterface
 {
@@ -28,54 +29,68 @@ final class UserIo implements IoInterface
         $this->database = $database;
     }
 
-    public function get(int $userId, string ...$columns): array
+    public function get(int $id, string ...$columns): array
     {
         $args = empty($columns) ? ['*'] : $columns;
-        $result = $this->database->getQueryBuilder()
+        $queryBuilder = $this->database->getQueryBuilder()
             ->select(...$args)
-            ->from('chv_users')
-            ->where('user_id = :userId')
-            ->setParameter('userId', $userId, ParameterType::INTEGER)
-            ->execute()
-            ->fetchAssociative();
+            ->from('user')
+            ->where('id = :id')
+            ->setParameter('id', $id, ParameterType::INTEGER);
+        /** @var Result $result */
+        $result = $queryBuilder->execute();
+        $result = $result->fetchAssociative();
         if ($result === false) {
             throw new OutOfBoundsException(
                 message: (new Message('No user exists for id %id%'))
-                    ->code('%id%', (string) $userId)
+                    ->code('%id%', (string) $id)
             );
         }
 
         return $result;
     }
 
-    public function delete(int $userId): int
+    public function delete(int $id): int
     {
         return $this->database->getQueryBuilder()
-            ->delete('chv_users')
-            ->where('user_id = :userId')
-            ->setParameter('userId', $userId, ParameterType::INTEGER)
+            ->delete('user')
+            ->where('id = :id')
+            ->setParameter('id', $id, ParameterType::INTEGER)
             ->execute();
     }
 
-    public function update(int $userId, string ...$values): int
+    public function update(int $id, string ...$values): int
     {
-        $result = $this->database->getQueryBuilder()
-            ->update('chv_users');
+        $queryBuilder = $this->database->getQueryBuilder()
+            ->update('user');
         foreach ($values as $column => $value) {
             $column = (string) $column;
-            $result
+            $queryBuilder
                 ->set($column, ":${column}")
                 ->setParameter($column, $value);
         }
 
-        return $result
-            ->where('user_id = :userId')
-            ->setParameter('userId', $userId, ParameterType::INTEGER)
+        return $queryBuilder
+            ->where('id = :id')
+            ->setParameter('id', $id, ParameterType::INTEGER)
             ->execute();
     }
 
-    public function insert(array $values): int
+    public function insert(string ...$values): int
     {
+        $queryBuilder = $this->database->getQueryBuilder()
+            ->insert('user');
+        foreach ($values as $column => $value) {
+            $column = (string) $column;
+            $queryBuilder
+                ->setValue($column, ":${column}")
+                ->setParameter($column, $value);
+        }
+        $result = $queryBuilder->execute();
+        if ($result === 1) {
+            return (int) $queryBuilder->getConnection()->lastInsertId();
+        }
+
         return 0;
     }
 }

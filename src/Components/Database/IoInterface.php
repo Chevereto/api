@@ -19,9 +19,18 @@ interface IoInterface
 
     public function get(int $userId, string ...$columns): array;
 
+    /**
+     * @return int Number of deleted rows `0`, `1`.
+     */
     public function delete(int $id): int;
 
+    /**
+     * @return int Number of updated rows.
+     */
     public function update(int $id, string ...$values): int;
 
-    public function insert(array $values): int;
+    /**
+     * @return int Last inserted Id.
+     */
+    public function insert(string ...$values): int;
 }

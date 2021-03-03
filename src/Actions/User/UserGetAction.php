@@ -61,7 +61,7 @@ class UserGetAction extends Action implements DependentInterface
         $raw = $this->userIo->get($userId);
 
         return $this->getResponse(
-            user: new User($raw)
+            user: new User(...$raw)
         );
     }
 }

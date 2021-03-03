@@ -14,6 +14,7 @@ declare(strict_types=1);
 namespace Chevereto\Tests\Entities\User;
 
 use Chevereto\Components\Database\Database;
+use Chevereto\Entities\User\User;
 use Chevereto\Entities\User\UserIo;
 use Doctrine\DBAL\DriverManager;
 use PHPUnit\Framework\TestCase;
@@ -22,9 +23,9 @@ final class UserIoTest extends TestCase
 {
     public function testWea(): void
     {
-        // $this->expectNotToPerformAssertions();
+        $this->expectNotToPerformAssertions();
         $connectionParams = [
-            'dbname' => 'chevereto',
+            'dbname' => 'chevereto-4',
             'user' => 'root',
             'password' => 'root',
             'host' => 'localhost',
@@ -32,10 +33,32 @@ final class UserIoTest extends TestCase
         ];
         $connection = DriverManager::getConnection($connectionParams);
         $database = new Database($connection);
-        $userIo = new UserIo($database);
-        $id = 2;
-        // xdd($userIo->delete($id));
-        // xdd($userIo->update($id, user_liked: '202'));
-        xdd(weaita: $userIo->get($id, '*'));
+        // $userIo = new UserIo($database);
+        // $inserted = $userIo->insert(
+        //     datetime_utc: '2021-03-03 15:27:00',
+        //     name: 'Rodolfo',
+        //     username: 'rodolfo',
+        //     email: 'rodolfo@chevereto.com',
+        //     website: 'https://rodolfoberrios.com',
+        //     bio: 'El Rodo',
+        //     timezone: '0',
+        //     language: '0',
+        //     status: '0',
+        //     public_images: '0',
+        //     public_videos: '0',
+        //     public_audios: '0',
+        //     followers: '0',
+        //     following: '0',
+        //     likes_given: '0',
+        //     likes_made: '0',
+        // );
+        // $raw = $userIo->get(9, '*');
+        // xdd(
+        //     get: $raw,
+        //     user: new User(...$raw)
+        //     // update: $userIo->update($inserted, likes_given: '222'),
+        //     // getUpdated: $userIo->get($inserted, 'likes_given'),
+        //     // delete: $userIo->delete($inserted)
+        // );
     }
 }
