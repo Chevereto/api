@@ -14,7 +14,7 @@ declare(strict_types=1);
 namespace Chevereto\Components\Database;
 
 /**
- * Describes the component in charge of providing single-entity I/O interaction.
+ * Describes the component in charge of providing entity I/O interaction.
  */
 interface EntityIoInterface
 {
@@ -31,9 +31,11 @@ interface EntityIoInterface
     public function id(): string;
 
     /**
+     * Select the entity columns identified by its id.
+     *
      * @return array Raw associative result.
      */
-    public function select(int $userId, string ...$columns): array;
+    public function select(int $id, string ...$columns): array;
 
     /**
      * @return int Number of deleted rows `0`, `1`.

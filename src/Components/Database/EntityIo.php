@@ -15,6 +15,7 @@ namespace Chevereto\Components\Database;
 
 use Chevere\Components\Message\Message;
 use Chevere\Exceptions\Core\OutOfBoundsException;
+use Chevereto\Components\Database\Traits\GetWhereEqualsTrait;
 use Doctrine\DBAL\ParameterType;
 use Doctrine\DBAL\Result;
 
@@ -23,9 +24,11 @@ use Doctrine\DBAL\Result;
  */
 abstract class EntityIo implements EntityIoInterface
 {
-    private Database $database;
+    use GetWhereEqualsTrait;
 
-    private string $whereIdClause;
+    protected Database $database;
+
+    protected string $whereIdClause;
 
     public function __construct(Database $database)
     {
@@ -100,33 +103,5 @@ abstract class EntityIo implements EntityIoInterface
         }
 
         return 0;
-    }
-
-    public function selectByValues(array $select = ['*'], string ...$values): array
-    {
-        $queryBuilder = $this->database->getQueryBuilder()
-            ->select(...$select)
-            ->from($this->table());
-        foreach ($values as $column => $value) {
-            $column = (string) $column;
-            $queryBuilder
-                ->andWhere($this->getWhereEquals($column))
-                ->setParameter($column, $value);
-        }
-        /** @var Result $result */
-        $result = $queryBuilder->execute();
-        $fetch = $result->fetchAllAssociative();
-        if ($fetch === false) {
-            throw new OutOfBoundsException(
-                message: new Message('No record exists for values provided')
-            );
-        }
-
-        return $fetch;
-    }
-
-    private function getWhereEquals(string $column): string
-    {
-        return str_replace('%s', $column, '%s = :%s');
     }
 }
