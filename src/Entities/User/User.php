@@ -27,8 +27,13 @@ final class User
         return $this->id;
     }
 
-    // public function getUrl($handle) {
-    // }
-    // public function getUrlAlbums($user_url) {
-    // }
+    public function url(): string
+    {
+        return '';
+    }
+
+    public function urlAlbums(): string
+    {
+        return '';
+    }
 }

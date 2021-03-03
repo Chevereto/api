@@ -22,9 +22,9 @@ final class UserIoTest extends TestCase
 {
     public function testWea(): void
     {
-        $this->expectNotToPerformAssertions();
+        // $this->expectNotToPerformAssertions();
         $connectionParams = [
-            'dbname' => 'chevereto-4',
+            'dbname' => 'chevereto',
             'user' => 'root',
             'password' => 'root',
             'host' => 'localhost',
@@ -33,6 +33,9 @@ final class UserIoTest extends TestCase
         $connection = DriverManager::getConnection($connectionParams);
         $database = new Database($connection);
         $userIo = new UserIo($database);
-        // xdd($userIo->sql());
+        $id = 2;
+        // xdd($userIo->delete($id));
+        // xdd($userIo->update($id, user_liked: '202'));
+        xdd(weaita: $userIo->get($id, '*'));
     }
 }

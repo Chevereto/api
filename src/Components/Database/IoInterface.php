@@ -17,11 +17,11 @@ interface IoInterface
 {
     public function __construct(Database $database);
 
-    public function get(int $id): array;
+    public function get(int $userId, string ...$columns): array;
 
-    public function delete(int $id): void;
+    public function delete(int $id): int;
 
-    public function update(int $id, array $values): void;
+    public function update(int $id, string ...$values): int;
 
     public function insert(array $values): int;
 }

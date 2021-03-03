@@ -178,7 +178,7 @@ final class UploadPostController extends Controller implements DependentInterfac
         try {
             $Deserialize = new Deserialize($source);
             $uploadFile = $Deserialize->var()['tmp_name'];
-        } catch (Exception $e) {
+        } catch (Exception) {
             $uploadFile = tempnam(sys_get_temp_dir(), 'chv.temp');
             $uri = UriFactory::factory($source);
             if ($uri->isValid()) {
