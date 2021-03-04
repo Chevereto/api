@@ -14,11 +14,12 @@ declare(strict_types=1);
 namespace Chevereto\Controllers\Api\V1\Upload;
 
 use Chevere\Components\Controller\Controller;
-use Chevere\Components\Dependent\Traits\DependentTrait;
 use Chevere\Components\Message\Message;
 use Chevere\Components\Parameter\IntegerParameter;
 use Chevere\Components\Parameter\Parameters;
 use Chevere\Components\Parameter\StringParameter;
+use Chevere\Components\Pluggable\Plug\Hook\Traits\PluggableHooksTrait;
+use Chevere\Components\Pluggable\PluggableAnchors;
 use Chevere\Components\Regex\Regex;
 use Chevere\Components\Serialize\Deserialize;
 use Chevere\Components\Workflow\Step;
@@ -28,9 +29,10 @@ use Chevere\Components\Workflow\WorkflowRunner;
 use function Chevere\Components\Workflow\workflowRunner;
 use Chevere\Exceptions\Core\Exception;
 use Chevere\Exceptions\Core\InvalidArgumentException;
-use Chevere\Interfaces\Dependent\DependentInterface;
 use Chevere\Interfaces\Parameter\ArgumentsInterface;
 use Chevere\Interfaces\Parameter\ParametersInterface;
+use Chevere\Interfaces\Pluggable\Plug\Hook\PluggableHooksInterface;
+use Chevere\Interfaces\Pluggable\PluggableAnchorsInterface;
 use Chevere\Interfaces\Response\ResponseInterface;
 use Chevere\Interfaces\Workflow\WorkflowInterface;
 use Chevereto\Actions\Database\DatabaseReserveRowAction;
@@ -48,9 +50,9 @@ use Chevereto\Controllers\Api\V2\File\Traits\FileStoreBase64SourceTrait;
 use Laminas\Uri\UriFactory;
 use function Safe\tempnam;
 
-final class UploadPostController extends Controller implements DependentInterface
+final class UploadPostController extends Controller implements PluggableHooksInterface
 {
-    use DependentTrait;
+    use PluggableHooksTrait;
     use FileStoreBase64SourceTrait;
 
     private WorkflowInterface $workflow;
@@ -58,6 +60,11 @@ final class UploadPostController extends Controller implements DependentInterfac
     public function getDescription(): string
     {
         return 'Uploads an image resource.';
+    }
+
+    public static function getHookAnchors(): PluggableAnchorsInterface
+    {
+        return new PluggableAnchors('getWorkflow:after');
     }
 
     public function getContextParameters(): ParametersInterface
@@ -73,7 +80,6 @@ final class UploadPostController extends Controller implements DependentInterfac
             minWidth: new IntegerParameter(),
             naming: new StringParameter(),
             path: new StringParameter(),
-            userId: new IntegerParameter()
         );
     }
 
@@ -96,7 +102,7 @@ final class UploadPostController extends Controller implements DependentInterfac
 
     public function getWorkflow(): WorkflowInterface
     {
-        return new Workflow(
+        $workflow = new Workflow(
             validateFile: (new Step(FileValidateAction::class))
                 ->withArguments(
                     mimes: '${mimes}',
@@ -161,6 +167,9 @@ final class UploadPostController extends Controller implements DependentInterfac
                     userId: '${userId}',
                 )
         );
+        $this->hook('afterSetWorkflow', $workflow);
+
+        return $workflow;
     }
 
     public function run(ArgumentsInterface $arguments): ResponseInterface
