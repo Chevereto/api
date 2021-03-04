@@ -167,7 +167,7 @@ final class UploadPostController extends Controller implements PluggableHooksInt
                     userId: '${userId}',
                 )
         );
-        $this->hook('afterSetWorkflow', $workflow);
+        $this->hook('getWorkflow:after', $workflow);
 
         return $workflow;
     }
