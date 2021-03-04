@@ -13,7 +13,7 @@ declare(strict_types=1);
 
 namespace Chevereto\Controllers\Api\V2\File;
 
-use Chevere\Components\Action\ControllerWorkflow;
+use Chevere\Components\Controller\ControllerWorkflow;
 use Chevere\Components\Parameter\IntegerParameter;
 use Chevere\Components\Parameter\Parameters;
 use Chevere\Components\Parameter\StringParameter;

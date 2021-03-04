@@ -13,7 +13,7 @@ declare(strict_types=1);
 
 namespace Chevereto\Controllers\Api\V1\Upload;
 
-use Chevere\Components\Action\Controller;
+use Chevere\Components\Controller\Controller;
 use Chevere\Components\Dependent\Traits\DependentTrait;
 use Chevere\Components\Message\Message;
 use Chevere\Components\Parameter\IntegerParameter;

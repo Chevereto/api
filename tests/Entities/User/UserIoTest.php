@@ -17,6 +17,7 @@ use Chevereto\Components\Database\Database;
 use Chevereto\Entities\User\User;
 use Chevereto\Entities\User\UserIo;
 use Chevereto\Entities\User\UserProbe;
+use Chevereto\Entities\User\UsersIo;
 use Doctrine\DBAL\DriverManager;
 use PHPUnit\Framework\TestCase;
 
@@ -34,7 +35,8 @@ final class UserIoTest extends TestCase
         ];
         $connection = DriverManager::getConnection($connectionParams);
         $database = new Database($connection);
-        // $userIo = new UserIo($database);
+        $userIo = new UserIo($database);
+        $usersIo = new UsersIo($database);
         // xdd(
         //     (new UserProbe($database))->isExistentUsername('rodolfo')
         // );
@@ -56,12 +58,17 @@ final class UserIoTest extends TestCase
         //     likes_given: '0',
         //     likes_made: '0',
         // );
-        // $raw = $userIo->get(9, '*');
+        $raw = $userIo->select(9, '*');
         // xdd(
-        //     get: $raw,
-        //     user: new User(...$raw)
+        //     // select: $raw,
+        //     // user: new User(...$raw),
+        //     byValue: $usersIo->selectWhereAllValues(
+        //         columns: ['id', 'name', 'email'],
+        //         email: 'rodolfo@chevereto.com',
+        //         username: 'alejandro',
+        //     )
         //     // update: $userIo->update($inserted, likes_given: '222'),
-        //     // getUpdated: $userIo->get($inserted, 'likes_given'),
+        //     // selectUpdated: $userIo->select($inserted, 'likes_given'),
         //     // delete: $userIo->delete($inserted)
         // );
     }

@@ -19,6 +19,22 @@ jobs:
       - name: Checkout
         uses: actions/checkout@v2
 
+      # - name: Shutdown Ubuntu MySQL
+      #   if: ${{ !env.ACT }}
+      #   run: |
+      #     sudo systemctl stop mysql
+
+      # - name: Set up MariaDB
+      #   uses: getong/mariadb-action@v1.1
+      #   with:
+      #     host port: 3307
+      #     container port: 3308
+      #     character set server: utf8mb4
+      #     collation server: utf8mb4_general_ci
+      #     mariadb version: "10.4.10"
+      #     mysql database: test
+      #     mysql root password: password
+
       - name: Setup cache environment
         id: extcache
         uses: shivammathur/cache-extensions@v1
