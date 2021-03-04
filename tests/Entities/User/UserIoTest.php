@@ -26,17 +26,17 @@ final class UserIoTest extends TestCase
     public function testWea(): void
     {
         $this->expectNotToPerformAssertions();
-        $connectionParams = [
-            'dbname' => 'chevereto-4',
-            'user' => 'root',
-            'password' => 'root',
-            'host' => 'localhost',
-            'driver' => 'pdo_mysql',
-        ];
-        $connection = DriverManager::getConnection($connectionParams);
-        $database = new Database($connection);
-        $userIo = new UserIo($database);
-        $usersIo = new UsersIo($database);
+        // $connectionParams = [
+        //     'dbname' => 'chevereto-4',
+        //     'user' => 'root',
+        //     'password' => 'root',
+        //     'host' => 'localhost',
+        //     'driver' => 'pdo_mysql',
+        // ];
+        // $connection = DriverManager::getConnection($connectionParams);
+        // $database = new Database($connection);
+        // $userIo = new UserIo($database);
+        // $usersIo = new UsersIo($database);
         // xdd(
         //     (new UserProbe($database))->isExistentUsername('rodolfo')
         // );
@@ -58,7 +58,7 @@ final class UserIoTest extends TestCase
         //     likes_given: '0',
         //     likes_made: '0',
         // );
-        $raw = $userIo->select(9, '*');
+        // $raw = $userIo->select(9, '*');
         // xdd(
         //     // select: $raw,
         //     // user: new User(...$raw),
