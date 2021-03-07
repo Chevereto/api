@@ -18,6 +18,7 @@ use Chevere\Components\Parameter\ObjectParameter;
 use Chevere\Components\Parameter\Parameters;
 use Chevere\Components\Parameter\StringParameter;
 use Chevere\Components\Regex\Regex;
+use Chevere\Interfaces\Filesystem\PathInterface;
 use Chevere\Interfaces\Parameter\ArgumentsInterface;
 use Chevere\Interfaces\Parameter\ParametersInterface;
 use Chevere\Interfaces\Response\ResponseInterface;
@@ -35,7 +36,7 @@ class FileUploadAction extends Action
             targetBasename: (new StringParameter())
                 ->withRegex(new Regex('/^.+\.[a-zA-Z]+$/')),
             storage: new ObjectParameter(Storage::class),
-            path: new StringParameter()
+            path: new ObjectParameter(PathInterface::class)
         );
     }
 

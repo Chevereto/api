@@ -128,7 +128,7 @@ abstract class ImagePostController extends FilePostController
             'filename' => $uploadFile,
         ]);
 
-        return (new WorkflowResponse($this->getResponseDataParameters(), []))
+        return (new WorkflowResponse($this->getResponseParameters(), []))
             ->withWorkflowMessage(
                 getWorkflowMessage($this->getWorkflow(), ...$settings)
             );

@@ -44,7 +44,7 @@ class ImageFetchMetaAction extends Action
         );
     }
 
-    public function getResponseDataParameters(): ParametersInterface
+    public function getResponseParameters(): ParametersInterface
     {
         return new Parameters(
             exif: new ArrayParameter(),

@@ -16,6 +16,7 @@ namespace Chevereto\Actions\File;
 use Chevere\Components\Action\Action;
 use Chevere\Components\Filesystem\Basename;
 use Chevere\Components\Filesystem\Path;
+use Chevere\Components\Parameter\IntegerParameter;
 use Chevere\Components\Parameter\ObjectParameter;
 use Chevere\Components\Parameter\Parameters;
 use Chevere\Components\Parameter\StringParameter;
@@ -51,33 +52,34 @@ class FileTargetBasenameAction extends Action
     public function getParameters(): ParametersInterface
     {
         return new Parameters(
-            id: new StringParameter(),
+            id: new IntegerParameter(),
             name: (new StringParameter())
                 ->withRegex(new Regex('/^.+\.[a-zA-Z]+$/')),
             naming: (new StringParameter())
                 ->withRegex(new Regex('/^original|random|mixed|id$/'))
                 ->withDefault('original'),
             storage: new ObjectParameter(Storage::class),
-            path: new ObjectParameter(Path::class)
+            path: new ObjectParameter(PathInterface::class)
         );
     }
 
-    public function getResponseDataParameters(): ParametersInterface
+    public function getResponseParameters(): ParametersInterface
     {
         return new Parameters(
-            basename: new ObjectParameter(Basename::class)
+            basename: new ObjectParameter(Basename::class),
         );
     }
 
     public function run(ArgumentsInterface $arguments): ResponseInterface
     {
-        $id = $arguments->getString('id');
+        $id = $arguments->getInteger('id');
+        $encodedId = 'encoded';
         $name = $arguments->getString('name');
         $naming = $arguments->getString('naming');
         $basename = new Basename($name);
         if ($naming === 'id') {
             return $this->getResponse(
-                basename: new Basename($id . '.' . $basename->extension())
+                basename: new Basename($encodedId . '.' . $basename->extension())
             );
         }
         /** @var Storage $storage */

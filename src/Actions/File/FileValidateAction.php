@@ -61,7 +61,7 @@ class FileValidateAction extends Action
             );
     }
 
-    public function getResponseDataParameters(): ParametersInterface
+    public function getResponseParameters(): ParametersInterface
     {
         return new Parameters(
             bytes : new IntegerParameter(),

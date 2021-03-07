@@ -47,7 +47,7 @@ class UserGetAction extends Action implements DependentInterface
         );
     }
 
-    public function getResponseDataParameters(): ParametersInterface
+    public function getResponseParameters(): ParametersInterface
     {
         return new Parameters(
             user: new ObjectParameter(User::class)

@@ -23,6 +23,12 @@
         "ext-bcmath": "^8.0",
         "doctrine/orm": "^2.8"
     },
+    "repositories": [
+        {
+            "type": "vcs",
+            "url": "https://github.com/chevere/chevere"
+        }
+    ],
     "autoload": {
         "files": [
             "src/Components/Image/functions.php",

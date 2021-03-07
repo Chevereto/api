@@ -13,9 +13,9 @@ declare(strict_types=1);
 
 namespace Chevereto\Controllers\Api\V1\Upload;
 
-use Chevere\Components\Controller\Controller;
-use Chevere\Components\Message\Message;
-use Chevere\Components\Parameter\IntegerParameter;
+use Chevere\Components\Controller\ControllerWorkflow;
+use Chevere\Components\DataStructure\Map;
+use Chevere\Components\Dependent\Traits\DependentTrait;
 use Chevere\Components\Parameter\Parameters;
 use Chevere\Components\Parameter\StringParameter;
 use Chevere\Components\Pluggable\Plug\Hook\Traits\PluggableHooksTrait;
@@ -27,8 +27,6 @@ use Chevere\Components\Workflow\Workflow;
 use Chevere\Components\Workflow\WorkflowRun;
 use Chevere\Components\Workflow\WorkflowRunner;
 use function Chevere\Components\Workflow\workflowRunner;
-use Chevere\Exceptions\Core\Exception;
-use Chevere\Exceptions\Core\InvalidArgumentException;
 use Chevere\Interfaces\Parameter\ArgumentsInterface;
 use Chevere\Interfaces\Parameter\ParametersInterface;
 use Chevere\Interfaces\Pluggable\Plug\Hook\PluggableHooksInterface;
@@ -45,17 +43,18 @@ use Chevereto\Actions\Image\ImageFixOrientationAction;
 use Chevereto\Actions\Image\ImageInsertAction;
 use Chevereto\Actions\Image\ImageStripMetaAction;
 use Chevereto\Actions\Image\ImageValidateMediaAction;
+use Chevereto\Actions\Legacy\ValidateApiV1KeyAction;
 use Chevereto\Actions\Storage\StorageGetForUserAction;
 use Chevereto\Controllers\Api\V2\File\Traits\FileStoreBase64SourceTrait;
 use Laminas\Uri\UriFactory;
 use function Safe\tempnam;
+use Throwable;
 
-final class UploadPostController extends Controller implements PluggableHooksInterface
+final class UploadPostController extends ControllerWorkflow implements PluggableHooksInterface
 {
+    use DependentTrait;
     use PluggableHooksTrait;
     use FileStoreBase64SourceTrait;
-
-    private WorkflowInterface $workflow;
 
     public function getDescription(): string
     {
@@ -64,22 +63,15 @@ final class UploadPostController extends Controller implements PluggableHooksInt
 
     public static function getHookAnchors(): PluggableAnchorsInterface
     {
-        return new PluggableAnchors('getWorkflow:after');
+        return new PluggableAnchors(
+            'getWorkflow:after',
+        );
     }
 
-    public function getContextParameters(): ParametersInterface
+    public function getResponseParameters(): ParametersInterface
     {
         return new Parameters(
-            apiV1Key: new StringParameter(),
-            mimes: new StringParameter(),
-            maxBytes: new IntegerParameter(),
-            maxHeight: new IntegerParameter(),
-            maxWidth: new IntegerParameter(),
-            minBytes: new IntegerParameter(),
-            minHeight: new IntegerParameter(),
-            minWidth: new IntegerParameter(),
-            naming: new StringParameter(),
-            path: new StringParameter(),
+            document: new StringParameter()
         );
     }
 
@@ -102,7 +94,11 @@ final class UploadPostController extends Controller implements PluggableHooksInt
 
     public function getWorkflow(): WorkflowInterface
     {
-        return new Workflow(
+        $workflow = new Workflow(
+            validateApiV1Key: new Step(
+                ValidateApiV1KeyAction::class,
+                key: '${key}',
+            ),
             validateFile: new Step(
                 FileValidateAction::class,
                 mimes: '${mimes}',
@@ -110,7 +106,7 @@ final class UploadPostController extends Controller implements PluggableHooksInt
                 maxBytes: '${maxBytes}',
                 minBytes: '${minBytes}',
             ),
-            validate: new Step(
+            validateMedia: new Step(
                 ImageValidateMediaAction::class,
                 filename: '${filename}',
                 maxHeight: '${maxHeight}',
@@ -121,21 +117,21 @@ final class UploadPostController extends Controller implements PluggableHooksInt
             assertNotDuplicate: new Step(
                 FileAssertNotDuplicateAction::class,
                 md5: '${validateFile:md5}',
-                perceptual: '${validate:perceptual}',
+                perceptual: '${validateMedia:perceptual}',
                 ip: '${ip}',
                 ipVersion: '${ipVersion}',
             ),
             fixOrientation: new Step(
                 ImageFixOrientationAction::class,
-                image: '${validate:image}'
+                image: '${validateMedia:image}'
             ),
             fetchMeta: new Step(
                 ImageFetchMetaAction::class,
-                image: '${validate:image}'
+                image: '${validateMedia:image}'
             ),
             stripMeta: new Step(
                 ImageStripMetaAction::class,
-                image: '${validate:image}'
+                image: '${validateMedia:image}'
             ),
             storageForUser: new Step(
                 StorageGetForUserAction::class,
@@ -176,20 +172,12 @@ final class UploadPostController extends Controller implements PluggableHooksInt
 
     public function run(ArgumentsInterface $arguments): ResponseInterface
     {
-        $context = $this->contextArguments();
-        if ($arguments->getString('key') !== $context->getString('apiV1Key')) {
-            throw new InvalidArgumentException(
-                new Message('Invalid API V1 key provided'),
-                100
-            );
-        }
-        // $source will be a serialized PHP array if _FILES (+tryFiles attribute)
         $source = $arguments->getString('source');
 
         try {
-            $Deserialize = new Deserialize($source);
-            $uploadFile = $Deserialize->var()['tmp_name'];
-        } catch (Exception) {
+            $deserialize = new Deserialize($source);
+            $uploadFile = $deserialize->var()['tmp_name'];
+        } catch (Throwable) {
             $uploadFile = tempnam(sys_get_temp_dir(), 'chv.temp');
             $uri = UriFactory::factory($source);
             if ($uri->isValid()) {
@@ -198,21 +186,26 @@ final class UploadPostController extends Controller implements PluggableHooksInt
                 $this->assertStoreSource($source, $uploadFile);
             }
         }
-        $settings = array_replace($context->toArray(), [
-            'filename' => $uploadFile,
-            'albumId' => '',
-        ]);
-        unset($settings['apiV1Key']);
-        $workflowRun = (new WorkflowRunner(
-            new WorkflowRun($this->workflow, $settings)
-        ))->run('container');
-        $data = $workflowRun->get('upload')->data();
-        if ($arguments->getString('format') === 'txt') {
-            $raw = $data['url_viewer'];
-        } else {
-            $raw = json_encode($data, JSON_PRETTY_PRINT);
-        }
+        $workflowArguments = [
+        ];
 
-        return $this->getResponse(raw: $raw);
+        return $this
+            ->getResponse(
+                key: $arguments->getString('key'),
+                filename: $uploadFile,
+                albumId: '',
+            )
+            ->withAddedAttribute('instant');
+
+        // $run = new WorkflowRun($this->workflow, ...$workflowArguments);
+        // $runner = (new WorkflowRunner($run))->run(new Map());
+        // $data = $runner->get('upload')->data();
+        // if ($arguments->getString('format') === 'txt') {
+        //     $raw = $data['url_viewer'];
+        // } else {
+        //     $raw = json_encode($data, JSON_PRETTY_PRINT);
+        // }
+
+        // return $this->getResponse(raw: $raw);
     }
 }

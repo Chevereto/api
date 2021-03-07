@@ -58,7 +58,7 @@ class StorageGetForUserAction extends Action implements DependentInterface
         );
     }
 
-    public function getResponseDataParameters(): ParametersInterface
+    public function getResponseParameters(): ParametersInterface
     {
         return new Parameters(
             storage: new ObjectParameter(Storage::class)

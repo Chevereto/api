@@ -24,7 +24,7 @@
             "\t\t);",
             "\t}",
             "",
-            "\tpublic function getResponseDataParameters(): ParametersInterface",
+            "\tpublic function getResponseParameters(): ParametersInterface",
             "\t{",
             "\t\treturn new Parameters(",
             "\t\t\tresponse: new StringParameter()",

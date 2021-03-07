@@ -70,7 +70,7 @@ class ValidateMediaAction extends Action
         );
     }
 
-    public function getResponseDataParameters(): ParametersInterface
+    public function getResponseParameters(): ParametersInterface
     {
         return new Parameters(
             format: new ObjectParameter(Format::class),

@@ -67,7 +67,7 @@ class ImageValidateMediaAction extends Action
         );
     }
 
-    public function getResponseDataParameters(): ParametersInterface
+    public function getResponseParameters(): ParametersInterface
     {
         return new Parameters(
             image: new ObjectParameter(Image::class),
