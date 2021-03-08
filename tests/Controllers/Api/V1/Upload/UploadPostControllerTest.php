@@ -75,7 +75,7 @@ final class UploadPostControllerTest extends TestCase
             new WorkflowRun($workflow, ...$options)
         );
         $dependencies = new Map(database: $database);
-        $runner->run($dependencies);
+        $runner = $runner->withRun($dependencies);
         $workflow = $controller->getWorkflow();
     }
 
