@@ -153,7 +153,7 @@ final class UploadPostController extends ControllerWorkflow implements Pluggable
             upload: new Step(
                 FileUploadAction::class,
                 filename: '${filename}',
-                targetBasename: '${targetBasename:name}',
+                targetBasename: '${targetBasename:basename}',
                 storage: '${storageForUser:storage}',
                 path: '${path}',
             ),

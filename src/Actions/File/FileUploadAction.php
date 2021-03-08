@@ -14,10 +14,10 @@ declare(strict_types=1);
 namespace Chevereto\Actions\File;
 
 use Chevere\Components\Action\Action;
+use Chevere\Components\Filesystem\Basename;
 use Chevere\Components\Parameter\ObjectParameter;
 use Chevere\Components\Parameter\Parameters;
 use Chevere\Components\Parameter\StringParameter;
-use Chevere\Components\Regex\Regex;
 use Chevere\Interfaces\Filesystem\PathInterface;
 use Chevere\Interfaces\Parameter\ArgumentsInterface;
 use Chevere\Interfaces\Parameter\ParametersInterface;
@@ -33,8 +33,7 @@ class FileUploadAction extends Action
     {
         return new Parameters(
             filename: new StringParameter(),
-            targetBasename: (new StringParameter())
-                ->withRegex(new Regex('/^.+\.[a-zA-Z]+$/')),
+            targetBasename: new ObjectParameter(Basename::class),
             storage: new ObjectParameter(Storage::class),
             path: new ObjectParameter(PathInterface::class)
         );
@@ -43,8 +42,8 @@ class FileUploadAction extends Action
     public function run(ArgumentsInterface $arguments): ResponseInterface
     {
         $filename = $arguments->getString('filename');
-        $naming = $arguments->getString('naming');
-        $name = $arguments->getString('name');
+        /** @var Basename $basename */
+        $basename = $arguments->get('targetBasename');
         /** @var Storage $storage */
         $storage = $arguments->get('storage');
         // $storage->adapter()->write();

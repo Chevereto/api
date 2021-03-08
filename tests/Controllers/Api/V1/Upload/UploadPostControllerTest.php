@@ -70,9 +70,7 @@ final class UploadPostControllerTest extends TestCase
         $response = $controller->run($runArguments);
         $this->assertInstanceOf(WorkflowResponseInterface::class, $response);
         $workflow = $controller->getWorkflow();
-        // xdd($workflow->parameters());
         $options = array_merge($response->data(), $context);
-        // xdd($options['response']);
         $runner = new WorkflowRunner(
             new WorkflowRun($workflow, ...$options)
         );

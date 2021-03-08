@@ -15,9 +15,8 @@ namespace Chevereto\Actions\Image;
 
 use Chevere\Components\Action\Action;
 use Chevere\Components\Parameter\ArrayParameter;
-use Chevere\Components\Parameter\Parameter;
+use Chevere\Components\Parameter\ObjectParameter;
 use Chevere\Components\Parameter\Parameters;
-use Chevere\Components\Type\Type;
 use Chevere\Interfaces\Parameter\ArgumentsInterface;
 use Chevere\Interfaces\Parameter\ParametersInterface;
 use Chevere\Interfaces\Response\ResponseInterface;
@@ -40,7 +39,7 @@ class ImageFetchMetaAction extends Action
     public function getParameters(): ParametersInterface
     {
         return new Parameters(
-            image: new Parameter(new Type(Image::class))
+            image: new ObjectParameter(Image::class)
         );
     }
 

@@ -26,14 +26,15 @@ final class FileTargetBasenameActionTest extends TestCase
     public function testId(): void
     {
         $action = new FileTargetBasenameAction();
-        $arguments = $this->getArguments([
+        $options = $this->getArguments([
             'naming' => 'id',
             'name' => 'test.md',
         ]);
-        $basename = new Basename($arguments['name']);
-        $response = $action->run($action->getArguments(...$arguments));
+        $basename = new Basename($options['name']);
+        $arguments = $action->getArguments(...$options);
+        $response = $action->run($arguments);
         $this->assertSame(
-            $arguments['id'] . '.' . $basename->extension(),
+            'encoded' . '.' . $basename->extension(),
             $response->data()['basename']->toString()
         );
     }
@@ -124,15 +125,17 @@ final class FileTargetBasenameActionTest extends TestCase
         $this->assertTrue(strlen($responseBasename->toString()) === 255);
     }
 
-    private function getArguments(array $array): array {
+    private function getArguments(array $array): array
+    {
         return array_merge([
-            'id' => '123',
+            'id' => 123,
             'storage' => $this->getStorage(),
             'path' => new Path('/'),
         ], $array);
     }
 
-    private function getStorage(): Storage {
+    private function getStorage(): Storage
+    {
         return new Storage(new LocalFilesystemAdapter(__DIR__ . '/_resources'));
     }
 }
