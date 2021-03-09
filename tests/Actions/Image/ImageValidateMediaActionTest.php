@@ -35,7 +35,7 @@ final class ImageValidateMediaActionTest extends TestCase
     {
         $action = $this->getImageValidateMediaAction();
         $arguments = $this->getTestArguments([
-            'filename' => __FILE__,
+            'filepath' => __FILE__,
         ]);
         $this->expectInvalidArgumentException(1000);
         $action->run($action->getArguments(...$arguments));
@@ -92,7 +92,7 @@ final class ImageValidateMediaActionTest extends TestCase
     private function getTestArguments(array $arguments): array
     {
         return array_replace([
-            'filename' => __DIR__ . '/assets/favicon.png',
+            'filepath' => __DIR__ . '/assets/favicon.png',
             'maxWidth' => 1000,
             'maxHeight' => 1000,
             'minWidth' => 100,

@@ -32,7 +32,7 @@ class FileUploadAction extends Action
     public function getParameters(): ParametersInterface
     {
         return new Parameters(
-            filename: new StringParameter(),
+            filepath: new StringParameter(),
             targetFilename: new ObjectParameter(Filename::class),
             storage: new ObjectParameter(Storage::class),
             path: new ObjectParameter(PathInterface::class)
@@ -41,7 +41,7 @@ class FileUploadAction extends Action
 
     public function run(ArgumentsInterface $arguments): ResponseInterface
     {
-        $filename = $arguments->getString('filename');
+        $filename = $arguments->getString('filepath');
         /** @var Filename $targetFilename */
         $targetFilename = $arguments->get('targetFilename');
         /** @var Storage $storage */

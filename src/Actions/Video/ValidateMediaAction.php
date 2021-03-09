@@ -56,7 +56,7 @@ class ValidateMediaAction extends Action
     public function getParameters(): ParametersInterface
     {
         return new Parameters(
-            filename: new StringParameter(),
+            filepath: new StringParameter(),
             maxHeight: new IntegerParameter(),
             maxWidth: new IntegerParameter(),
             maxLength: (new IntegerParameter())
@@ -80,12 +80,12 @@ class ValidateMediaAction extends Action
 
     public function run(ArgumentsInterface $arguments): ResponseInterface
     {
-        $filename = $arguments->getString('filename');
+        $filepath = $arguments->getString('filepath');
         $probe = FFProbe::create();
-        $this->assertValidMedia($probe, $filename);
-        $format = $this->assertGetFormat($probe, $filename);
-        $stream = $this->assertGetStream($probe, $filename);
-        $this->assertValidVideo($stream, $filename);
+        $this->assertValidMedia($probe, $filepath);
+        $format = $this->assertGetFormat($probe, $filepath);
+        $stream = $this->assertGetStream($probe, $filepath);
+        $this->assertValidVideo($stream, $filepath);
         $this->maxHeight = $arguments->getInteger('maxHeight');
         $this->maxLength = $arguments->getInteger('maxLength');
         $this->maxWidth = $arguments->getInteger('maxWidth');
@@ -102,11 +102,11 @@ class ValidateMediaAction extends Action
         );
     }
 
-    private function assertValidMedia(FFProbe $probe, string $filename): void
+    private function assertValidMedia(FFProbe $probe, string $filepath): void
     {
-        if (! $probe->isValid($filename)) {
+        if (! $probe->isValid($filepath)) {
             throw new InvalidArgumentException(
-                $this->getManagerExceptionMessage($filename),
+                $this->getManagerExceptionMessage($filepath),
                 1000
             );
         }

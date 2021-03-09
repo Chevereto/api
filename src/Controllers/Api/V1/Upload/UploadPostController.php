@@ -103,13 +103,13 @@ final class UploadPostController extends ControllerWorkflow implements Pluggable
             validateFile: new Step(
                 FileValidateAction::class,
                 mimes: '${apiV1UploadMimes}',
-                filename: '${filename}',
+                filepath: '${uploadFilepath}',
                 maxBytes: '${apiV1UploadMaxBytes}',
                 minBytes: '${apiV1UploadMinBytes}',
             ),
             validateMedia: new Step(
                 ImageValidateMediaAction::class,
-                filename: '${filename}',
+                filepath: '${uploadFilepath}',
                 maxHeight: '${apiV1UploadMaxHeight}',
                 maxWidth: '${apiV1UploadMaxWidth}',
                 minHeight: '${apiV1UploadMinHeight}',
@@ -153,7 +153,7 @@ final class UploadPostController extends ControllerWorkflow implements Pluggable
             ),
             upload: new Step(
                 FileUploadAction::class,
-                filename: '${filename}',
+                filepath: '${uploadFilepath}',
                 targetFilename: '${targetFilename:filename}',
                 storage: '${storageForUser:storage}',
                 path: '${apiV1UploadPath}',
@@ -177,21 +177,21 @@ final class UploadPostController extends ControllerWorkflow implements Pluggable
 
         try {
             $deserialize = new Deserialize($source);
-            $uploadFile = $deserialize->var()['tmp_name'];
+            $uploadFilepath = $deserialize->var()['tmp_name'];
         } catch (Throwable) {
-            $uploadFile = tempnam(sys_get_temp_dir(), 'chv.temp');
+            $uploadFilepath = tempnam(sys_get_temp_dir(), 'chv.temp');
             $uri = UriFactory::factory($source);
             if ($uri->isValid()) {
                 // G\fetch_url($source, $uploadFile);
             } else {
-                $this->assertStoreSource($source, $uploadFile);
+                $this->assertStoreSource($source, $uploadFilepath);
             }
         }
 
         return $this
             ->getWorkflowResponse(
                 key: $arguments->getString('key'),
-                filename: $uploadFile,
+                uploadFilepath: $uploadFilepath,
             )
             ->withAddedAttribute('instant');
 

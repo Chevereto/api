@@ -39,13 +39,13 @@ abstract class ImagePostController extends FilePostController
             validateFile: new Step(
                 FileValidateAction::class,
                 mimes: '${mimes}',
-                filename: '${uploadFilepath}',
+                filepath: '${uploadFilepath}',
                 maxBytes: '${maxBytes}',
                 minBytes: '${minBytes}',
             ),
             validateMedia: new Step(
                 ImageValidateMediaAction::class,
-                filename: '${uploadFilepath}',
+                filepath: '${uploadFilepath}',
                 maxHeight: '${maxHeight}',
                 maxWidth: '${maxWidth}',
                 minHeight: '${minHeight}',
@@ -89,7 +89,7 @@ abstract class ImagePostController extends FilePostController
             ),
             upload: new Step(
                 FileUploadAction::class,
-                filename: '${uploadFilepath}',
+                filepath: '${uploadFilepath}',
                 targetFilename: '${targetFilename:name}',
                 storage: '${storageForUser:storage}',
                 path: '${path}',

@@ -38,7 +38,7 @@ final class ValidateMediaActionTest extends TestCase
     {
         $action = new ValidateMediaAction();
         $arguments = $this->getTestArguments([
-            'filename' => __FILE__,
+            'filepath' => __FILE__,
         ]);
         $this->expectInvalidArgumentException(1000);
         $action->run($action->getArguments(...$arguments));
@@ -49,7 +49,7 @@ final class ValidateMediaActionTest extends TestCase
         $action = new ValidateMediaAction();
         $arguments = $this->getTestArguments(
             [
-                'filename' => __DIR__ . '/../Image/assets/favicon.png',
+                'filepath' => __DIR__ . '/../Image/assets/favicon.png',
             ]
         );
         $this->expectInvalidArgumentException(1000);
@@ -61,7 +61,7 @@ final class ValidateMediaActionTest extends TestCase
         $action = new ValidateMediaAction();
         $arguments = $this->getTestArguments(
             [
-                'filename' => __DIR__ . '/../Audio/assets/small.mp3',
+                'filepath' => __DIR__ . '/../Audio/assets/small.mp3',
             ]
         );
         $this->expectInvalidArgumentException(1000);
@@ -134,7 +134,7 @@ final class ValidateMediaActionTest extends TestCase
     private function getTestArguments(array $arguments): array
     {
         return array_replace([
-            'filename' => __DIR__ . '/assets/small.webm',
+            'filepath' => __DIR__ . '/assets/small.webm',
             'maxHeight' => 20000,
             'maxWidth' => 20000,
             'maxLength' => 3600,

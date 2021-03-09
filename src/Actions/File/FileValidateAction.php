@@ -53,7 +53,7 @@ class FileValidateAction extends Action
             mimes : (new StringParameter())
                 ->withRegex(new Regex('/^([\w]+\/[\w\-\+\.]+)+(,([\w]+\/[\w\-\+\.]+))*$/'))
                 ->withDescription('Comma-separated list of allowed mime-types'),
-            filename : new StringParameter(),
+            filepath : new StringParameter(),
         ))
             ->withAddedOptional(
                 maxBytes : (new IntegerParameter())->withDefault(0),
@@ -76,20 +76,20 @@ class FileValidateAction extends Action
         $this->minBytes = $arguments->has('minBytes')
             ? $arguments->getInteger('minBytes')
             : 0;
-        $filename = $arguments->getString('filename');
-        $bytes = $this->assertGetFileBytes($filename);
+        $filepath = $arguments->getString('filepath');
+        $bytes = $this->assertGetFileBytes($filepath);
         if ($arguments->has('maxBytes')) {
             $this->maxBytes = $arguments->getInteger('maxBytes');
             $this->assertMaxBytes($bytes);
         }
         $this->assertMinBytes($bytes);
-        $mime = mime_content_type($filename);
+        $mime = mime_content_type($filepath);
         $this->assertMime($mime);
 
         return $this->getResponse(
             bytes: $bytes,
             mime: $mime,
-            md5: md5_file($filename),
+            md5: md5_file($filepath),
         );
     }
 

@@ -71,7 +71,7 @@ class ImageValidateMediaAction extends Action implements DependentInterface
     public function getParameters(): ParametersInterface
     {
         return new Parameters(
-            filename: new StringParameter(),
+            filepath: new StringParameter(),
             maxHeight: new IntegerParameter(),
             maxWidth: new IntegerParameter(),
             minHeight: new IntegerParameter(),
@@ -90,8 +90,8 @@ class ImageValidateMediaAction extends Action implements DependentInterface
     public function run(ArgumentsInterface $arguments): ResponseInterface
     {
         $this->assertDependencies();
-        $filename = $arguments->getString('filename');
-        $image = $this->assertGetImage($filename);
+        $filepath = $arguments->getString('filepath');
+        $image = $this->assertGetImage($filepath);
         $this->width = $image->width();
         $this->height = $image->height();
         $this->maxWidth = $arguments->getInteger('maxWidth');
@@ -105,17 +105,17 @@ class ImageValidateMediaAction extends Action implements DependentInterface
 
         return $this->getResponse(
             image: $image,
-            perceptual: imageHash()->hash($filename)->toHex()
+            perceptual: imageHash()->hash($filepath)->toHex()
         );
     }
 
-    private function assertGetImage(string $filename): Image
+    private function assertGetImage(string $filepath): Image
     {
         try {
-            return $this->imageManager->make($filename);
+            return $this->imageManager->make($filepath);
         } catch (Throwable $e) {
             throw new InvalidArgumentException(
-                (new Message("Filename provided can't be handled by %manager%: %message%"))
+                (new Message("filepath provided can't be handled by %manager%: %message%"))
                     ->code('%manager%', ImageManager::class)
                     ->strtr('%message%', $e->getMessage()),
                 1000

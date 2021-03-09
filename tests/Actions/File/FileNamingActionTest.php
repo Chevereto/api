@@ -121,6 +121,7 @@ final class FileNamingActionTest extends TestCase
         ]);
         $arguments['name'] = randomString(255 - 3) . '.md';
         $response = $action->run($action->getArguments(...$arguments));
+        /** @var Filename $responseFilename */
         $responseFilename = $response->data()['filename'];
         $this->assertTrue(strlen($responseFilename->toString()) === 255);
     }

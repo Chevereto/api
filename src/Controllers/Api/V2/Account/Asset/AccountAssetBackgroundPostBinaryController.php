@@ -32,13 +32,13 @@ final class AccountAssetBackgroundPostBinaryController extends AccountAssetPostB
             validateFile: new Step(
                 FileValidateAction::class,
                 mimes: '${mimes}',
-                filename: '${filename}',
+                filepath: '${uploadFilepath}',
                 maxBytes: '${accountBackgroundMaxBytes}',
                 minBytes: '${accountBackgroundMinBytes}',
             ),
             validateMedia: new Step(
                 ImageValidateMediaAction::class,
-                filename: '${filename}',
+                filepath: '${uploadFilepath}',
                 maxHeight: '${accountBackgroundMaxHeight}',
                 maxWidth: '${accountBackgroundMaxWidth}',
                 minHeight: '${accountBackgroundMinHeight}',

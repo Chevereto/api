@@ -50,7 +50,7 @@ abstract class AccountAssetPostBinaryController extends FilePostController
                 ),
                 upload: new Step(
                     FileUploadAction::class,
-                    filename: '${filename}',
+                    filepath: '${uploadFilepath}',
                     targetFilename: '${asset:filename}',
                     storage: '${storageForAsset:storage}',
                     path: '${asset:path}',
@@ -60,10 +60,10 @@ abstract class AccountAssetPostBinaryController extends FilePostController
 
     public function run(ArgumentsInterface $arguments): ResponseInterface
     {
-        $uploadFile = tempnam(sys_get_temp_dir(), 'chv.temp');
-        $this->assertStoreSource($arguments->getString('source'), $uploadFile);
+        $uploadFilepath = tempnam(sys_get_temp_dir(), 'chv.temp');
+        $this->assertStoreSource($arguments->getString('source'), $uploadFilepath);
         $settings = array_replace($arguments->toArray(), [
-            'filename' => $uploadFile,
+            'uploadFilepath' => $uploadFilepath,
         ]);
 
         return $this
