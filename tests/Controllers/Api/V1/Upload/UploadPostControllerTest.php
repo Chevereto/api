@@ -21,6 +21,7 @@ use Chevere\Components\Workflow\WorkflowRunner;
 use Chevere\Interfaces\Workflow\WorkflowInterface;
 use Chevere\Interfaces\Workflow\WorkflowResponseInterface;
 use Chevereto\Components\Database\Database;
+use function Chevereto\Components\Image\imageManager;
 use Chevereto\Controllers\Api\V1\Upload\UploadPostController;
 use Doctrine\DBAL\DriverManager;
 use PHPUnit\Framework\TestCase;
@@ -74,7 +75,10 @@ final class UploadPostControllerTest extends TestCase
         $runner = new WorkflowRunner(
             new WorkflowRun($workflow, ...$options)
         );
-        $dependencies = new Map(database: $database);
+        $dependencies = new Map(
+            database: $database,
+            imageManager: imageManager()
+        );
         $runner = $runner->withRun($dependencies);
         $workflow = $controller->getWorkflow();
     }

@@ -14,6 +14,7 @@ declare(strict_types=1);
 namespace Tests\Actions\Image;
 
 use Chevereto\Actions\Image\ImageValidateMediaAction;
+use function Chevereto\Components\Image\imageManager;
 use Intervention\Image\Image;
 use PHPUnit\Framework\TestCase;
 use Tests\Actions\Traits\ExpectInvalidArgumentExceptionCodeTrait;
@@ -24,7 +25,7 @@ final class ImageValidateMediaActionTest extends TestCase
 
     public function testConstruct(): void
     {
-        $action = new ImageValidateMediaAction();
+        $action = $this->getImageValidateMediaAction();
         $arguments = $this->getTestArguments([]);
         $response = $action->run($action->getArguments(...$arguments));
         $this->assertInstanceOf(Image::class, $response->data()['image']);
@@ -32,7 +33,7 @@ final class ImageValidateMediaActionTest extends TestCase
 
     public function testInvalidImage(): void
     {
-        $action = new ImageValidateMediaAction();
+        $action = $this->getImageValidateMediaAction();
         $arguments = $this->getTestArguments([
             'filename' => __FILE__,
         ]);
@@ -42,7 +43,7 @@ final class ImageValidateMediaActionTest extends TestCase
 
     public function testMinHeight(): void
     {
-        $action = new ImageValidateMediaAction();
+        $action = $this->getImageValidateMediaAction();
         $arguments = $this->getTestArguments([
             'minHeight' => 301,
         ]);
@@ -52,7 +53,7 @@ final class ImageValidateMediaActionTest extends TestCase
 
     public function testMaxHeight(): void
     {
-        $action = new ImageValidateMediaAction();
+        $action = $this->getImageValidateMediaAction();
         $arguments = $this->getTestArguments([
             'maxHeight' => 299,
         ]);
@@ -62,7 +63,7 @@ final class ImageValidateMediaActionTest extends TestCase
 
     public function testMinWidth(): void
     {
-        $action = new ImageValidateMediaAction();
+        $action = $this->getImageValidateMediaAction();
         $arguments = $this->getTestArguments([
             'minWidth' => 301,
         ]);
@@ -72,12 +73,20 @@ final class ImageValidateMediaActionTest extends TestCase
 
     public function testMaxWidth(): void
     {
-        $action = new ImageValidateMediaAction();
+        $action = $this->getImageValidateMediaAction();
         $arguments = $this->getTestArguments([
             'maxWidth' => 299,
         ]);
         $this->expectInvalidArgumentException(1004);
         $action->run($action->getArguments(...$arguments));
+    }
+
+    private function getImageValidateMediaAction(): ImageValidateMediaAction
+    {
+        return (new ImageValidateMediaAction())
+            ->withDependencies(
+                imageManager: imageManager(),
+            );
     }
 
     private function getTestArguments(array $arguments): array
