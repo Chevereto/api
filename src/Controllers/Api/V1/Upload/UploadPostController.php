@@ -35,7 +35,7 @@ use Chevere\Interfaces\Response\ResponseInterface;
 use Chevere\Interfaces\Workflow\WorkflowInterface;
 use Chevereto\Actions\Database\DatabaseReserveRowAction;
 use Chevereto\Actions\File\FileAssertNotDuplicateAction;
-use Chevereto\Actions\File\FileTargetBasenameAction;
+use Chevereto\Actions\File\FileNamingAction;
 use Chevereto\Actions\File\FileUploadAction;
 use Chevereto\Actions\File\FileValidateAction;
 use Chevereto\Actions\Image\ImageFetchMetaAction;
@@ -77,13 +77,14 @@ final class UploadPostController extends ControllerWorkflow implements Pluggable
 
     public function getParameters(): ParametersInterface
     {
-        return (new Parameters(
-            source: (new StringParameter())
-                ->withAddedAttribute('tryFiles')
-                ->withDescription('A base64 image string OR an image URL. It also takes image multipart/form-data.'),
-            key: (new StringParameter())
-                ->withDescription('API V1 key.')
-        ))
+        return (new Parameters())
+            ->withAdded(
+                source: (new StringParameter())
+                    ->withAddedAttribute('tryFiles')
+                    ->withDescription('A base64 image string OR an image URL. It also takes image multipart/form-data.'),
+                key: (new StringParameter())
+                    ->withDescription('API V1 key.')
+            )
             ->withAddedOptional(
                 format: (new StringParameter())
                     ->withRegex(new Regex('/^(json|txt)$/'))
@@ -101,25 +102,25 @@ final class UploadPostController extends ControllerWorkflow implements Pluggable
             ),
             validateFile: new Step(
                 FileValidateAction::class,
-                mimes: '${mimes}',
+                mimes: '${apiV1UploadMimes}',
                 filename: '${filename}',
-                maxBytes: '${maxBytes}',
-                minBytes: '${minBytes}',
+                maxBytes: '${apiV1UploadMaxBytes}',
+                minBytes: '${apiV1UploadMinBytes}',
             ),
             validateMedia: new Step(
                 ImageValidateMediaAction::class,
                 filename: '${filename}',
-                maxHeight: '${maxHeight}',
-                maxWidth: '${maxWidth}',
-                minHeight: '${minHeight}',
-                minWidth: '${minWidth}',
+                maxHeight: '${apiV1UploadMaxHeight}',
+                maxWidth: '${apiV1UploadMaxWidth}',
+                minHeight: '${apiV1UploadMinHeight}',
+                minWidth: '${apiV1UploadMinWidth}',
             ),
             assertNotDuplicate: new Step(
                 FileAssertNotDuplicateAction::class,
                 md5: '${validateFile:md5}',
                 perceptual: '${validateMedia:perceptual}',
-                ip: '${ip}',
-                ipVersion: '${ipVersion}',
+                ip: '${requesterIp}',
+                ipVersion: '${requesterIpVersion}',
             ),
             fixOrientation: new Step(
                 ImageFixOrientationAction::class,
@@ -140,28 +141,28 @@ final class UploadPostController extends ControllerWorkflow implements Pluggable
             ),
             reserveId: new Step(
                 DatabaseReserveRowAction::class,
-                table: '${table}',
+                table: '${tableImage}',
             ),
-            targetBasename: new Step(
-                FileTargetBasenameAction::class,
+            targetFilename: new Step(
+                FileNamingAction::class,
                 id: '${reserveId:id}',
                 name: '${name}',
                 naming: '${naming}',
                 storage: '${storageForUser:storage}',
-                path: '${path}'
+                path: '${apiV1UploadPath}'
             ),
             upload: new Step(
                 FileUploadAction::class,
                 filename: '${filename}',
-                targetBasename: '${targetBasename:basename}',
+                targetFilename: '${targetFilename:filename}',
                 storage: '${storageForUser:storage}',
-                path: '${path}',
+                path: '${apiV1UploadPath}',
             ),
             insert: new Step(
                 ImageInsertAction::class,
                 id: '${reserveId:id}',
                 albumId: '${albumId}',
-                expires: '${expires}',
+                expires: '${apiV1UploadExpires}',
                 userId: '${userId}',
             )
         );
@@ -188,10 +189,9 @@ final class UploadPostController extends ControllerWorkflow implements Pluggable
         }
 
         return $this
-            ->getResponse(
+            ->getWorkflowResponse(
                 key: $arguments->getString('key'),
                 filename: $uploadFile,
-                albumId: '',
             )
             ->withAddedAttribute('instant');
 

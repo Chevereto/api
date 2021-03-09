@@ -20,7 +20,7 @@ use Chevere\Interfaces\Response\ResponseInterface;
 use Chevere\Interfaces\Workflow\WorkflowInterface;
 use Chevereto\Actions\Database\DatabaseReserveRowAction;
 use Chevereto\Actions\File\FileAssertNotDuplicateAction;
-use Chevereto\Actions\File\FileTargetBasenameAction;
+use Chevereto\Actions\File\FileNamingAction;
 use Chevereto\Actions\File\FileUploadAction;
 use Chevereto\Actions\File\FileValidateAction;
 use Chevereto\Actions\Image\ImageFetchMetaAction;
@@ -39,13 +39,13 @@ abstract class ImagePostController extends FilePostController
             validateFile: new Step(
                 FileValidateAction::class,
                 mimes: '${mimes}',
-                filename: '${filename}',
+                filename: '${uploadFilepath}',
                 maxBytes: '${maxBytes}',
                 minBytes: '${minBytes}',
             ),
             validateMedia: new Step(
                 ImageValidateMediaAction::class,
-                filename: '${filename}',
+                filename: '${uploadFilepath}',
                 maxHeight: '${maxHeight}',
                 maxWidth: '${maxWidth}',
                 minHeight: '${minHeight}',
@@ -79,8 +79,8 @@ abstract class ImagePostController extends FilePostController
                 DatabaseReserveRowAction::class,
                 table: '${table}',
             ),
-            targetBasename: new Step(
-                FileTargetBasenameAction::class,
+            targetFilename: new Step(
+                FileNamingAction::class,
                 id: '${reserveId:id}',
                 name: '${name}',
                 naming: '${naming}',
@@ -89,8 +89,8 @@ abstract class ImagePostController extends FilePostController
             ),
             upload: new Step(
                 FileUploadAction::class,
-                filename: '${filename}',
-                targetBasename: '${targetBasename:name}',
+                filename: '${uploadFilepath}',
+                targetFilename: '${targetFilename:name}',
                 storage: '${storageForUser:storage}',
                 path: '${path}',
             ),
@@ -106,10 +106,10 @@ abstract class ImagePostController extends FilePostController
 
     public function run(ArgumentsInterface $arguments): ResponseInterface
     {
-        $uploadFile = tempnam(sys_get_temp_dir(), 'chv.temp');
-        $this->assertStoreSource($arguments->getString('source'), $uploadFile);
+        $uploadFilepath = tempnam(sys_get_temp_dir(), 'chv.temp');
+        $this->assertStoreSource($arguments->getString('source'), $uploadFilepath);
         $settings = array_replace($arguments->toArray(), [
-            'filename' => $uploadFile,
+            'uploadFilepath' => $uploadFilepath,
         ]);
 
         return $this->getResponse();

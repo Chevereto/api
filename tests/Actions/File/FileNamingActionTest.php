@@ -13,116 +13,116 @@ declare(strict_types=1);
 
 namespace Chevereto\Tests\Actions\File;
 
-use Chevere\Components\Filesystem\Basename;
+use Chevere\Components\Filesystem\Filename;
 use Chevere\Components\Filesystem\Path;
 use function Chevere\Components\Str\randomString;
-use Chevereto\Actions\File\FileTargetBasenameAction;
+use Chevereto\Actions\File\FileNamingAction;
 use Chevereto\Components\Storage\Storage;
 use League\Flysystem\Local\LocalFilesystemAdapter;
 use PHPUnit\Framework\TestCase;
 
-final class FileTargetBasenameActionTest extends TestCase
+final class FileNamingActionTest extends TestCase
 {
     public function testId(): void
     {
-        $action = new FileTargetBasenameAction();
+        $action = new FileNamingAction();
         $options = $this->getArguments([
             'naming' => 'id',
             'name' => 'test.md',
         ]);
-        $basename = new Basename($options['name']);
+        $filename = new Filename($options['name']);
         $arguments = $action->getArguments(...$options);
         $response = $action->run($arguments);
         $this->assertSame(
-            'encoded' . '.' . $basename->extension(),
-            $response->data()['basename']->toString()
+            'encoded' . '.' . $filename->extension(),
+            $response->data()['filename']->toString()
         );
     }
 
     public function testOriginal(): void
     {
-        $action = new FileTargetBasenameAction();
+        $action = new FileNamingAction();
         $arguments = $this->getArguments([
             'naming' => 'original',
             'name' => 'test.md',
         ]);
-        $basename = new Basename($arguments['name']);
+        $filename = new Filename($arguments['name']);
         $response = $action->run($action->getArguments(...$arguments));
-        /** @var Basename $responseBasename */
-        $responseBasename = $response->data()['basename'];
+        /** @var Filename $responseFilename */
+        $responseFilename = $response->data()['filename'];
         $this->assertSame(
-            $basename->toString(),
-            $responseBasename->toString()
+            $filename->toString(),
+            $responseFilename->toString()
         );
     }
 
     public function testOriginalFailoverMixed(): void
     {
-        $action = new FileTargetBasenameAction();
+        $action = new FileNamingAction();
         $arguments = $this->getArguments([
             'naming' => 'original',
             'name' => 'test.md',
             'path' => new Path('/some/path/'),
         ]);
-        $basename = new Basename($arguments['name']);
+        $filename = new Filename($arguments['name']);
         $response = $action->run($action->getArguments(...$arguments));
-        /** @var Basename $responseBasename */
-        $responseBasename = $response->data()['basename'];
-        $this->assertNotSame($basename->toString(), $responseBasename->toString());
+        /** @var Filename $responseFilename */
+        $responseFilename = $response->data()['filename'];
+        $this->assertNotSame($filename->toString(), $responseFilename->toString());
         $this->assertStringStartsWith(
-            $basename->name(),
-            $responseBasename->toString()
+            $filename->name(),
+            $responseFilename->toString()
         );
         $this->assertStringEndsWith(
-            '.' . $basename->extension(),
-            $responseBasename->toString()
+            '.' . $filename->extension(),
+            $responseFilename->toString()
         );
     }
 
     public function testRandomName(): void
     {
-        $action = new FileTargetBasenameAction();
+        $action = new FileNamingAction();
         $arguments = $this->getArguments([
             'naming' => 'random',
             'name' => 'test.md',
         ]);
-        $basename = new Basename($arguments['name']);
+        $filename = new Filename($arguments['name']);
         $response = $action->run($action->getArguments(...$arguments));
-        /** @var Basename $responseBasename */
-        $responseBasename = $response->data()['basename'];
-        $this->assertSame($basename->extension(), $responseBasename->extension());
-        $this->assertNotSame($arguments['name'], $responseBasename->toString());
+        /** @var Filename $responseFilename */
+        $responseFilename = $response->data()['filename'];
+        $this->assertSame($filename->extension(), $responseFilename->extension());
+        $this->assertNotSame($arguments['name'], $responseFilename->toString());
     }
 
     public function testMixedName(): void
     {
-        $action = new FileTargetBasenameAction();
+        $action = new FileNamingAction();
         $arguments = $this->getArguments([
             'naming' => 'mixed',
             'name' => 'test.md',
         ]);
-        $basename = new Basename($arguments['name']);
+        $filename = new Filename($arguments['name']);
         $response = $action->run($action->getArguments(...$arguments));
-        /** @var Basename $responseBasename */
-        $responseBasename = $response->data()['basename'];
-        $this->assertSame($basename->extension(), $responseBasename->extension());
-        $this->assertNotSame($basename->toString(), $responseBasename->toString());
-        $this->assertStringStartsWith($basename->name(), $responseBasename->toString());
-        $expectedLength = mb_strlen($basename->toString()) + 16;
-        $this->assertTrue(mb_strlen($responseBasename->toString()) === $expectedLength);
+        /** @var Filename $responseFilename */
+        $responseFilename = $response->data()['filename'];
+        $this->assertSame($filename->extension(), $responseFilename->extension());
+        $this->assertNotSame($filename->toString(), $responseFilename->toString());
+        $this->assertStringStartsWith($filename->name(), $responseFilename->toString());
+        $expectedLength = mb_strlen($filename->toString()) + 16;
+        $this->assertTrue(mb_strlen($responseFilename->toString()) === $expectedLength);
     }
 
     public function testMixedNameTooLong(): void
     {
-        $action = new FileTargetBasenameAction();
+        $action = new FileNamingAction();
         $arguments = $this->getArguments([
             'naming' => 'mixed',
             'name' => 'test.md',
         ]);
         $arguments['name'] = randomString(255 - 3) . '.md';
         $response = $action->run($action->getArguments(...$arguments));
-        $responseBasename = $response->data()['basename'];
-        $this->assertTrue(strlen($responseBasename->toString()) === 255);
+        $responseFilename = $response->data()['filename'];
+        $this->assertTrue(strlen($responseFilename->toString()) === 255);
     }
 
     private function getArguments(array $array): array
