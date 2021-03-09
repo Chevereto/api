@@ -11,28 +11,27 @@
 
 declare(strict_types=1);
 
-namespace Chevereto\Controllers\Api\V2\Image;
+namespace Chevereto\Controllers\Api\V2\Account\Asset;
 
 use Chevere\Components\Workflow\Step;
 use Chevere\Components\Workflow\Workflow;
 use Chevere\Interfaces\Parameter\ArgumentsInterface;
+use Chevere\Interfaces\Parameter\StringParameterInterface;
 use Chevere\Interfaces\Response\ResponseInterface;
 use Chevere\Interfaces\Workflow\WorkflowInterface;
-use Chevereto\Actions\Database\DatabaseReserveRowAction;
-use Chevereto\Actions\File\FileAssertNotDuplicateAction;
-use Chevereto\Actions\File\FileTargetBasenameAction;
 use Chevereto\Actions\File\FileUploadAction;
 use Chevereto\Actions\File\FileValidateAction;
-use Chevereto\Actions\Image\ImageFetchMetaAction;
 use Chevereto\Actions\Image\ImageFixOrientationAction;
-use Chevereto\Actions\Image\ImageInsertAction;
 use Chevereto\Actions\Image\ImageStripMetaAction;
 use Chevereto\Actions\Image\ImageValidateMediaAction;
-use Chevereto\Actions\Storage\StorageGetForUserAction;
+use Chevereto\Actions\Storage\StorageGetForAssetAction;
 use Chevereto\Controllers\Api\V2\File\FilePostController;
+use Chevereto\Controllers\Api\V2\File\Traits\FileStoreBinarySourceTrait;
 
-abstract class ImagePostController extends FilePostController
+abstract class AccountAssetPostBinaryController extends FilePostController
 {
+    use FileStoreBinarySourceTrait;
+
     public function getWorkflow(): WorkflowInterface
     {
         return new Workflow(
@@ -51,55 +50,25 @@ abstract class ImagePostController extends FilePostController
                 minHeight: '${minHeight}',
                 minWidth: '${minWidth}',
             ),
-            assertNotDuplicate: new Step(
-                FileAssertNotDuplicateAction::class,
-                md5: '${validateFile:md5}',
-                perceptual: '${validateMedia:perceptual}',
-                ip: '${ip}',
-                ipVersion: '${ipVersion}',
-            ),
             fixOrientation: new Step(
                 ImageFixOrientationAction::class,
-                image: '${validateMedia:image}'
-            ),
-            fetchMeta: new Step(
-                ImageFetchMetaAction::class,
                 image: '${validateMedia:image}'
             ),
             stripMeta: new Step(
                 ImageStripMetaAction::class,
                 image: '${validateMedia:image}'
             ),
-            storageForUser: new Step(
-                StorageGetForUserAction::class,
+            storageForAsset: new Step(
+                StorageGetForAssetAction::class,
                 userId: '${userId}',
                 bytesRequired: '${validateFile:bytes}',
-            ),
-            reserveId: new Step(
-                DatabaseReserveRowAction::class,
-                table: '${table}',
-            ),
-            targetBasename: new Step(
-                FileTargetBasenameAction::class,
-                id: '${reserveId:id}',
-                name: '${name}',
-                naming: '${naming}',
-                storage: '${storageForUser:storage}',
-                path: '${path}'
             ),
             upload: new Step(
                 FileUploadAction::class,
                 filename: '${filename}',
-                targetBasename: '${targetBasename:name}',
-                storage: '${storageForUser:storage}',
+                targetBasename: '${basename}',
+                storage: '${storageForAsset:storage}',
                 path: '${path}',
-            ),
-            insert: new Step(
-                ImageInsertAction::class,
-                id: '${reserveId:id}',
-                albumId: '${albumId}',
-                expires: '${expires}',
-                userId: '${userId}',
             ),
         );
     }
@@ -112,6 +81,16 @@ abstract class ImagePostController extends FilePostController
             'filename' => $uploadFile,
         ]);
 
+        return $this
+            ->getResponse()
+            ->withAddedAttribute('instant');
+
         return $this->getResponse();
+    }
+
+    public function getSourceParameter(): StringParameterInterface
+    {
+        return $this->getBinaryStringParameter()
+            ->withDescription('A binary image.');
     }
 }

@@ -186,8 +186,6 @@ final class UploadPostController extends ControllerWorkflow implements Pluggable
                 $this->assertStoreSource($source, $uploadFile);
             }
         }
-        $workflowArguments = [
-        ];
 
         return $this
             ->getResponse(
