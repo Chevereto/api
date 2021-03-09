@@ -19,6 +19,8 @@ use Chevere\Components\Filesystem\Path;
 use Chevere\Components\Parameter\ObjectParameter;
 use Chevere\Components\Parameter\Parameters;
 use Chevere\Components\Parameter\StringParameter;
+use Chevere\Components\Regex\Regex;
+use function Chevere\Components\Str\randomString;
 use Chevere\Interfaces\Filesystem\PathInterface;
 use Chevere\Interfaces\Parameter\ArgumentsInterface;
 use Chevere\Interfaces\Parameter\ParametersInterface;
@@ -29,8 +31,8 @@ class AccountAssetAction extends Action
     public function getParameters(): ParametersInterface
     {
         return new Parameters(
-            name: new StringParameter(),
-            format: new StringParameter(),
+            format: (new StringParameter())
+                ->withRegex(new Regex('/^jpe?g|webp|gif|png$/')),
             path: new StringParameter(),
         );
     }
@@ -45,9 +47,13 @@ class AccountAssetAction extends Action
 
     public function run(ArgumentsInterface $arguments): ResponseInterface
     {
+        $filename = randomString(32);
+        $format = $arguments->getString('format');
+        $path = $arguments->getString('path');
+
         return $this->getResponse(
-            filename: new Filename($arguments->getString('name')),
-            path: new Path($arguments->getString('name')),
+            filename: new Filename("${filename}.${format}"),
+            path: new Path($path),
         );
     }
 }

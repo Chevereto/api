@@ -16,6 +16,7 @@ namespace Chevereto\Controllers\Api\V2\Account\Asset;
 use Chevere\Components\Workflow\Step;
 use Chevere\Components\Workflow\Workflow;
 use Chevere\Interfaces\Workflow\WorkflowInterface;
+use Chevereto\Actions\Account\Asset\AccountAssetAction;
 use Chevereto\Actions\File\FileValidateAction;
 use Chevereto\Actions\Image\ImageValidateMediaAction;
 
@@ -29,6 +30,11 @@ final class AccountAssetBackgroundPostBinaryController extends AccountAssetPostB
     public function getBaseWorkflow(): WorkflowInterface
     {
         return new Workflow(
+            asset: new Step(
+                AccountAssetAction::class,
+                format: '${accountBackgroundFormat}',
+                path: '${accountBackgroundPath}'
+            ),
             validateFile: new Step(
                 FileValidateAction::class,
                 mimes: '${mimes}',
@@ -43,7 +49,7 @@ final class AccountAssetBackgroundPostBinaryController extends AccountAssetPostB
                 maxWidth: '${accountBackgroundMaxWidth}',
                 minHeight: '${accountBackgroundMinHeight}',
                 minWidth: '${accountBackgroundMinWidth}',
-            )
+            ),
         );
     }
 }

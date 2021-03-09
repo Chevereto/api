@@ -38,7 +38,7 @@ final class AccountAssetAvatarPostBinaryController extends AccountAssetPostBinar
             validateFile: new Step(
                 FileValidateAction::class,
                 mimes: '${accountAvatarMimes}',
-                filepath: '${accountAvatarFilename}',
+                filepath: '${uploadFilepath}',
                 maxBytes: '${accountAvatarMaxBytes}',
                 minBytes: '${accountAvatarMinBytes}',
             ),
@@ -49,7 +49,7 @@ final class AccountAssetAvatarPostBinaryController extends AccountAssetPostBinar
                 maxWidth: '${accountAvatarMaxWidth}',
                 minHeight: '${accountAvatarMinHeight}',
                 minWidth: '${accountAvatarMinWidth}',
-            )
+            ),
         );
     }
 }
