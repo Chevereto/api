@@ -14,14 +14,14 @@ declare(strict_types=1);
 namespace Chevereto\Actions\File;
 
 use Chevere\Components\Action\Action;
-use Chevere\Components\Filesystem\Basename;
-use Chevere\Components\Filesystem\Path;
+use Chevere\Components\Filesystem\Filename;
 use Chevere\Components\Parameter\IntegerParameter;
 use Chevere\Components\Parameter\ObjectParameter;
 use Chevere\Components\Parameter\Parameters;
 use Chevere\Components\Parameter\StringParameter;
 use Chevere\Components\Regex\Regex;
 use function Chevere\Components\Str\randomString;
+use Chevere\Interfaces\Filesystem\FilenameInterface;
 use Chevere\Interfaces\Filesystem\PathInterface;
 use Chevere\Interfaces\Parameter\ArgumentsInterface;
 use Chevere\Interfaces\Parameter\ParametersInterface;
@@ -29,25 +29,9 @@ use Chevere\Interfaces\Response\ResponseInterface;
 use Chevereto\Components\Storage\Storage;
 
 /**
- * Determines the best available target basename for the given storage and path.
- *
- * Arguments:
- *
- * ```php
- * id: string,
- * name: string,
- * naming: string,
- * storage: Storage,
- * path: string,
- * ```
- *
- * Response:
- *
- * ```php
- * basename: Basename,
- * ```
+ * Determines the best available target filename for the given storage, path and naming.
  */
-class FileTargetBasenameAction extends Action
+class FileNamingAction extends Action
 {
     public function getParameters(): ParametersInterface
     {
@@ -66,7 +50,7 @@ class FileTargetBasenameAction extends Action
     public function getResponseParameters(): ParametersInterface
     {
         return new Parameters(
-            basename: new ObjectParameter(Basename::class),
+            filename: new ObjectParameter(Filename::class),
         );
     }
 
@@ -76,53 +60,53 @@ class FileTargetBasenameAction extends Action
         $encodedId = 'encoded';
         $name = $arguments->getString('name');
         $naming = $arguments->getString('naming');
-        $basename = new Basename($name);
+        $file = new Filename($name);
         if ($naming === 'id') {
             return $this->getResponse(
-                basename: new Basename($encodedId . '.' . $basename->extension())
+                filename: new Filename($encodedId . '.' . $file->extension())
             );
         }
         /** @var Storage $storage */
         $storage = $arguments->get('storage');
         /** @var PathInterface $path */
         $path = $arguments->get('path');
-        $name = $this->getName($naming, $basename);
+        $name = $this->getName($naming, $file);
         while ($storage->adapter()->fileExists($path->getChild($name)->toString())) {
             if ($naming === 'original') {
                 $naming = 'mixed';
             }
-            $name = $this->getName($naming, $basename);
+            $name = $this->getName($naming, $file);
         }
 
-        return $this->getResponse(basename: new Basename($name));
+        return $this->getResponse(filename: new Filename($name));
     }
 
-    public function getName(string $naming, Basename $basename): string
+    public function getName(string $naming, FilenameInterface $filename): string
     {
         return match($naming) {
-            'original' => $basename->toString(),
-            'random' => $this->getRandomName($basename),
-            'mixed' => $this->getMixedName($basename),
+            'original' => $filename->toString(),
+            'random' => $this->getRandomName($filename),
+            'mixed' => $this->getMixedName($filename),
         };
     }
 
-    private function getRandomName(Basename $basename): string
+    private function getRandomName(FilenameInterface $filename): string
     {
-        return randomString(32) . '.' . $basename->extension();
+        return randomString(32) . '.' . $filename->extension();
     }
 
-    private function getMixedName(Basename $basename): string
+    private function getMixedName(FilenameInterface $filename): string
     {
         $charsLength = 16;
         $chars = randomString($charsLength);
-        $name = $basename->name();
+        $name = $filename->name();
         $nameLength = mb_strlen($name);
-        $withExtensionLength = mb_strlen($basename->extension()) + 1;
-        if ($nameLength + $charsLength > Basename::MAX_LENGTH_BYTES) {
-            $chop = Basename::MAX_LENGTH_BYTES - $charsLength - $nameLength - $withExtensionLength;
+        $withExtensionLength = mb_strlen($filename->extension()) + 1;
+        if ($nameLength + $charsLength > Filename::MAX_LENGTH_BYTES) {
+            $chop = Filename::MAX_LENGTH_BYTES - $charsLength - $nameLength - $withExtensionLength;
             $name = mb_substr($name, 0, $chop);
         }
 
-        return $name . $chars . '.' . $basename->extension();
+        return $name . $chars . '.' . $filename->extension();
     }
 }

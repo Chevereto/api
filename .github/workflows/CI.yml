@@ -50,8 +50,8 @@ jobs:
           key: ${{ steps.extcache.outputs.key }}
           restore-keys: ${{ steps.extcache.outputs.key }}
 
-      - name: Setup dependencies
-        run: sudo apt-get update && sudo apt-get install -y imagemagick ffmpeg
+      # - name: Setup dependencies
+      #   run: sudo apt-get update && sudo apt-get install -y imagemagick ffmpeg
 
       - name: Setup PHP
         uses: shivammathur/setup-php@v2

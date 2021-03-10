@@ -35,7 +35,7 @@ abstract class VideoPostController extends FilePostController
         $uploadFile = tempnam(sys_get_temp_dir(), 'chv.temp');
         $this->assertStoreSource($source, $uploadFile);
         $settings = $this->settings
-            ->withPut('filename', $uploadFile)
+            ->withPut('filepath', $uploadFile)
             ->withPut('albumId', '');
         $settings = $settings->toArray();
         unset($settings['apiV1Key']);

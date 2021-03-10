@@ -27,7 +27,7 @@ final class FileValidateActionTest extends TestCase
     {
         $action = new FileValidateAction();
         $arguments = [
-            'filename' => __FILE__,
+            'filepath' => __FILE__,
             'mimes' => 'text/x-php',
         ];
         $response = $action->run($action->getArguments(...$arguments));
@@ -45,7 +45,7 @@ final class FileValidateActionTest extends TestCase
     {
         $action = new FileValidateAction();
         $arguments = [
-            'filename' => __FILE__,
+            'filepath' => __FILE__,
             'mimes' => 'text/x-php',
             'minBytes' => 20000000,
         ];
@@ -57,7 +57,7 @@ final class FileValidateActionTest extends TestCase
     {
         $action = new FileValidateAction();
         $arguments = [
-            'filename' => __FILE__,
+            'filepath' => __FILE__,
             'mimes' => 'text/x-php,text/plain',
             'maxBytes' => 20000000,
             'minBytes' => 1,
@@ -75,7 +75,7 @@ final class FileValidateActionTest extends TestCase
     {
         $action = new FileValidateAction();
         $arguments = [
-            'filename' => __FILE__,
+            'filepath' => __FILE__,
             'mimes' => 'text/plain,application/pdf',
         ];
         $this->expectInvalidArgumentException(1004);

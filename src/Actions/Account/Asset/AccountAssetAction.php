@@ -11,43 +11,49 @@
 
 declare(strict_types=1);
 
-namespace Chevereto\Actions\File;
+namespace Chevereto\Actions\Account\Asset;
 
 use Chevere\Components\Action\Action;
 use Chevere\Components\Filesystem\Filename;
+use Chevere\Components\Filesystem\Path;
 use Chevere\Components\Parameter\ObjectParameter;
 use Chevere\Components\Parameter\Parameters;
 use Chevere\Components\Parameter\StringParameter;
+use Chevere\Components\Regex\Regex;
+use function Chevere\Components\Str\randomString;
 use Chevere\Interfaces\Filesystem\PathInterface;
 use Chevere\Interfaces\Parameter\ArgumentsInterface;
 use Chevere\Interfaces\Parameter\ParametersInterface;
 use Chevere\Interfaces\Response\ResponseInterface;
-use Chevereto\Components\Storage\Storage;
 
-/**
- * Upload the filename to the target storage.
- */
-class FileUploadAction extends Action
+class AccountAssetAction extends Action
 {
     public function getParameters(): ParametersInterface
     {
         return new Parameters(
-            filepath: new StringParameter(),
-            targetFilename: new ObjectParameter(Filename::class),
-            storage: new ObjectParameter(Storage::class),
-            path: new ObjectParameter(PathInterface::class)
+            format: (new StringParameter())
+                ->withRegex(new Regex('/^jpe?g|webp|gif|png$/')),
+            path: new StringParameter(),
+        );
+    }
+
+    public function getResponseParameters(): ParametersInterface
+    {
+        return new Parameters(
+            filename: new ObjectParameter(Filename::class),
+            path: new ObjectParameter(PathInterface::class),
         );
     }
 
     public function run(ArgumentsInterface $arguments): ResponseInterface
     {
-        $filename = $arguments->getString('filepath');
-        /** @var Filename $targetFilename */
-        $targetFilename = $arguments->get('targetFilename');
-        /** @var Storage $storage */
-        $storage = $arguments->get('storage');
-        // $storage->adapter()->write();
+        $filename = randomString(32);
+        $format = $arguments->getString('format');
+        $path = $arguments->getString('path');
 
-        return $this->getResponse();
+        return $this->getResponse(
+            filename: new Filename("${filename}.${format}"),
+            path: new Path($path),
+        );
     }
 }

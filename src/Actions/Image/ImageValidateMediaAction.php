@@ -14,20 +14,21 @@ declare(strict_types=1);
 namespace Chevereto\Actions\Image;
 
 use Chevere\Components\Action\Action;
+use Chevere\Components\Dependent\Dependencies;
+use Chevere\Components\Dependent\Traits\DependentTrait;
 use Chevere\Components\Message\Message;
 use Chevere\Components\Parameter\IntegerParameter;
 use Chevere\Components\Parameter\ObjectParameter;
 use Chevere\Components\Parameter\Parameters;
 use Chevere\Components\Parameter\StringParameter;
 use Chevere\Exceptions\Core\InvalidArgumentException;
-use Chevere\Exceptions\Core\OutOfBoundsException;
-use Chevere\Exceptions\Core\TypeException;
+use Chevere\Interfaces\Dependent\DependenciesInterface;
+use Chevere\Interfaces\Dependent\DependentInterface;
 use Chevere\Interfaces\Message\MessageInterface;
 use Chevere\Interfaces\Parameter\ArgumentsInterface;
 use Chevere\Interfaces\Parameter\ParametersInterface;
 use Chevere\Interfaces\Response\ResponseInterface;
 use function Chevereto\Components\Image\imageHash;
-use function Chevereto\Components\Image\imageManager;
 use Intervention\Image\Image;
 use Intervention\Image\ImageManager;
 use Throwable;
@@ -42,8 +43,10 @@ use Throwable;
  * perceptual: string,
  * ```
  */
-class ImageValidateMediaAction extends Action
+class ImageValidateMediaAction extends Action implements DependentInterface
 {
+    use DependentTrait;
+
     private int $width = 0;
 
     private int $height = 0;
@@ -56,10 +59,19 @@ class ImageValidateMediaAction extends Action
 
     private int $minHeight = 0;
 
+    private ImageManager $imageManager;
+
+    public function getDependencies(): DependenciesInterface
+    {
+        return new Dependencies(
+            imageManager: ImageManager::class
+        );
+    }
+
     public function getParameters(): ParametersInterface
     {
         return new Parameters(
-            filename: new StringParameter(),
+            filepath: new StringParameter(),
             maxHeight: new IntegerParameter(),
             maxWidth: new IntegerParameter(),
             minHeight: new IntegerParameter(),
@@ -75,15 +87,11 @@ class ImageValidateMediaAction extends Action
         );
     }
 
-    /**
-     * @throws InvalidArgumentException
-     * @throws OutOfBoundsException
-     * @throws TypeException
-     */
     public function run(ArgumentsInterface $arguments): ResponseInterface
     {
-        $filename = $arguments->getString('filename');
-        $image = $this->assertGetImage($filename);
+        $this->assertDependencies();
+        $filepath = $arguments->getString('filepath');
+        $image = $this->assertGetImage($filepath);
         $this->width = $image->width();
         $this->height = $image->height();
         $this->maxWidth = $arguments->getInteger('maxWidth');
@@ -97,17 +105,17 @@ class ImageValidateMediaAction extends Action
 
         return $this->getResponse(
             image: $image,
-            perceptual: imageHash()->hash($filename)->toHex()
+            perceptual: imageHash()->hash($filepath)->toHex()
         );
     }
 
-    private function assertGetImage(string $filename): Image
+    private function assertGetImage(string $filepath): Image
     {
         try {
-            return imageManager()->make($filename);
+            return $this->imageManager->make($filepath);
         } catch (Throwable $e) {
             throw new InvalidArgumentException(
-                (new Message("Filename provided can't be handled by %manager%: %message%"))
+                (new Message("filepath provided can't be handled by %manager%: %message%"))
                     ->code('%manager%', ImageManager::class)
                     ->strtr('%message%', $e->getMessage()),
                 1000

@@ -21,6 +21,7 @@ use Chevere\Components\Workflow\WorkflowRunner;
 use Chevere\Interfaces\Workflow\WorkflowInterface;
 use Chevere\Interfaces\Workflow\WorkflowResponseInterface;
 use Chevereto\Components\Database\Database;
+use function Chevereto\Components\Image\imageManager;
 use Chevereto\Controllers\Api\V1\Upload\UploadPostController;
 use Doctrine\DBAL\DriverManager;
 use PHPUnit\Framework\TestCase;
@@ -47,22 +48,22 @@ final class UploadPostControllerTest extends TestCase
             'format' => 'json',
         ];
         $context = [
-            'albumId' => 123,
-            'ip' => '127.0.0.1',
-            'ipVersion' => '4',
-            'maxBytes' => 20000000,
-            'maxHeight' => 20000,
-            'maxWidth' => 20000,
-            'expires' => 0,
-            'mimes' => 'image/png',
-            'minBytes' => 0,
-            'minHeight' => 20,
-            'minWidth' => 20,
+            'albumId' => 0,
+            'apiV1UploadExpires' => 0,
+            'apiV1UploadMaxBytes' => 20000000,
+            'apiV1UploadMaxHeight' => 20000,
+            'apiV1UploadMaxWidth' => 20000,
+            'apiV1UploadMimes' => 'image/png',
+            'apiV1UploadMinBytes' => 0,
+            'apiV1UploadMinHeight' => 20,
+            'apiV1UploadMinWidth' => 20,
+            'apiV1UploadPath' => new Path('/2021/03/06/'),
             'name' => 'DSC-TEST.jpg',
             'naming' => 'original',
-            'path' => new Path('/2021/03/06/'),
-            'table' => 'images',
-            'userId' => 123,
+            'requesterIp' => '127.0.0.1',
+            'requesterIpVersion' => '4',
+            'tableImage' => 'image',
+            'userId' => 0,
         ];
         $controller = new UploadPostController();
         $parameters = $controller->parameters();
@@ -74,7 +75,10 @@ final class UploadPostControllerTest extends TestCase
         $runner = new WorkflowRunner(
             new WorkflowRun($workflow, ...$options)
         );
-        $dependencies = new Map(database: $database);
+        $dependencies = new Map(
+            database: $database,
+            imageManager: imageManager()
+        );
         $runner = $runner->withRun($dependencies);
         $workflow = $controller->getWorkflow();
     }

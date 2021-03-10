@@ -13,18 +13,14 @@ declare(strict_types=1);
 
 namespace Chevereto\Controllers\Api\V2\Image;
 
-use Chevere\Components\Parameter\IntegerParameter;
-use function Chevere\Components\Workflow\getWorkflowMessage;
 use Chevere\Components\Workflow\Step;
 use Chevere\Components\Workflow\Workflow;
-use Chevere\Components\Workflow\WorkflowResponse;
 use Chevere\Interfaces\Parameter\ArgumentsInterface;
-use Chevere\Interfaces\Parameter\ParametersInterface;
 use Chevere\Interfaces\Response\ResponseInterface;
 use Chevere\Interfaces\Workflow\WorkflowInterface;
 use Chevereto\Actions\Database\DatabaseReserveRowAction;
 use Chevereto\Actions\File\FileAssertNotDuplicateAction;
-use Chevereto\Actions\File\FileTargetBasenameAction;
+use Chevereto\Actions\File\FileNamingAction;
 use Chevereto\Actions\File\FileUploadAction;
 use Chevereto\Actions\File\FileValidateAction;
 use Chevereto\Actions\Image\ImageFetchMetaAction;
@@ -37,30 +33,19 @@ use Chevereto\Controllers\Api\V2\File\FilePostController;
 
 abstract class ImagePostController extends FilePostController
 {
-    final public function getContextParameters(): ParametersInterface
-    {
-        return parent::getContextParameters()
-            ->withAdded(
-                maxHeight: new IntegerParameter(),
-                maxWidth: new IntegerParameter(),
-                minHeight: new IntegerParameter(),
-                minWidth: new IntegerParameter(),
-            );
-    }
-
     public function getWorkflow(): WorkflowInterface
     {
         return new Workflow(
             validateFile: new Step(
                 FileValidateAction::class,
                 mimes: '${mimes}',
-                filename: '${filename}',
+                filepath: '${uploadFilepath}',
                 maxBytes: '${maxBytes}',
                 minBytes: '${minBytes}',
             ),
             validateMedia: new Step(
                 ImageValidateMediaAction::class,
-                filename: '${filename}',
+                filepath: '${uploadFilepath}',
                 maxHeight: '${maxHeight}',
                 maxWidth: '${maxWidth}',
                 minHeight: '${minHeight}',
@@ -94,8 +79,8 @@ abstract class ImagePostController extends FilePostController
                 DatabaseReserveRowAction::class,
                 table: '${table}',
             ),
-            targetBasename: new Step(
-                FileTargetBasenameAction::class,
+            targetFilename: new Step(
+                FileNamingAction::class,
                 id: '${reserveId:id}',
                 name: '${name}',
                 naming: '${naming}',
@@ -104,8 +89,8 @@ abstract class ImagePostController extends FilePostController
             ),
             upload: new Step(
                 FileUploadAction::class,
-                filename: '${filename}',
-                targetBasename: '${targetBasename:name}',
+                filepath: '${uploadFilepath}',
+                targetFilename: '${targetFilename:name}',
                 storage: '${storageForUser:storage}',
                 path: '${path}',
             ),
@@ -121,16 +106,12 @@ abstract class ImagePostController extends FilePostController
 
     public function run(ArgumentsInterface $arguments): ResponseInterface
     {
-        $context = $this->contextArguments();
-        $uploadFile = tempnam(sys_get_temp_dir(), 'chv.temp');
-        $this->assertStoreSource($arguments->getString('source'), $uploadFile);
-        $settings = array_replace($context->toArray(), [
-            'filename' => $uploadFile,
+        $uploadFilepath = tempnam(sys_get_temp_dir(), 'chv.temp');
+        $this->assertStoreSource($arguments->getString('source'), $uploadFilepath);
+        $settings = array_replace($arguments->toArray(), [
+            'uploadFilepath' => $uploadFilepath,
         ]);
 
-        return (new WorkflowResponse($this->getResponseParameters(), []))
-            ->withWorkflowMessage(
-                getWorkflowMessage($this->getWorkflow(), ...$settings)
-            );
+        return $this->getResponse();
     }
 }
